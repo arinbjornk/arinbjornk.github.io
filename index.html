@@ -1,41 +1,192 @@
 <!DOCTYPE html>
+<html>
+  <head>
+    <title>Arinbjörn Kolbeinsson</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@arinbjornkol" />
+    <meta name="twitter:title" content="K01" />
+    <!-- <meta name="twitter:description" content="View the album on Flickr." /> -->
+    <meta name="twitter:image" content="favicons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300&display=swap" rel="stylesheet">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKXHXJS3W7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
 
-<html lang="en">
-<style type="text/css">
-.centerImage
-{
-text-align:center;
-display:block;
-}
-</style>
-<head>
-  <meta charset="utf-8">
-  <meta name="theme-color" content="#275c5d">
-  <title>arinbjornk.github.io</title>
-  <meta name="description" content="404">
-  <meta name="arinbjorn" content="Website">
-  <!-- <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,700" rel="stylesheet"> -->
-  <link rel="stylesheet" href="index.css" type="text/css" media="all" />
-  <link rel="icon" sizes="192x192" href="icon.png">
+      gtag('config', 'G-TKXHXJS3W7');
+    </script>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
+    <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
+    <meta name="msapplication-TileColor" content="#65C0D4">
+    <meta name="theme-color" content="#65C0D4">
+  </head>
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-78789413-2', 'auto');
-  ga('send', 'pageview');
-</script>
-</head>
+  <body>
+    <!-- <nav>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a href="#" class="k01">
+            K01
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#About">About</a>
+        </li>
+        <li class="nav-item">
+          <a href="#Mission">Mission</a>
+        </li>
+        <li class="nav-item">
+          <a href="#Research">Research</a>
+        </li>
+        <li class="nav-item">
+          <a href="#Contact">Contact</a>
+        </li>
+      </ul>
+    </nav> -->
 
-<body>
-<div class="image">
-    <img src="source_small.gif" class="centerImage" align="left" alt="what image shows" width="50%">
-    <t2>
-        <h2>Lost?</h2>
-        <p1>You might be looking for: <a href="http://www.arinbjorn.is">arinbjorn.is</a></p1>
-    </t2>
-</div>
-</body>
+    <div class="background">
+      <div class="gradient gradient-body"></div>
+      <div class="gradient gradient-body gradient-two"></div>
+      <div class="gradient gradient-body gradient-three"></div>
+      <div class="gradient gradient-body gradient-four"></div>
+    </div>
+
+    <div class="main">
+
+      <!-- <div class="title k01"></div> -->
+      
+      <div class="title">
+        <div class="flex-item">
+          <img src="assets/images/avatar.jpg" alt="Avatar">
+        </div>
+        <!-- <div class="prefix">Hi, I'm</div> -->
+        <h1>Arinbjörn Kolbeinsson</h1>
+        <!-- <div class="suffix">PhD MRes MEng ACGI</div> -->
+        <!-- <h1 class="logo">K01</h1> -->
+        <p>I'm a machine learning researcher at Evidation Health.
+          <!-- <br> -->
+          My work involves developing and creating machine learning systems that improve health and quality of life.
+        </p>
+      </div>
+
+      <!-- <div class="vertical container" id="About">
+        
+      </div> -->
+
+      <div class="dual">
+        <div class="vertical container odd" id="Education">
+        <div class="subtitle">Education</div>
+        <ul>
+          <li>
+            <span class="education-title">PhD: Deep learning for health outcome prediction</span><br>
+            <span class="education-date">Imperial College London, 2021</span>
+          </li>
+          <li>
+            <span class="education-title">MRes in Biomedical Research</span><br>
+            <span class="education-date">Imperial College London, 2016</span>
+          </li>
+          <li>
+            <span class="education-title">MEng in Bioengineering</span><br>
+            <span class="education-date">Imperial College London, 2015</span>
+          </li>
+        </ul>
+        </div>
+        <div class="vertical container odd">
+          <div class="subtitle">Interests</div>
+          <!-- <p>My work focuses on developing machine learning methods that learn from high-dimensional biomedical data including genetic,
+          brain MRI and hospital diagnosis data for personalised health outcome prediction.</p> -->
+
+          <ul>
+            <li>Personalised health outcome prediction and action optimisation</li>
+            <li>Time-series analysis to identify changes or anomalies in temporal data</li>
+            <li>Multi-modal learning</li>
+            <li>Tensor methods for improving robustness and generalisability</li>
+          </ul>
+        </div>
+      </div>
+
+
+      <div class="dual">
+      <div class="vertical container odd evidation">
+        <div class="subtitle">Evidation</div>
+        <p>
+          I currently work at Evidation Health where I develop machine learning methods to predict health outcomes based on high-frequency multi-modal data. I also
+        collaborate on research with academic institutions on differential privacy in machine learning.
+      <br><br>Read more on <a href="https://evidation.com"
+        style="color: #333333; font-style: italic;">evidation.com</a>
+      </p>
+      </div>
+      </div>
+
+      <div class="dual">
+      <div class="vertical container" id="Imperial College London">
+        <div class="right subtitle">Imperial College London</div>
+        <p>During my PhD at Imperial College London, I developed a deep neural network model to 
+          <a href="https://www.nature.com/articles/s41598-020-76518-z" style="color:#252525;">predict brain age difference</a>
+          using over 20,000 MRI scans from UK Biobank. Through a phenome-wide association analysis, we identified significant
+          associations between this learnt biomarker and over 40 traits, including cognitive diseases and poorer cognitive function, highlighting
+          relationships and possible causation between brain and systemic health.
+          <br><br>
+          Central to my research was developing new machine learning models to analyse these complex health data.
+           I created 
+          <a href="https://ieeexplore.ieee.org/abstract/document/9381098" style="color:#252525;">a method to learn features from 3D brain volumes</a>
+          <a href="https://arxiv.org/pdf/1902.10758.pdf" style="color:#252525;">(arXiv version)</a>
+          with a stochastic tensor regression layer to better
+          leverage the structural information in the images. Part of this work was done during my internship at Samsung AI, in
+          collaboration with Professor Anima Anandkumar’s group at Caltech.
+      </div>
+      </div>
+
+      <div class="dual">
+      <div class="vertical container" id="Publications">
+        <div class="right subtitle alternate">Publication spotlight</div>
+        <ul>
+          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Naman Shukla, Akhil Gupta, Lavanya Marla, and Kartik
+            Yellepeddi. "Galactic Air Improves Ancillary Revenues with Dynamic Personalized Pricing." INFORMS Journal on Applied
+            Analytics (2022).</li>
+          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Jean Kossaifi, Yannis Panagakis, Adrian Bulat, Anima
+            Anandkumar, Ioanna Tzoulaki, and Paul Matthews. "Tensor Dropout for Robust Learning," in IEEE Journal of Selected
+            Topics in Signal Processing, doi: 10.1109/JSTSP.2021.3064182 (2021).</li>
+          <li>Akhil Gupta, Lavanya Marla, Ruoyu Sun, Naman Shukla and <span class="highlight">Arinbjörn Kolbeinsson</span>.
+            “PenDer: Incorporating Shape Constraints via Penalized Derivatives”. In Proceedings of the AAAI Conference on
+            Artificial Intelligence (2021).</li>
+          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Sarah Filippi, Yannis Panagakis, Paul M. Matthews, Paul
+            Elliott, Abbas Dehghan, and Ioanna Tzoulaki. "Accelerated MRI-predicted brain ageing and its associations with
+            cardiometabolic and brain disorders." Scientific Reports 10, no. 1 (2020): 1-9.</li>
+          <li>Kossaifi, Jean, Zachary C. Lipton, <span class="highlight">Arinbjörn Kolbeinsson</span>, Aran Khanna, Tommaso
+            Furlanello, and Anima Anandkumar. "Tensor regression networks." Journal of Machine Learning Research 21, no. 123
+            (2020): 1-21.</li>
+          <li>
+            See all on my <a href="https://scholar.google.co.uk/citations?user=MiI7lj0AAAAJ&hl=en" style="text-decoration; color:#252525; font-style: italic;">Google Scholar profile</a>.
+          </li>
+        </ul>
+      </div>
+      </div>
+
+      <div class="dual">
+      <div class="vertical container" id="Contact">
+        <div class="right subtitle alternate">Contact</div>
+        <p>Want to get in touch? Reach me on
+          <a href="https:/twitter.com/arinbjornkol" style="color:#252525;">Twitter</a>,
+          <a href="https:/linkedin.com/in/arinbjorn" style="color:#252525;">LinkedIn</a> or 
+          <a href="https:/github.com/arinbjornk" style="color:#252525;">GitHub</a>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p class="footer-font">Copyright &copy; 2023 Arinbjörn Kolbeinsson. All rights reserved.</p>
+    </div>
+  </body>
+
 </html>
