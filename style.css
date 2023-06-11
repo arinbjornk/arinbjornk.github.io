@@ -36,12 +36,13 @@ body {
   /* height: 100%; */
   overflow: auto;
   position: relative;
+  align-items: center;
 }
 
 p {
   font-size: 1.3rem;
   color: #333333;
-  max-width: 60rem;
+  /* max-width: 60rem; */
 }
 
 /* DEBUG */
@@ -107,6 +108,7 @@ p {
   position: relative;
   background-color: rgba(255, 255, 255, 0.0);
   padding-top: 5vh;
+  max-width: 120rem;
 }
 
 .dual {
@@ -191,7 +193,7 @@ h1 {
   padding: 10%;
   z-index: 1001;
   width: 80%;
-  /* min-width: 80vw; */
+  min-width: 20rem;
   padding: 30px;
   flex-grow: 1;
   margin: 10px;
