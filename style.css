@@ -116,7 +116,7 @@ p {
   /* align-items: center; */
   flex-wrap: wrap;
   width: 80%;
-  margin: 10px;
+  /* margin: 10px; */
 }
 
 .title {
@@ -174,7 +174,7 @@ h1 {
   min-height: 5vh;
   max-width: 60rem;
   width: 100%;
-  font-family: 'Source Serif 4', serif;
+  font-family: 'Avenir', 'Source Serif 4', serif;
   /* text-decoration: underline; */
   font-size: 3rem;
 }
@@ -198,6 +198,7 @@ h1 {
   flex-grow: 1;
   margin: 10px;
   box-sizing: border-box;
+  transition: background-color 0.3s ease;
 }
 
 .vertical {
@@ -287,7 +288,7 @@ li {
   }
 
   .dual { 
-    width: 100%;
+    width: 90%;
   }
 }
 
@@ -471,6 +472,8 @@ height: 100%;
 }
 
 
-/* .evidation a:hover {
-  background-color: #faba15;
-} */
+.evidation:hover {
+  background-color: rgb(250, 186, 21, 0.75);
+  /* background-color: rgba(0.75, 0.75, 0.75, .15); */
+    -webkit-backdrop-filter: blur(30px);
+}
