@@ -166,7 +166,7 @@ h1 {
     color: #252525;
 }
 
-.subtitle{
+.subtitle {
   display: flex;
   text-align: stretch;
   /* flex: 0 1 15%; */
