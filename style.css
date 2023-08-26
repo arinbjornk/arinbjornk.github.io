@@ -195,10 +195,12 @@ h1 {
   width: 80%;
   min-width: 20rem;
   padding: 30px;
+  padding-left: 4rem;
+  padding-right: 4rem;
   flex-grow: 1;
   margin: 10px;
   box-sizing: border-box;
-  transition: background-color 0.3s ease;
+  transition: background-color 1s ease;
 }
 
 .vertical {
@@ -471,9 +473,13 @@ height: 100%;
   border-radius: 20% 80% 120% 30% / 10% 30% 10% 70%;
 }
 
+.evidation{
+  transition: all 2s ease;
+}
 
 .evidation:hover {
-  background-color: rgb(250, 186, 21, 0.75);
-  /* background-color: rgba(0.75, 0.75, 0.75, .15); */
+  /* background-color: rgb(250, 186, 21, 0.75); */
+  background: linear-gradient(to bottom right, rgb(250, 186, 21, 0.25), rgb(250, 186, 21, 0.75));
+  transition: all 2s ease;
     -webkit-backdrop-filter: blur(30px);
 }
