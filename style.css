@@ -177,6 +177,24 @@ h1 {
   font-family: 'Avenir', 'Source Serif 4', serif;
   /* text-decoration: underline; */
   font-size: 3rem;
+  font-weight: 600;
+}
+
+sub {
+  font-size: 0.9rem;
+  color: #ccc;
+  font-family: 'Lora', serif;
+  border: 1px solid #ccc;
+  /* Thin border */
+  border-radius: 4px;
+  /* Rounded edges */
+  padding: 2px 4px;
+  /* Padding around the text for spacing */
+  display: inline-block;
+  /* Ensure it wraps around the text properly without expanding */
+  max-width: max-content;
+  /* Ensure the element width is as small as possible */
+  margin-bottom: 0.5rem;
 }
 
 .highlight {
@@ -206,7 +224,7 @@ h1 {
 .vertical {
   flex-direction: column;
   align-items: left;
-  align-content: center;
+  /* align-content: flex-start; */
   justify-content: center;
   /* flex-grow: 1; */
 }
@@ -214,6 +232,7 @@ h1 {
 .odd {
   background-color: rgba(0.75, 0.75, 0.75, .15);
   -webkit-backdrop-filter: blur(30px);
+  justify-content: flex-start;
 }
 
 /* .right {
@@ -473,7 +492,7 @@ height: 100%;
   border-radius: 20% 80% 120% 30% / 10% 30% 10% 70%;
 }
 
-.evidation{
+/* .evidation{
   transition: all 2s ease;
 }
 
@@ -482,4 +501,4 @@ height: 100%;
   background: linear-gradient(to bottom right, rgb(250, 186, 21, 0.25), rgb(250, 186, 21, 0.75));
   transition: all 2s ease;
     -webkit-backdrop-filter: blur(30px);
-}
+} */
