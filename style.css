@@ -262,6 +262,9 @@ li {
 
 .education-title {
   font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+  }
 }
 
 .education-date {
