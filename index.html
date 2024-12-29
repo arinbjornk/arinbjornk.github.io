@@ -773,6 +773,38 @@
     <p>Copyright © 2024 Arinbjörn Kolbeinsson. All rights reserved.</p>
   </footer>
 
+
+  <script src="assets/js/fireworks.js"></script>
+  <script src="assets/js/snow.js"></script>
+  <script>
+    // Get current date
+      const now = new Date();
+      const month = now.getMonth() + 1; // Months are 0-indexed
+      const day = now.getDate();
+
+      console.log("Current date:", month, day); // Log current date
+
+      // Check if it's December 31st or January 1st for fireworks
+      const isNewYears = (month === 12 && day === 31) || (month === 1 && day === 1);
+      console.log("isNewYears:", isNewYears);
+
+      // Check if it's December or January, but not New Years Eve/Day 
+      const isWinter = (month === 12 || month === 1) && !isNewYears;
+      console.log("isWinter:", isWinter);
+
+      console.log("Should run fireworks?", isNewYears);
+      console.log("Should run snow?", isWinter);
+
+      // Initialize effects based on conditions
+      if (isNewYears) {
+        console.log("Starting fireworks effect");
+        new FireworksEffect();
+      } else if (isWinter) {
+        console.log("Starting snow effect");
+        new SnowEffect();
+      }
+  </script>
+
   <!-- Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKXHXJS3W7"></script>
   <script>
@@ -781,24 +813,3 @@
     gtag('js', new Date());
     gtag('config', 'G-TKXHXJS3W7');
   </script>
-  <script>
-    // Get current date
-    const now = new Date();
-    const month = now.getMonth() + 1; // Months are 0-indexed
-    const day = now.getDate();
-
-    // Check if it's December 31st or January 1st for fireworks
-    const isNewYears = (month === 12 && day === 31) || (month === 1 && day === 1);
-    
-    // Check if it's December or January (excluding New Years dates) for snow
-    const isWinter = (month === 12 && day !== 31) || (month === 1 && day !== 1);
-
-    // Initialize effects based on conditions
-    if (isNewYears) {
-      new FireworksEffect();
-    } else if (isWinter) {
-      new SnowEffect();
-    }
-  </script>
-  <script src="assets/js/fireworks.js"></script>
-  <script src="assets/js/snow.js"></script>

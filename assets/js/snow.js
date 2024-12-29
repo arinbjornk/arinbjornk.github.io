@@ -114,7 +114,7 @@ class SnowEffect {
   }
 }
 
-// Initialize snow effect when the page loads
-window.addEventListener('load', () => {
-  new SnowEffect();
-});
+// // Initialize snow effect when the page loads
+// window.addEventListener('load', () => {
+//   new SnowEffect();
+// });

@@ -195,8 +195,8 @@ class FireworksEffect {
   }
 }
 
-// Initialize fireworks effect when the page loads
-window.addEventListener('load', () => {
-  // Duration in milliseconds (30 seconds)
-  new FireworksEffect(30000);
-});
+// // Initialize fireworks effect when the page loads
+// window.addEventListener('load', () => {
+//   // Duration in milliseconds (30 seconds)
+//   new FireworksEffect(30000);
+// });
