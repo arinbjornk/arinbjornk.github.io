@@ -1,174 +1,731 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Arinbjörn Kolbeinsson</title>
-    <meta name="description"
-      content="Arinbjörn Kolbeinsson: Machine learning, personalised medicine, research, tensor methods and more.">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="@arinbjornkol" />
-    <meta name="twitter:title" content="Arinbjörn Kolbeinsson" />
-    <meta name="twitter:description" content="Machine learning, personalised medicine, research, tensor methods and more." />
-    <meta name="twitter:image" content="favicons/apple-touch-icon.png" />
-    <meta property="og:title" content="Arinbjörn Kolbeinsson" />
-    <meta property="og:url" content="https://arinbjorn.is" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="assets/images/banner.webp" />
-    <meta property="og:description" content="Machine learning, personalised medicine, research, tensor methods and more." />
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300&display=swap" rel="stylesheet">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKXHXJS3W7"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
+<html lang="en">
 
-      gtag('config', 'G-TKXHXJS3W7');
-    </script>
-    <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
-    <link rel="icon" type="image/png" href="assets/favicon/favicon.png">
-    <meta name="msapplication-TileColor" content="#65C0D4">
-    <meta name="theme-color" content="#65C0D4">
-  </head>
+<head>
+  <title>Arinbjörn Kolbeinsson</title>
+  <meta name="description"
+    content="Arinbjörn Kolbeinsson: Machine learning, personalised medicine, research, tensor methods and more.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Social media meta tags -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@arinbjornkol" />
+  <meta name="twitter:title" content="Arinbjörn Kolbeinsson" />
+  <meta name="twitter:description"
+    content="Machine learning, personalised medicine, research, tensor methods and more." />
+  <meta name="twitter:image" content="favicons/apple-touch-icon.png" />
+  <meta property="og:title" content="Arinbjörn Kolbeinsson" />
+  <meta property="og:url" content="https://arinbjorn.is" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/images/banner.webp" />
+  <meta property="og:description"
+    content="Machine learning, personalised medicine, research, tensor methods and more." />
 
-  <body>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400&display=swap"
+    rel="stylesheet">
 
-    <div class="background">
-      <div class="gradient gradient-body"></div>
-      <div class="gradient gradient-body gradient-two"></div>
-      <div class="gradient gradient-body gradient-three"></div>
-      <div class="gradient gradient-body gradient-four"></div>
+  <style>
+    /* Theme and base variables */
+    :root {
+      --primary-color: #252525;
+      --text-color: #333333;
+      --background-card: rgba(255, 255, 255, 0.25);
+      --theme-ml: #2064B0;      /* Darker blue */
+      --theme-health: #207F73;  /* Darker teal */
+      --theme-law: #663399;     /* Darker purple */
+      --transition-standard: all 0.3s ease;
+      --container-width: 70ch;
+      --spacing-base: 1rem;
+    }
+
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: #65C0D4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* Typography */
+    h1 {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 600;
+      color: var(--primary-color);
+      letter-spacing: -0.02em;
+      margin: var(--spacing-base) 0;
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      color: var(--text-color);
+      max-width: var(--container-width);
+    }
+
+    /* Layout components */
+    .main {
+      width: min(90%, 80rem);
+      margin: 5vh auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .dual {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* Enhanced container styles with theme accents */
+    .container {
+      flex: 1 1 min(100%, 38rem);
+      min-width: 300px;
+      padding: 2.5rem;
+      border-radius: 1rem;
+      background: var(--background-card);
+      backdrop-filter: blur(30px);
+      transition: var(--transition-standard);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 70rem;
+    }
+
+    .container>* {
+      width: 100%;
+      max-width: 90%;
+    }
+
+    .container:hover {
+      /* transform: translateY(-2px); */
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      opacity: 0.7;
+      transition: var(--transition-standard);
+    }
+
+    .container:hover::before {
+      opacity: 1;
+    }
+
+    /* Theme indicators */
+    .theme-ml::before {
+      background-color: var(--theme-ml);
+    }
+
+    .theme-health::before {
+      background-color: var(--theme-health);
+    }
+
+    .theme-law::before {
+      background-color: var(--theme-law);
+    }
+
+    /* Theme images */
+    .theme-image {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: var(--transition-standard);
+      opacity: 0.85;
+    }
+
+    .theme-image:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Profile section */
+    .title {
+      text-align: center;
+      max-width: var(--container-width);
+      margin-bottom: 4rem;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .profile-image {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 2rem;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      transition: var(--transition-standard);
+    }
+
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition-standard);
+    }
+
+    .profile-image:hover {
+      transform: scale(1.02);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Research themes section */
+    .interests-grid {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      justify-content: space-between;
+      width: 90%;
+    }
+
+    .theme-category {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Section styling */
+    .subtitle {
+      font-family: 'Source Serif 4', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      margin-bottom: 1.5rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      width: 90%;
+    }
+
+    /* Section headers and tags */
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      width: 90%;
+    }
+
+    .section-header .theme-tag {
+      align-self: flex-start;
+    }
+
+    .highlight {
+      font-weight: bold;
+    }
+
+    .theme-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .theme-header h3 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .theme-tag {
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: #eee;
+      /* font-weight: normal; */
+      font-weight: bold;
+    }
+
+    .tag-ml {
+      /* background-color: var(--theme-ml);
+      background-color: var(--theme-ml); */
+      border: 2px solid var(--theme-ml);
+      color: var(--theme-ml);
+    }
+
+    .tag-health {
+      /* background-color: var(--theme-health); */
+      border: 2px solid var(--theme-health);
+      color: var(--theme-health)
+    }
+
+    .tag-law {
+      /* background-color: var(--theme-law); */
+      border: 2px solid var(--theme-law);
+      color: var(--theme-law);
+    }
+
+    /* Update these styles in your CSS */
+    .education-item {
+        position: relative;
+        padding-left: 1.5rem;  /* Changed from padding-right to padding-left */
+        padding-right: 0;      /* Remove right padding */
+        margin-bottom: 1.5rem;
+    }
+
+    .education-theme-indicator {
+        position: absolute;
+        left: 0;              /* Changed from right: 0 to left: 0 */
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 2px;
+        opacity: 0.7;
+        transition: var(--transition-standard);
+    }
+
+    .education-theme-indicator.theme-ml {
+      background-color: var(--theme-ml);
+    }
+
+    .education-theme-indicator.theme-health {
+      background-color: var(--theme-health);
+    }
+
+    .education-theme-indicator.theme-law {
+      background-color: var(--theme-law);
+    }
+
+    /* Lists and links */
+    ul {
+      list-style: none;
+      padding: 0;
+      font-size: 1.1rem;
+      color: var(--text-color);
+      width: 90%;
+    }
+
+    li {
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary-color);
+      text-decoration: underline;
+      transition: var(--transition-standard);
+    }
+
+    a:hover {
+      color: #065fd4;
+      text-decoration: underline;
+    }
+
+    /* Background animations */
+    .background {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .gradient {
+      --size: 100vh;
+      --speed: 25s;
+      --easing: cubic-bezier(0.8, 0.2, 0.2, 0.8);
+      width: var(--size);
+      height: 80vh;
+      filter: blur(calc(var(--size) / 3));
+      background-image: linear-gradient(hsl(158, 82%, 57%, 85%), hsl(252, 82%, 57%));
+      animation: rotate var(--speed) var(--easing) alternate infinite;
+      border-radius: 30% 120% 120% 30% / 30% 30% 70% 70%;
+      z-index: -1;
+    }
+
+    .gradient-body {
+      background-color: #E2F6F8;
+      position: absolute;
+      inset: 0;
+      display: flex;
+      place-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .gradient-two {
+      background-color: #FFB74D;
+      animation: rotate2 var(--speed) var(--easing) alternate infinite;
+    }
+
+    .gradient-three {
+      width: 100vh;
+      height: 80vh;
+      filter: blur(calc(100vh / 3));
+      background-color: #FFB74D;
+      animation: rotate3 var(--speed) var(--easing) alternate infinite;
+    }
+
+    .gradient-four {
+      width: 50vh;
+      height: 60vh;
+      filter: blur(calc(50vh / 3));
+      background-color: #A4E7ED;
+      animation: rotate4 var(--speed) var(--easing) alternate infinite;
+      border-radius: 20% 80% 120% 30% / 10% 30% 10% 70%;
+    }
+
+    /* Animation keyframes */
+    @keyframes rotate {
+      0% {
+        transform: translateX(0vw) translateY(0vh) rotate(40deg);
+      }
+
+      50% {
+        transform: translateX(60vw) translateY(20vh) rotate(360deg);
+      }
+
+      100% {
+        transform: translateX(60vw) translateY(0vh) rotate(110deg);
+      }
+    }
+
+    @keyframes rotate2 {
+      0% {
+        transform: translateX(60vw) translateY(15vh) rotate(0deg);
+      }
+
+      50% {
+        transform: translateX(50vw) translateY(200vh) rotate(360deg);
+      }
+
+      100% {
+        transform: translateX(10vw) translateY(15vh) rotate(0deg);
+      }
+    }
+
+    @keyframes rotate3 {
+      0% {
+        transform: translateX(50vw) translateY(400%) rotate(360deg);
+      }
+
+      50% {
+        transform: translateX(10vw) translateY(15vh) rotate(0deg);
+      }
+
+      100% {
+        transform: translateX(60vw) translateY(200vh) rotate(0deg);
+      }
+    }
+
+    @keyframes rotate4 {
+      0% {
+        transform: translateX(60vw) translateY(200%) rotate(0deg);
+      }
+
+      50% {
+        transform: translateX(0vw) translateY(100vh) rotate(360deg);
+      }
+
+      100% {
+        transform: translateX(0vw) translateY(120vh) rotate(360deg);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Media queries */
+    @media (max-width: 768px) {
+      :root {
+        --container-width: 100%;
+      }
+
+      .container {
+        padding: 1.5rem;
+      }
+
+      .dual {
+        gap: 1rem;
+      }
+
+      .profile-image {
+        width: 180px;
+        height: 180px;
+      }
+
+      .subtitle {
+        font-size: 1.75rem;
+      }
+
+      .interests-grid {
+        flex-direction: column;
+      }
+
+      .theme-category {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Background -->
+  <div class="background">
+    <div class="gradient gradient-body"></div>
+    <div class="gradient gradient-body gradient-two"></div>
+    <div class="gradient gradient-body gradient-three"></div>
+    <div class="gradient gradient-body gradient-four"></div>
+  </div>
+
+  <!-- Add Snow Effect -->
+  <div id="snow-container"></div>
+
+  <main class="main">
+    <!-- Profile -->
+    <div class="title">
+      <div class="profile-image">
+        <img src="assets/images/avatar.webp" alt="Profile of Arinbjörn Kolbeinsson">
+      </div>
+      <h1>Arinbjörn Kolbeinsson</h1>
+      <p>I advance machine learning research and transform deep technical innovations into practical solutions. My work spans developing
+      efficient foundation models, applying deep learning to healthcare challenges and advancing AI applications in legal
+      systems - bridging cutting-edge research with real-world impact.</p>
     </div>
 
-    <div class="main">
+    <!-- Research Themes -->
+    <div class="dual">
+      <div class="container">
+        <div class="subtitle">Research Themes</div>
+        <div class="interests-grid">
+          <div class="interest-category theme-ml">
+            <span class="theme-tag tag-ml">ML Methods</span><br>
+            <h3>Machine Learning Models and Systems
+            </h3>
+            <ul>
+              <li>Model interventions and editing for controllable AI</li>
+              <li>3D neural networks for medical computer vision</li>
+              <li>Tensor methods for robust and efficient deep learning</li>
+            </ul>
+          </div>
 
-      <!-- <div class="title k01"></div> -->
-      
-      <div class="title">
-        <div class="flex-item">
-          <img src="assets/images/avatar.webp" alt="Profile of Arinbjörn Kolbeinsson">
+          <div class="interest-category theme-health">
+            <h3>
+              <span class="theme-tag tag-health">Healthcare</span><br>
+              Healthcare & Biomedicine
+            </h3>
+            <ul>
+              <li>Personalised health prediction using multi-modal data</li>
+              <li>Systems for brain MRI analysis and systemic health markers</li>
+              <li>Deep learning for time series analysis in healthcare</li>
+            </ul>
+          </div>
+
+          <div class="interest-category theme-law">
+            <h3>
+              <span class="theme-tag tag-law">Legal</span><br>
+              AI & Law
+            </h3>
+            <ul>
+              <li>Dynamic standardisation in legal contracts</li>
+              <li>AI governance and regulatory frameworks</li>
+              <li>Intersection of law and AI development</li>
+            </ul>
+          </div>
         </div>
-        <!-- <div class="prefix">Hi, I'm</div> -->
-        <h1>Arinbjörn Kolbeinsson</h1>
-        <!-- <div class="suffix">PhD MRes MEng ACGI</div> -->
-        <!-- <h1 class="logo">K01</h1> -->
-        <p>My focus is on advancing research and transforming complex ideas into practical solutions, using machine learning, engineering and statistics
-        to drive progress in healthcare, biomedicine and law. I’m passionate about building from scratch, tackling challenges
-        and delivering meaningful outcomes.
-        </p>
       </div>
+    </div>
 
-      <!-- <div class="vertical container" id="About">
-        
-      </div> -->
+    <!-- Foundation Models -->
+    <div class="dual">
+      <div class="container theme-ml">
+        <div class="section-header">
+          <span class="theme-tag tag-ml">ML Methods</span>
+          <div class="subtitle">Foundation Model Interventions</div>
+        </div>
+        <img src="assets/images/composable.svg" alt="Foundation Models" class="theme-image"  style="background-color: white;">
+        <p>At the University of Virginia, I conduct research on <a href='https://arxiv.org/abs/2407.06483'>Composable
+          Interventions for Language Models</a>. My work develops frameworks to study how different types of interventions -
+        like knowledge editing, model compression, and machine unlearning - interact when applied sequentially to the same
+        model. With my collaborators, we have uncovered critical insights about
+        intervention interactions and identified gaps in current approaches. This research aims to enhance model control and
+        efficiency while maintaining performance, with implications for developing more robust multi-objective interventions.</p>
+      </div>
+    </div>
 
-      <div class="dual">
-        <div class="vertical container odd" id="Education">
+    <!-- Health Analytics -->
+    <div class="dual">
+      <div class="container theme-health">
+        <div class="section-header">
+          <span class="theme-tag tag-health">Healthcare</span>
+          <div class="subtitle">Time Series Machine Learning for Digital Health</div>
+        </div>
+        <img src="assets/images/self-supervised.svg" alt="Foundation Models" class="theme-image"
+          style="background-color: white;">
+        <p>At Evidation Health, I specialised in machine learning for health time series data. As part of the research team, I
+        developed prediction models for <a
+          href='https://evidation.com/resources/evidation-launches-flusmart-a-direct-to-person-digital-flu-monitoring-program-to-better-understand-flu-in-everyday-life'>FluSmart</a>,
+        a digital flu monitoring program that uses wearable sensor data to detect early signs of influenza-like illness. My
+        research advanced the field through novel applications of <a href='https://arxiv.org/abs/2112.13755'>self-supervised
+          learning for time series analysis</a> and development of <a
+          href='https://arxiv.org/abs/2307.16664'>generative models for wearable data</a>. In collaboration with
+        researchers from the University of Washington and Evidation, I contributed to <a
+          href='https://proceedings.mlr.press/v209/merrill23b/merrill23b.pdf'>Homekit2020</a>, a large-scale public benchmark for
+        wearable sensor data classification, containing over 14 million hours of multimodal health data. This work established
+        new frameworks for analysing temporal health data and addressing data scarcity challenges in medical research.</p>
+      </div>
+    </div>
+
+    <!-- Brain Research -->
+    <div class="dual">
+      <div class="container theme-health">
+        <div class="section-header">
+          <span class="theme-tag tag-health">Healthcare</span>
+          <div class="subtitle">Deep Learning for Health Biomarkers</div>
+        </div>
+        <img src="assets/images/brain.svg" alt="Brain Research" class="theme-image" style="background-color: white;">
+        <p>During my PhD at Imperial College London, I developed novel deep learning approaches for biomarker discovery from
+        medical imaging and genomic data. My <a
+          href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf'>doctoral research</a> introduced
+        3D-ResNet architectures for brain MRI analysis, achieving state-of-the-art accuracy in brain age prediction using over
+        21,000 scans from UK Biobank. Through innovative interpretation methods and phenome-wide association analysis, I
+        identified crucial links, and their causality, between brain structure and systemic health, particularly cardiometabolic and cognitive
+        conditions.<br><br>I also developed receptive field networks for analysing genome sequences, demonstrating how deep learning
+        can leverage both local and global genomic structure for polygenic risk prediction. This work bridges the gap between
+        raw medical data and actionable health insights through interpretable deep learning models.</p>
+      </div>
+    </div>
+
+    <!-- Tensor Methods -->
+    <div class="dual">
+      <div class="container theme-ml">
+        <div class="section-header">
+          <span class="theme-tag tag-ml">ML Methods</span>
+          <div class="subtitle">Tensor Methods for robust Machine Learning</div>
+        </div>
+        <img src="assets/images/surf_bernoulli_avgpool.png" alt="Tensor Methods" class="theme-image" style="background-color: white;">
+        <p>My research also focuses on tensor methods for deep learning, making neural networks more robust and efficient. I developed <a
+          href='https://arxiv.org/abs/1902.10758'>Tensor Dropout</a>, a novel stochastic regularisation technique that
+        significantly improves model robustness to both random and adversarial noise without requiring adversarial training.
+        Through collaborations between Samsung AI and Caltech, I contributed to <a
+          href='https://jmlr.org/papers/volume21/18-503/18-503.pdf'>Tensor Regression Networks</a>, demonstrating how tensor
+        methods can reduce parameter count while preserving model expressiveness. These innovations were particularly impactful
+        for medical imaging tasks, where they enabled more reliable predictions from 3D brain MRI data. My work established
+        theoretical foundations for using tensor methods in deep learning while delivering practical performance improvements on
+        real-world tasks.</p>
+      </div>
+    </div>
+
+    <!-- AI & Law -->
+    <div class="dual">
+      <div class="container theme-law">
+        <div class="section-header">
+          <span class="theme-tag tag-law">Legal</span>
+          <div class="subtitle">AI & Legal Systems</div>
+        </div>
+        <img src="assets/images/contracts.svg" alt="Legal AI" class="theme-image" style="background-color: white;">
+        <p>Recently completed legal studies at the University of Iceland, where my thesis research focused on <a
+          href='https://arinbjorn.is/assets/theses/Kvikir-samningsstadlar-BA-IS.pdf'> Dynamic Contract Standardisation
+          (thesis in Icelandic)</a> using AI systems. This work explored how machine learning can make standardised
+        contracts more flexible while maintaining legal validity and protecting consumer rights. My combined expertise in AI
+        development and law enables me to bridge technical innovation with regulatory frameworks, particularly in areas like
+        contract automation and consumer protection. This interdisciplinary background provides unique insights into developing
+        AI systems that are both technically sophisticated and legally compliant.</p>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="dual">
+      <div class="container">
         <div class="subtitle">Education</div>
-        <!-- <sub>Engineering & Science</sub> -->
         <ul>
-          <li>
+          <li class="education-item">
+            <div class="education-theme-indicator theme-ml"></div>
             <a href="assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf" class="education-title">
               PhD: Deep learning for health outcome prediction
             </a><br>
             <span class="education-date">Imperial College London, 2021</span>
           </li>
-          <li>
+          <li class="education-item">
+            <div class="education-theme-indicator theme-health"></div>
             <a href="assets/theses/Arinbjorn-Kolbeinsson-MRes-Report.pdf" class="education-title">
               MRes in Biomedical Research
             </a><br>
             <span class="education-date">Imperial College London, 2016</span>
           </li>
-          <li>
+          <li class="education-item">
+            <div class="education-theme-indicator theme-health"></div>
             <a href="assets/theses/Arinbjorn-Kolbeinsson-MEng-Report.pdf" class="education-title">
               MEng in Bioengineering
             </a><br>
             <span class="education-date">Imperial College London, 2015</span>
           </li>
-        <!-- </ul>
-        <ul> -->
-          <li>
+          <li class="education-item">
+            <div class="education-theme-indicator theme-law"></div>
             <a href="assets/theses/Kvikir-samningsstadlar-BA-IS.pdf" class="education-title">
               BA in Law
             </a><br>
             <span class="education-date">University of Iceland, 2024</span>
           </li>
         </ul>
-        </div>
-        <div class="vertical container odd">
-          <div class="subtitle">Interests</div>
-          <!-- <p>My work focuses on developing machine learning methods that learn from high-dimensional biomedical data including genetic,
-          brain MRI and hospital diagnosis data for personalised health outcome prediction.</p> -->
-
-          <ul>
-            <li>Personalised health outcome prediction and action optimisation</li>
-            <li>Time-series analysis to identify changes or anomalies in temporal data</li>
-            <li>Multi-modal learning</li>
-            <li>Tensor methods for improving robustness and generalisability</li>
-          </ul>
-        </div>
       </div>
+    </div>
 
-      <div class="dual">
-        <div class="vertical container" id="UVA">
-          <div class="right subtitle">University of Virginia</div>
-          <p>I am currently a visiting scholar at the <a href="https://profile.virginia.edu/sux7mp" style="color:#252525;">University of Virginia</a>
-          where I collaborate with Tom Hartvigsen on advancing the efficiency, computational speed, and ecological footprint of
-          Large Language Models (LLMs). In this capacity, I am also contributing to the development of cutting-edge model
-          editing techniques.</p>
-        </div>
-      </div>
-
-
-      <div class="dual">
-      <div class="vertical container evidation">
-        <div class="subtitle">Evidation</div>
-        <p>
-          At Evidation Health I developed machine learning methods to predict health outcomes based on high-frequency multi-modal data. I also
-        collaborated on research with academic institutions on differential privacy in machine learning.
-      <br><br>Read more on <a href="https://evidation.com"
-        style="color: #333333; font-style: italic;">evidation.com</a>
-      </p>
-      </div>
-      </div>
-
-      <div class="dual">
-      <div class="vertical container" id="Imperial College London">
-        <div class="right subtitle">Imperial College London</div>
-        <p>During my PhD at Imperial College London, I developed a deep neural network model to 
-          <a href="https://www.nature.com/articles/s41598-020-76518-z" style="color:#252525;">predict brain age difference</a>
-          using over 20,000 MRI scans from UK Biobank. Through a phenome-wide association analysis, we identified significant
-          associations between this learnt biomarker and over 40 traits, including cognitive diseases and poorer cognitive function, highlighting
-          relationships and possible causation between brain and systemic health.
-          <br><br>
-          Central to my research was developing new machine learning models to analyse these complex health data.
-           I created 
-          <a href="https://ieeexplore.ieee.org/abstract/document/9381098" style="color:#252525;">a method to learn features from 3D brain volumes</a>
-          <a href="https://arxiv.org/pdf/1902.10758.pdf" style="color:#252525;">(open access version)</a>
-          with a stochastic tensor regression layer to better
-          leverage the structural information in the images. Part of this work was done during my internship at Samsung AI, in
-          collaboration with Professor Anima Anandkumar’s group at Caltech.
-      </div>
-      </div>
-
-      <div class="dual">
-      <div class="vertical container" id="Publications">
-        <div class="right subtitle alternate">Publication spotlight</div>
+    <!-- Publications -->
+    <div class="dual">
+      <div class="container">
+        <div class="subtitle">Publication Spotlight</div>
         <ul>
-          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Kyle O'Brien, Tianjin Huang, Shanghua Gao, Shiwei Liu, Jonathan Richard Schwarz, Anurag Vaidya,
-          Faisal Mahmood, Marinka Zitnik, Tianlong Chen and Thomas Hartvigsen. "Composable Interventions for Language Models". Pre-print (2024).</li>
-          <li>Mike A Merrill, Esteban Safranchik, <span class="highlight">Arinbjörn Kolbeinsson</span>, Piyusha Gade, Ernesto Ramirez, Ludwig Schmidt, Luca Foschini,
-          Tim Althoff. "Homekit2020: A benchmark for time series classification on a large mobile sensing dataset with laboratory tested ground
-          truth of influenza infections". Conference on Health, Inference, and Learning (CHIL)
-          (2023).</li>
-          <li>Georgios Efstathiadis, Patrick Emedom-Nnamdi, <span class="highlight">Arinbjörn Kolbeinsson</span>, Jukka-Pekka Onnela, Junwei Lu. "STASIS: Reinforcement Learning Simulators for Human-Centric Real-World Environments"
+          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Kyle O'Brien, Tianjin Huang, Shanghua Gao, Shiwei Liu,
+            Jonathan Richard Schwarz, Anurag Vaidya,
+            Faisal Mahmood, Marinka Zitnik, Tianlong Chen and Thomas Hartvigsen. "Composable Interventions for Language Models".
+            Pre-print (2024).</li>
+          <li>Mike A Merrill, Esteban Safranchik, <span class="highlight">Arinbjörn Kolbeinsson</span>, Piyusha Gade, Ernesto
+            Ramirez, Ludwig Schmidt, Luca Foschini,
+            Tim Althoff. "Homekit2020: A benchmark for time series classification on a large mobile sensing dataset with
+            laboratory tested ground
+            truth of influenza infections". Conference on Health, Inference, and Learning (CHIL)
+            (2023).</li>
+          <li>Georgios Efstathiadis, Patrick Emedom-Nnamdi, <span class="highlight">Arinbjörn Kolbeinsson</span>, Jukka-Pekka
+            Onnela, Junwei Lu. "STASIS: Reinforcement Learning Simulators for Human-Centric Real-World Environments"
             Trustworthy Machine Learning for Healthcare
             (2023).</li>
           <li><span class="highlight">Arinbjörn Kolbeinsson</span> and Luca Foschini. "Generative models for wearables data."
@@ -190,28 +747,58 @@
             Furlanello, and Anima Anandkumar. "Tensor regression networks." Journal of Machine Learning Research 21, no. 123
             (2020).</li>
           <li>
-            See all on my <a href="https://scholar.google.co.uk/citations?user=MiI7lj0AAAAJ&hl=en" style="text-decoration; color:#252525; font-style: italic;">Google Scholar profile</a>.
+            See all on my <a href="https://scholar.google.co.uk/citations?user=MiI7lj0AAAAJ&hl=en"
+              style="color:#252525; font-style: italic;">Google Scholar profile</a>.
           </li>
         </ul>
       </div>
-      </div>
-
-      <div class="dual">
-      <div class="vertical container" id="Contact">
-        <div class="right subtitle alternate">Contact</div>
-        <p>Want to get in touch? Reach me on
-          <a href="https://bsky.app/profile/arinbjorn.is" style="color:#252525;">Bluesky</a>,
-          <a href="https://www.threads.net/@arinbjornkol" style="color:#252525;">Threads</a>,
-          <a rel="me" href="https://sigmoid.social/@arinbjorn" style="color:#252525";>Mastodon</a>,
-          <a href="https:/linkedin.com/in/arinbjorn" style="color:#252525;">LinkedIn</a> or 
-          <a href="https:/github.com/arinbjornk" style="color:#252525;">GitHub</a>.</p>
-        </div>
-      </div>
     </div>
 
-    <div class="footer">
-      <p class="footer-font">Copyright &copy; 2024 Arinbjörn Kolbeinsson. All rights reserved.</p>
+    <!-- Contact -->
+    <div class="dual">
+      <div class="container">
+        <div class="subtitle">Contact</div>
+        <p>Want to get in touch?<br>You can reach me at arinbjorn@virginia.edu, or find me on
+          <a href="https://bsky.app/profile/arinbjorn.is">Bluesky</a>,
+          <a href="https://www.threads.net/@arinbjornkol">Threads</a>,
+          <a href="https://sigmoid.social/@arinbjorn">Mastodon</a>,
+          <a href="https:/linkedin.com/in/arinbjorn">LinkedIn</a> or
+          <a href="https:/github.com/arinbjornk">GitHub</a>.
+        </p>
+      </div>
     </div>
-  </body>
+  </main>
 
-</html>
+  <footer style="text-align: center; padding: 2rem; color: white;">
+    <p>Copyright © 2024 Arinbjörn Kolbeinsson. All rights reserved.</p>
+  </footer>
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKXHXJS3W7"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-TKXHXJS3W7');
+  </script>
+  <script>
+    // Get current date
+    const now = new Date();
+    const month = now.getMonth() + 1; // Months are 0-indexed
+    const day = now.getDate();
+
+    // Check if it's December 31st or January 1st for fireworks
+    const isNewYears = (month === 12 && day === 31) || (month === 1 && day === 1);
+    
+    // Check if it's December or January for snow
+    const isWinter = month === 12 || month === 1;
+
+    // Initialize effects based on conditions
+    if (isNewYears) {
+      new FireworksEffect();
+    } else if (isWinter) {
+      new SnowEffect();
+    }
+  </script>
+  <script src="assets/js/fireworks.js"></script>
+  <script src="assets/js/snow.js"></script>
