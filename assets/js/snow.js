@@ -1,11 +1,9 @@
-// snow.js
 class SnowEffect {
   constructor() {
-    // Create canvas element
+    // Previous constructor code remains the same
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
     
-    // Style canvas
     this.canvas.style.position = 'absolute';
     this.canvas.style.top = '0';
     this.canvas.style.left = '0';
@@ -14,7 +12,6 @@ class SnowEffect {
     this.canvas.style.width = '100%';
     this.canvas.style.height = '100%';
     
-    // Create a container that matches body dimensions
     this.container = document.createElement('div');
     this.container.style.position = 'absolute';
     this.container.style.top = '0';
@@ -25,39 +22,31 @@ class SnowEffect {
     this.container.style.pointerEvents = 'none';
     this.container.appendChild(this.canvas);
     
-    // Add to document
     document.body.insertBefore(this.container, document.body.firstChild);
     
-    // Initialize
     this.snowflakes = [];
     this.resize();
     
-    // Event listeners
     window.addEventListener('resize', () => this.resize());
     
-    // Start animation
     this.animate();
   }
 
+  // Previous methods remain the same
   resize() {
-    // Get the actual height of the content
     const contentHeight = Math.max(
       document.body.offsetHeight,
       document.body.scrollHeight
     );
 
-    // Set container height to match content
     this.container.style.height = `${contentHeight}px`;
     
-    // Set canvas dimensions
     this.canvas.width = window.innerWidth;
     this.canvas.height = contentHeight;
     
-    // Create initial snowflakes if none exist
     if (this.snowflakes.length === 0) {
       this.snowflakes = Array(100).fill().map(() => {
         const flake = this.createSnowflake();
-        // Distribute initial y positions across the full height
         flake.y = Math.random() * this.canvas.height;
         return flake;
       });
@@ -69,7 +58,7 @@ class SnowEffect {
       x: Math.random() * this.canvas.width,
       y: atTop ? -10 : Math.random() * this.canvas.height,
       size: Math.random() * 2 + 2,
-      speedY: 0, // Will be set based on size
+      speedY: 0,
       speedX: Math.random() * 0.5 - 0.25,
       wobbleSpeed: Math.random() * 0.02,
       wobbleDistance: Math.random() * 0.8,
@@ -79,26 +68,52 @@ class SnowEffect {
   }
 
   updateSnowflake(flake) {
-    // Set speed based on size (if not already set)
     if (!flake.speedY) {
       flake.speedY = flake.size * 0.6;
     }
 
-    // Update position
     flake.y += flake.speedY;
     flake.x += Math.sin(flake.y * flake.wobbleSpeed + flake.wobbleOffset) * flake.wobbleDistance;
     flake.x += flake.speedX;
 
-    // Reset if out of bounds
     if (flake.y > this.canvas.height || flake.x < -10 || flake.x > this.canvas.width + 10) {
       Object.assign(flake, this.createSnowflake(true));
     }
   }
 
+  // Modified drawSnowflake method to better detect text
   drawSnowflake(flake) {
+    // Get the element at the snowflake's position
+    const element = document.elementFromPoint(flake.x, flake.y);
+    let isOverText = false;
+    
+    if (element) {
+      // Check if the element or its parent contains text
+      const hasText = (el) => {
+        // Check if element has direct text
+        if (el.childNodes) {
+          for (const node of el.childNodes) {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '') {
+              return true;
+            }
+          }
+        }
+        
+        // Check common text elements
+        const textElements = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'SPAN'];
+        return textElements.includes(el.tagName) && el.textContent.trim() !== '';
+      };
+
+      // Check current element and its parent
+      isOverText = hasText(element) || (element.parentElement && hasText(element.parentElement));
+    }
+
+    // Significantly reduce opacity when over text (more than before)
+    const finalOpacity = isOverText ? flake.opacity * 0.25 : flake.opacity;
+    
     this.ctx.beginPath();
     this.ctx.arc(flake.x, flake.y, flake.size, 0, Math.PI * 2);
-    this.ctx.fillStyle = `rgba(255, 255, 255, ${flake.opacity})`;
+    this.ctx.fillStyle = `rgba(255, 255, 255, ${finalOpacity})`;
     this.ctx.fill();
   }
 
@@ -114,7 +129,5 @@ class SnowEffect {
   }
 }
 
-// // Initialize snow effect when the page loads
-// window.addEventListener('load', () => {
-//   new SnowEffect();
-// });
+// Initialize snow effect when the page loads
+// new SnowEffect();
