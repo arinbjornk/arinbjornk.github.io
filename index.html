@@ -790,8 +790,8 @@
     // Check if it's December 31st or January 1st for fireworks
     const isNewYears = (month === 12 && day === 31) || (month === 1 && day === 1);
     
-    // Check if it's December or January for snow
-    const isWinter = month === 12 || month === 1;
+    // Check if it's December or January (excluding New Years dates) for snow
+    const isWinter = (month === 12 && day !== 31) || (month === 1 && day !== 1);
 
     // Initialize effects based on conditions
     if (isNewYears) {
