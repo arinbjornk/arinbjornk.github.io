@@ -127,42 +127,34 @@
         }
 
         // — GPS polling every 30 seconds —
-        const GEO_OPTS = {
-            enableHighAccuracy: true,
-            maximumAge: 0,
-            timeout: 15000
-        };
+        const HIGH_OPTS = {
+                enableHighAccuracy: true,
+                maximumAge: 0,
+                timeout: 15_000
+            };
 
-        function updatePos(pos) {
-            latitude = pos.coords.latitude;
-            longitude = pos.coords.longitude;
+            const LOW_OPTS = {
+                enableHighAccuracy: false,    // allow IP-based lookup
+                maximumAge: 300_000,    // you can cache up to 5 min
+                timeout: 10_000
+            };
 
-            document.getElementById('location').textContent =
-                `${latitude.toFixed(5)}°, ${longitude.toFixed(5)}°`;
-
-            if (!intervalId) {
-                startClock();
-                intervalId = setInterval(startClock, 1000);
+            function requestFix() {
+                // ① Try high‐accuracy first
+                navigator.geolocation.getCurrentPosition(updatePos, err => {
+                    if (err.code === err.POSITION_UNAVAILABLE) {
+                        // ② fallback to low‐accuracy if high‐accuracy fails
+                        console.warn('High-accuracy fix failed, falling back to low accuracy');
+                        navigator.geolocation.getCurrentPosition(updatePos, handleErr, LOW_OPTS);
+                    } else {
+                        handleErr(err);
+                    }
+                }, HIGH_OPTS);
             }
-        }
 
-        function handleErr(err) {
-            console.error('❌ GPS error object:', err);
-            document.getElementById('location').textContent =
-                `Error (${err.code}): ${err.message || 'unknown'}`;
-        }
-
-        function requestFix() {
-            navigator.geolocation.getCurrentPosition(updatePos, handleErr, GEO_OPTS);
-        }
-
-        if ('geolocation' in navigator) {
-            requestFix();                   // initial fix
-            setInterval(requestFix, 30000); // repeat every 30 s
-        } else {
-            document.getElementById('location').textContent =
-                'Geolocation not supported';
-        }
+            // Kick off and repeat every 30 s
+            requestFix();
+            setInterval(requestFix, 30_000);
     </script>
 </body>
 
