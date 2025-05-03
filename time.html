@@ -105,27 +105,34 @@
             }, 1000);
         }
 
-        // — GPS setup —
-        if ('geolocation' in navigator) {
-            navigator.geolocation.watchPosition(
-                pos => { /* … */ },
-                err => {
-                    // dump the complete error object
-                    console.error('❌ GPS error object:', err);
-                    console.log('GPS error (full JSON):',
-                        JSON.stringify(err, Object.getOwnPropertyNames(err), 2)
-                    );
-                    document.getElementById('location').textContent =
-                        `Error (${err.code}): ${err.message || 'no message'}`;
-                },
-                { enableHighAccuracy: true }
-            );
-        } else {
-            console.error('⚠️ Geolocation not supported');
-            document.getElementById('location').textContent =
-                'Geolocation not supported';
-        }
-    </script>
+        /* ---------- GPS setup ---------- */
+            if ('geolocation' in navigator) {
+                navigator.geolocation.watchPosition(
+                    pos => {
+                        // ① store the coordinates
+                        latitude = pos.coords.latitude;
+                        longitude = pos.coords.longitude;
+
+                        // ② put something on screen
+                        const loc = document.getElementById('location');
+                        loc.textContent =
+                            `${latitude.toFixed(5)}°, ${longitude.toFixed(5)}°`;
+
+                        // ③ start the clock once
+                        if (!intervalId) startClock();
+                    },
+                    err => {
+                        console.error('❌ GPS error object:', err);
+                        document.getElementById('location').textContent =
+                            `Error (${err.code}): ${err.message || 'unknown'}`;
+                    },
+                    { enableHighAccuracy: true }
+                );
+            } else {
+                document.getElementById('location').textContent =
+                    'Geolocation not supported';
+            }
+        </script>
 </body>
 
 </html>
