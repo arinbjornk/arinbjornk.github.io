@@ -3,47 +3,67 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Hyper-local Time</title>
     <style>
+        /* ensure gradient covers full viewport and body honours safe areas */
+        html,
+        body {
+            height: 100%;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
         html {
             font-family: 'Avenir', 'Source Sans Pro', sans-serif;
-            height: 100%;
-            width: 100%;
-            overflow-x: hidden;
             scroll-behaviour: smooth;
         }
 
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            height: 100%;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: background 1s linear;
+        /* fluid type scale */
+        :root {
+            font-size: clamp(16px, 2.5vw, 24px);
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: 2rem;
             font-weight: bold;
             margin: 0;
         }
 
         #time {
-            font-size: 4rem;
-            margin: 1rem 0;
+            font-size: 3rem;
+            margin: 0.5rem 0;
         }
 
         #location {
-            font-size: 1rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            transition: background 1s linear;
+        }
+
+        footer {
+            position: fixed;
+            bottom: env(safe-area-inset-bottom, 0);
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.875rem;
+            opacity: 0.6;
+            pointer-events: auto;
+        }
+
+        footer a {
             color: inherit;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -53,86 +73,97 @@
     <div id="time">--:--:--</div>
     <div id="location">Awaiting location…</div>
 
+    <footer>
+        <a href="https://arinbjorn.is" rel="noopener">arinbjorn.is</a>
+    </footer>
+
     <script>
         // — Helpers for solar geometry —
         const dayOfYear = d => Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
         const solarDeclination = n =>
             23.44 * Math.sin(2 * Math.PI * (n - 81) / 365) * Math.PI / 180;
         const solarElevation = (φ, δ, H) =>
-            Math.asin(Math.sin(φ) * Math.sin(δ) +
-                Math.cos(φ) * Math.cos(δ) * Math.cos(H));
+            Math.asin(
+                Math.sin(φ) * Math.sin(δ) +
+                Math.cos(φ) * Math.cos(δ) * Math.cos(H)
+            );
 
         let latitude, longitude, intervalId;
 
         function startClock() {
-            console.log('▶ startClock()');
-            intervalId = setInterval(() => {
-                const nowUTC = new Date();
-                const solarOffsetMs = longitude * 4 * 60 * 1000;
-                const solarTime = new Date(nowUTC.getTime() + solarOffsetMs);
-                console.log('⏱ solarTime:', solarTime.toISOString(), 'lon:', longitude);
+            const nowUTC = new Date();
+            const solarOffsetMs = longitude * 4 * 60 * 1000;
+            const solarTime = new Date(nowUTC.getTime() + solarOffsetMs);
 
-                // Format HH:MM:SS
-                const hh = solarTime.getUTCHours().toString().padStart(2, '0');
-                const mm = solarTime.getUTCMinutes().toString().padStart(2, '0');
-                const ss = solarTime.getUTCSeconds().toString().padStart(2, '0');
-                document.getElementById('time').textContent = `${hh}:${mm}:${ss}`;
+            // Format HH:MM:SS
+            const hh = solarTime.getUTCHours().toString().padStart(2, '0');
+            const mm = solarTime.getUTCMinutes().toString().padStart(2, '0');
+            const ss = solarTime.getUTCSeconds().toString().padStart(2, '0');
+            document.getElementById('time').textContent = `${hh}:${mm}:${ss}`;
 
-                // Solar elevation → background luminance
-                const N = dayOfYear(solarTime);
-                const δ = solarDeclination(N);
-                const φ = latitude * Math.PI / 180;
-                const H = ((solarTime.getUTCHours() + solarTime.getUTCMinutes() / 60) - 12)
-                    * 15 * Math.PI / 180;
-                const elev = solarElevation(φ, δ, H);
-                const L = Math.max(0, Math.sin(elev));  // 0 (night) → 1 (sun overhead)
+            // Solar elevation → background luminance
+            const N = dayOfYear(solarTime);
+            const δ = solarDeclination(N);
+            const φ = latitude * Math.PI / 180;
+            const H = ((solarTime.getUTCHours() + solarTime.getUTCMinutes() / 60) - 12)
+                * 15 * Math.PI / 180;
+            const elev = solarElevation(φ, δ, H);
+            const L = Math.max(0, Math.sin(elev));  // 0 (night) → 1 (sun overhead)
 
-                // Background gradient lightness
-                const topL = 10 + 40 * L;
-                const botL = 30 + 40 * L;
-                document.body.style.background =
-                    `linear-gradient(to bottom,
-             hsl(200,60%,${topL}%),
-             hsl(200,60%,${botL}%)
-           )`;
+            // Background gradient on <html>
+            const topL = 10 + 40 * L;
+            const botL = 30 + 40 * L;
+            document.documentElement.style.background =
+                `linear-gradient(to bottom,
+           hsl(200,60%,${topL}%),
+           hsl(200,60%,${botL}%)
+         )`;
 
-                // Pick text colour for contrast
-                const avgL = (topL + botL) / 2;
-                const txt = avgL > 50 ? '#252525' : '#ffffff';
-                document.querySelector('h1').style.color = txt;
-                document.getElementById('time').style.color = txt;
-                document.getElementById('location').style.color = txt;
-            }, 1000);
+            // Pick text colour for contrast and apply to all text elements
+            const avgL = (topL + botL) / 2;
+            const txt = avgL > 50 ? '#252525' : '#ffffff';
+            document.querySelectorAll('h1, #time, #location, footer a')
+                .forEach(el => el.style.color = txt);
         }
 
-        /* ---------- GPS setup ---------- */
-            if ('geolocation' in navigator) {
-                navigator.geolocation.watchPosition(
-                    pos => {
-                        // ① store the coordinates
-                        latitude = pos.coords.latitude;
-                        longitude = pos.coords.longitude;
+        // — GPS polling every 30 seconds —
+        const GEO_OPTS = {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 15000
+        };
 
-                        // ② put something on screen
-                        const loc = document.getElementById('location');
-                        loc.textContent =
-                            `${latitude.toFixed(5)}°, ${longitude.toFixed(5)}°`;
+        function updatePos(pos) {
+            latitude = pos.coords.latitude;
+            longitude = pos.coords.longitude;
 
-                        // ③ start the clock once
-                        if (!intervalId) startClock();
-                    },
-                    err => {
-                        console.error('❌ GPS error object:', err);
-                        document.getElementById('location').textContent =
-                            `Error (${err.code}): ${err.message || 'unknown'}`;
-                    },
-                    { enableHighAccuracy: true }
-                );
-            } else {
-                document.getElementById('location').textContent =
-                    'Geolocation not supported';
+            document.getElementById('location').textContent =
+                `${latitude.toFixed(5)}°, ${longitude.toFixed(5)}°`;
+
+            if (!intervalId) {
+                startClock();
+                intervalId = setInterval(startClock, 1000);
             }
-        </script>
+        }
+
+        function handleErr(err) {
+            console.error('❌ GPS error object:', err);
+            document.getElementById('location').textContent =
+                `Error (${err.code}): ${err.message || 'unknown'}`;
+        }
+
+        function requestFix() {
+            navigator.geolocation.getCurrentPosition(updatePos, handleErr, GEO_OPTS);
+        }
+
+        if ('geolocation' in navigator) {
+            requestFix();                   // initial fix
+            setInterval(requestFix, 30000); // repeat every 30 s
+        } else {
+            document.getElementById('location').textContent =
+                'Geolocation not supported';
+        }
+    </script>
 </body>
 
 </html>
