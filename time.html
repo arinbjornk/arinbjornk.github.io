@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Hyper-local Time</title>
+    <style>
+        html {
+            font-family: 'Avenir', 'Source Sans Pro', sans-serif;
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+            scroll-behaviour: smooth;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background 1s linear;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        #time {
+            font-size: 4rem;
+            margin: 1rem 0;
+        }
+
+        #location {
+            font-size: 1rem;
+            color: inherit;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Hyper-local Time</h1>
+    <div id="time">--:--:--</div>
+    <div id="location">Awaiting location…</div>
+
+    <script>
+        // — Helpers for solar geometry —
+        const dayOfYear = d => Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
+        const solarDeclination = n =>
+            23.44 * Math.sin(2 * Math.PI * (n - 81) / 365) * Math.PI / 180;
+        const solarElevation = (φ, δ, H) =>
+            Math.asin(Math.sin(φ) * Math.sin(δ) +
+                Math.cos(φ) * Math.cos(δ) * Math.cos(H));
+
+        let latitude, longitude, intervalId;
+
+        function startClock() {
+            console.log('▶ startClock()');
+            intervalId = setInterval(() => {
+                const nowUTC = new Date();
+                const solarOffsetMs = longitude * 4 * 60 * 1000;
+                const solarTime = new Date(nowUTC.getTime() + solarOffsetMs);
+                console.log('⏱ solarTime:', solarTime.toISOString(), 'lon:', longitude);
+
+                // Format HH:MM:SS
+                const hh = solarTime.getUTCHours().toString().padStart(2, '0');
+                const mm = solarTime.getUTCMinutes().toString().padStart(2, '0');
+                const ss = solarTime.getUTCSeconds().toString().padStart(2, '0');
+                document.getElementById('time').textContent = `${hh}:${mm}:${ss}`;
+
+                // Solar elevation → background luminance
+                const N = dayOfYear(solarTime);
+                const δ = solarDeclination(N);
+                const φ = latitude * Math.PI / 180;
+                const H = ((solarTime.getUTCHours() + solarTime.getUTCMinutes() / 60) - 12)
+                    * 15 * Math.PI / 180;
+                const elev = solarElevation(φ, δ, H);
+                const L = Math.max(0, Math.sin(elev));  // 0 (night) → 1 (sun overhead)
+
+                // Background gradient lightness
+                const topL = 10 + 40 * L;
+                const botL = 30 + 40 * L;
+                document.body.style.background =
+                    `linear-gradient(to bottom,
+             hsl(200,60%,${topL}%),
+             hsl(200,60%,${botL}%)
+           )`;
+
+                // Pick text colour for contrast
+                const avgL = (topL + botL) / 2;
+                const txt = avgL > 50 ? '#252525' : '#ffffff';
+                document.querySelector('h1').style.color = txt;
+                document.getElementById('time').style.color = txt;
+                document.getElementById('location').style.color = txt;
+            }, 1000);
+        }
+
+        // — GPS setup —
+        if ('geolocation' in navigator) {
+            navigator.geolocation.watchPosition(
+                pos => { /* … */ },
+                err => {
+                    // dump the complete error object
+                    console.error('❌ GPS error object:', err);
+                    console.log('GPS error (full JSON):',
+                        JSON.stringify(err, Object.getOwnPropertyNames(err), 2)
+                    );
+                    document.getElementById('location').textContent =
+                        `Error (${err.code}): ${err.message || 'no message'}`;
+                },
+                { enableHighAccuracy: true }
+            );
+        } else {
+            console.error('⚠️ Geolocation not supported');
+            document.getElementById('location').textContent =
+                'Geolocation not supported';
+        }
+    </script>
+</body>
+
+</html>
