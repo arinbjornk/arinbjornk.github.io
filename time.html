@@ -126,6 +126,24 @@
                 .forEach(el => el.style.color = txt);
         }
 
+        // — Position update & error handlers —
+        function updatePos(pos) {
+            latitude = pos.coords.latitude;
+            longitude = pos.coords.longitude;
+            document.getElementById('location').textContent =
+                `${latitude.toFixed(5)}°, ${longitude.toFixed(5)}°`;
+            if (!intervalId) {
+                startClock();
+                intervalId = setInterval(startClock, 1000);
+            }
+        }
+
+        function handleErr(err) {
+            console.error('❌ GPS error object:', err);
+            document.getElementById('location').textContent =
+                `Error (${err.code}): ${err.message || 'unknown'}`;
+        }
+
         // — GPS polling every 30 seconds —
         const HIGH_OPTS = {
                 enableHighAccuracy: true,
