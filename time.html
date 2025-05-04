@@ -47,7 +47,7 @@
             align-items: center;
             justify-content: center;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-            transition: background 1s linear;
+            transition: all 1s linear;
         }
 
         footer {
@@ -59,16 +59,94 @@
             font-size: 0.875rem;
             opacity: 0.6;
             pointer-events: auto;
+            padding: 1rem;
         }
 
         footer a {
             color: inherit;
             text-decoration: none;
         }
+
+        /* Floating gradient styles */
+        .background {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .floating-gradient {
+            position: absolute;
+            width: 100vh;
+            height: 80vh;
+            filter: blur(calc(100vh / 3));
+            border-radius: 30% 120% 120% 30% / 30% 30% 70% 70%;
+            z-index: -1;
+        }
+
+        .gradient-1 {
+            animation: rotate 25s cubic-bezier(0.8, 0.2, 0.2, 0.8) alternate infinite;
+        }
+
+        .gradient-2 {
+            animation: rotate2 25s cubic-bezier(0.8, 0.2, 0.2, 0.8) alternate infinite;
+        }
+
+        .gradient-3 {
+            animation: rotate3 25s cubic-bezier(0.8, 0.2, 0.2, 0.8) alternate infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: translateX(0vw) translateY(0vh) rotate(40deg);
+            }
+
+            50% {
+                transform: translateX(60vw) translateY(20vh) rotate(360deg);
+            }
+
+            100% {
+                transform: translateX(60vw) translateY(0vh) rotate(110deg);
+            }
+        }
+
+        @keyframes rotate2 {
+            0% {
+                transform: translateX(60vw) translateY(15vh) rotate(0deg);
+            }
+
+            50% {
+                transform: translateX(50vw) translateY(200vh) rotate(360deg);
+            }
+
+            100% {
+                transform: translateX(10vw) translateY(15vh) rotate(0deg);
+            }
+        }
+
+        @keyframes rotate3 {
+            0% {
+                transform: translateX(50vw) translateY(400%) rotate(360deg);
+            }
+
+            50% {
+                transform: translateX(10vw) translateY(15vh) rotate(0deg);
+            }
+
+            100% {
+                transform: translateX(60vw) translateY(200vh) rotate(0deg);
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Background div for floating gradients -->
+    <div class="background">
+        <!-- Floating gradients will be added here by JS -->
+    </div>
+
     <h1>Hyper-local Time</h1>
     <div id="time">--:--:--</div>
     <div id="location">Awaiting location…</div>
@@ -101,37 +179,134 @@
             const ss = solarTime.getUTCSeconds().toString().padStart(2, '0');
             document.getElementById('time').textContent = `${hh}:${mm}:${ss}`;
 
-            // Solar elevation → background luminance
+            // Solar elevation → background luminance with enhanced calculations
             const N = dayOfYear(solarTime);
             const δ = solarDeclination(N);
             const φ = latitude * Math.PI / 180;
             const H = ((solarTime.getUTCHours() + solarTime.getUTCMinutes() / 60) - 12)
                 * 15 * Math.PI / 180;
             const elev = solarElevation(φ, δ, H);
-            const L = Math.max(0, Math.sin(elev));  // 0 (night) → 1 (sun overhead)
 
-            // Background gradient on <html>
-            const topL = 10 + 40 * L;
-            const botL = 30 + 40 * L;
-            document.documentElement.style.background =
-                `linear-gradient(to bottom,
-           hsl(200,60%,${topL}%),
-           hsl(200,60%,${botL}%)
-         )`;
+            // Enhanced non-linear mapping for more dramatic effect
+            const L = Math.pow(Math.max(0, Math.sin(elev)), 0.6);  // 0 (night) → 1 (sun overhead)
 
-            // Pick text colour for contrast and apply to all text elements
-            const avgL = (topL + botL) / 2;
-            const txt = avgL > 50 ? '#252525' : '#ffffff';
+            // Time of day determination for color schemes
+            let timeOfDay;
+            if (L < 0.08) timeOfDay = 'night';
+            else if (L < 0.2) timeOfDay = 'dawn-dusk';
+            else if (L < 0.8) timeOfDay = 'day';
+            else timeOfDay = 'noon';
+
+            // Colors based on your website theme
+            let gradients = {
+                night: {
+                    // Dark blues and purples from your site theme
+                    background: `linear-gradient(to bottom, 
+                        hsl(252, 82%, ${Math.max(5, 8 * L)}%), 
+                        hsl(240, 80%, ${Math.max(10, 15 * L)}%)
+                    )`,
+                    floating: [
+                        { color: `hsl(252, 82%, ${Math.max(10, 15 * L)}%)`, opacity: 0.6 },
+                        { color: `hsl(240, 70%, ${Math.max(12, 18 * L)}%)`, opacity: 0.5 },
+                        { color: `hsl(230, 70%, ${Math.max(15, 20 * L)}%)`, opacity: 0.4 }
+                    ]
+                },
+                'dawn-dusk': {
+                    // Blends of orange (#FFB74D) and purple from your site
+                    background: `linear-gradient(to bottom, 
+                        hsl(${252 - (252 - 30) * (L - 0.08) / 0.12}, 82%, ${15 + 35 * (L - 0.08) / 0.12}%), 
+                        hsl(${240 - (240 - 40) * (L - 0.08) / 0.12}, 80%, ${20 + 30 * (L - 0.08) / 0.12}%)
+                    )`,
+                    floating: [
+                        { color: `hsl(30, 85%, ${40 + 20 * (L - 0.08) / 0.12}%)`, opacity: 0.7 }, // Orange from #FFB74D
+                        { color: `hsl(${210 - (210 - 30) * (L - 0.08) / 0.12}, 80%, ${30 + 25 * (L - 0.08) / 0.12}%)`, opacity: 0.6 },
+                        { color: `hsl(${252 - (252 - 40) * (L - 0.08) / 0.12}, 75%, ${25 + 30 * (L - 0.08) / 0.12}%)`, opacity: 0.5 }
+                    ]
+                },
+                day: {
+                    // Blues similar to your #65C0D4 and #A4E7ED
+                    background: `linear-gradient(to bottom, 
+                        hsl(190, ${65 + 15 * L}%, ${40 + 40 * L}%), 
+                        hsl(185, ${60 + 15 * L}%, ${50 + 30 * L}%)
+                    )`,
+                    floating: [
+                        { color: `hsl(180, 80%, ${60 + 20 * L}%)`, opacity: 0.7 }, // Light turquoise like #A4E7ED
+                        { color: `hsl(158, 82%, ${50 + 30 * L}%)`, opacity: 0.6 }, // Green from your gradient
+                        { color: `hsl(190, 75%, ${55 + 25 * L}%)`, opacity: 0.5 }  // Light blue
+                    ]
+                },
+                noon: {
+                    // Bright blues similar to your #E2F6F8
+                    background: `linear-gradient(to bottom, 
+                        hsl(185, 80%, ${75 + 15 * L}%), 
+                        hsl(180, 75%, ${80 + 15 * L}%)
+                    )`,
+                    floating: [
+                        { color: `hsl(180, 70%, ${85 + 10 * L}%)`, opacity: 0.6 }, // Very light blue
+                        { color: `hsl(158, 72%, ${80 + 15 * L}%)`, opacity: 0.55 }, // Light green
+                        { color: `hsl(190, 65%, ${85 + 10 * L}%)`, opacity: 0.5 }  // Very light turquoise
+                    ]
+                }
+            };
+
+            // Apply background gradient to html
+            document.documentElement.style.background = gradients[timeOfDay].background;
+
+            // Create or update floating gradient elements to match your website
+            ensureFloatingElements(3); // Make sure we have 3 floating elements
+
+            // Update each floating element
+            const floatingElements = document.querySelectorAll('.floating-gradient');
+            floatingElements.forEach((el, index) => {
+                const style = gradients[timeOfDay].floating[index];
+                el.style.backgroundColor = style.color;
+                el.style.opacity = style.opacity;
+
+                // Adjust animation speed based on time of day
+                // Slower at night, faster during the day
+                const speed = timeOfDay === 'night' ? '40s' :
+                    timeOfDay === 'dawn-dusk' ? '35s' : '25s';
+
+                el.style.animationDuration = speed;
+            });
+
+            // Pick text color for contrast
+            const isDark = L < 0.3; // Simplified logic based on L value
+            const txtColor = isDark ? '#ffffff' : '#252525';
             document.querySelectorAll('h1, #time, #location, footer a')
-                .forEach(el => el.style.color = txt);
+                .forEach(el => el.style.color = txtColor);
+        }
+
+        // Function to ensure we have the right number of floating gradient elements
+        function ensureFloatingElements(count) {
+            // Get background container
+            let background = document.querySelector('.background');
+
+            // Get existing floating elements
+            const existing = document.querySelectorAll('.floating-gradient');
+
+            // Remove extra elements if needed
+            for (let i = count; i < existing.length; i++) {
+                existing[i].remove();
+            }
+
+            // Add new elements if needed
+            for (let i = existing.length; i < count; i++) {
+                const el = document.createElement('div');
+                el.className = 'floating-gradient';
+                el.classList.add(`gradient-${i + 1}`);
+                background.appendChild(el);
+            }
         }
 
         // — Position update & error handlers —
         function updatePos(pos) {
             latitude = pos.coords.latitude;
             longitude = pos.coords.longitude;
+            const latDir = latitude >= 0 ? 'N' : 'S';
+            const lonDir = longitude >= 0 ? 'E' : 'W';
             document.getElementById('location').textContent =
-                `${latitude.toFixed(5)}°, ${longitude.toFixed(5)}°`;
+                `${Math.abs(latitude).toFixed(5)}°${latDir}, ${Math.abs(longitude).toFixed(5)}°${lonDir}`;
             if (!intervalId) {
                 startClock();
                 intervalId = setInterval(startClock, 1000);
@@ -146,33 +321,33 @@
 
         // — GPS polling every 30 seconds —
         const HIGH_OPTS = {
-                enableHighAccuracy: true,
-                maximumAge: 0,
-                timeout: 15_000
-            };
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 15_000
+        };
 
-            const LOW_OPTS = {
-                enableHighAccuracy: false,    // allow IP-based lookup
-                maximumAge: 300_000,    // you can cache up to 5 min
-                timeout: 10_000
-            };
+        const LOW_OPTS = {
+            enableHighAccuracy: false,    // allow IP-based lookup
+            maximumAge: 300_000,    // you can cache up to 5 min
+            timeout: 10_000
+        };
 
-            function requestFix() {
-                // ① Try high‐accuracy first
-                navigator.geolocation.getCurrentPosition(updatePos, err => {
-                    if (err.code === err.POSITION_UNAVAILABLE) {
-                        // ② fallback to low‐accuracy if high‐accuracy fails
-                        console.warn('High-accuracy fix failed, falling back to low accuracy');
-                        navigator.geolocation.getCurrentPosition(updatePos, handleErr, LOW_OPTS);
-                    } else {
-                        handleErr(err);
-                    }
-                }, HIGH_OPTS);
-            }
+        function requestFix() {
+            // ① Try high‐accuracy first
+            navigator.geolocation.getCurrentPosition(updatePos, err => {
+                if (err.code === err.POSITION_UNAVAILABLE) {
+                    // ② fallback to low‐accuracy if high‐accuracy fails
+                    console.warn('High-accuracy fix failed, falling back to low accuracy');
+                    navigator.geolocation.getCurrentPosition(updatePos, handleErr, LOW_OPTS);
+                } else {
+                    handleErr(err);
+                }
+            }, HIGH_OPTS);
+        }
 
-            // Kick off and repeat every 30 s
-            requestFix();
-            setInterval(requestFix, 30_000);
+        // Kick off and repeat every 30 s
+        requestFix();
+        setInterval(requestFix, 30_000);
     </script>
 </body>
 
