@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>European Train Routes - Financial Times Style</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- MapLibre GL JS -->
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=MetricWeb:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'MetricWeb', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f6f2e7;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(246, 242, 231, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 300px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #333;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-overlay h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #990f3d;
+        }
+
+        .map-overlay p {
+            margin: 0 0 10px 0;
+            color: #666;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .legend-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .maplibregl-ctrl-logo {
+            display: none !important;
+        }
+
+        .basemap-selector {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .basemap-selector label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .basemap-selector select {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            background: white;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .tracking-toggle {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .tracking-toggle label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .tracking-toggle input[type="checkbox"] {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div class="map-overlay">
+        <h3>European Train Network</h3>
+        <p>Major railway corridors connecting European cities. Routes animate at different speeds reflecting real-world journey times.</p>
+        <div class="legend" id="legend"></div>
+        <div class="basemap-selector">
+            <label for="basemap-select">Map Style:</label>
+            <select id="basemap-select">
+                <option value="positron">Clean Terrain</option>
+                <option value="voyager">Detailed Terrain</option>
+                <option value="humanitarian">Humanitarian OSM</option>
+                <option value="topo">Topographic</option>
+                <option value="dark">Dark Mode</option>
+            </select>
+        </div>
+        <div class="tracking-toggle">
+            <label>
+                <input type="checkbox" id="tracking-toggle" />
+                Camera Tracking
+            </label>
+        </div>
+    </div>
+
+    <script>
+        // Financial Times inspired color palette
+        const FT_COLORS = {
+            background: '#f6f2e7',
+            primary: '#990f3d',
+            secondary: '#0d7680',
+            accent1: '#a7a59b',
+            accent2: '#cc8b65',
+            accent3: '#6f7755',
+            text: '#33302e',
+            textLight: '#66605c'
+        };
+
+        // Professional route colors inspired by FT style
+        const ROUTE_COLORS = [
+            '#990f3d', // FT burgundy
+            '#0d7680', // teal
+            '#cc8b65', // warm orange
+            '#6f7755', // olive
+            '#9e2f50', // deep pink
+            '#2e6091', // blue
+            '#b85aa6', // purple
+            '#0f5499'  // navy
+        ];
+
+        // Enhanced route colors for topographic map - same hues, better contrast
+        const TOPO_ROUTE_COLORS = [
+            '#d91b60', // brighter burgundy/pink
+            '#00acc1', // brighter teal/cyan
+            '#ff8a50', // brighter orange
+            '#8bc34a', // brighter green
+            '#e91e63', // bright pink
+            '#1976d2', // bright blue
+            '#9c27b0', // bright purple
+            '#3f51b5'  // bright indigo
+        ];
+
+        // Basemap styles configuration
+        const BASEMAP_STYLES = {
+            positron: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            voyager: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+            dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+            humanitarian: {
+                version: 8,
+                sources: {
+                    'osm-humanitarian': {
+                        type: 'raster',
+                        tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'],
+                        tileSize: 256,
+                        attribution: '© OpenStreetMap contributors'
+                    }
+                },
+                layers: [
+                    {
+                        id: 'osm-humanitarian',
+                        type: 'raster',
+                        source: 'osm-humanitarian',
+                        paint: {
+                            'raster-opacity': 0.75,
+                            'raster-saturation': -0.5,
+                            'raster-contrast': -0.2,
+                            'raster-brightness-max': 0.9
+                        }
+                    }
+                ]
+            },
+            topo: {
+                version: 8,
+                sources: {
+                    'stamen-terrain': {
+                        type: 'raster',
+                        tiles: ['https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}.png'],
+                        tileSize: 256,
+                        attribution: '© Stadia Maps, © Stamen Design, © OpenMapTiles, © OpenStreetMap contributors'
+                    }
+                },
+                layers: [
+                    {
+                        id: 'stamen-terrain',
+                        type: 'raster',
+                        source: 'stamen-terrain',
+                        paint: {
+                            'raster-opacity': 0.9,
+                            'raster-saturation': -0.3
+                        }
+                    }
+                ]
+            }
+        };
+
+        // Initialize map with globe projection (like Apple Maps)
+        const map = new maplibregl.Map({
+            container: 'map',
+            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            center: [10.0, 50.0],
+            zoom: 4.2,
+            antialias: true,
+            maxZoom: 10,
+            minZoom: 2,
+            projection: 'globe'
+        });
+
+        // Route animation state
+        let routeAnimations = [];
+        let pulseAnimations = [];
+        
+        map.on('load', () => {
+            // Add strong terrain hillshade - much more visible
+            map.addSource('hillshade', {
+                type: 'raster',
+                tiles: [
+                    'https://basemaps.cartocdn.com/rastertiles/voyager_hillshade/{z}/{x}/{y}.png'
+                ],
+                tileSize: 256
+            });
+            map.addLayer({
+                id: 'hillshade',
+                type: 'raster',
+                source: 'hillshade',
+                paint: { 
+                    'raster-opacity': 0.8,
+                    'raster-contrast': 0.5,
+                    'raster-brightness-max': 1.5
+                }
+            }, map.getStyle().layers[0].id);
+
+            // Route file mappings with descriptive names
+            const routeFiles = [
+                { file: 'caledonian.geojson', name: 'London → Edinburgh (Caledonian Sleeper)', speed: 0.8 },
+                { file: 'GBCH.geojson', name: 'London → Switzerland', speed: 1.2 },
+                { file: 'ITA.geojson', name: 'Bari → Switzerland', speed: 1.5 },
+                { file: 'ROMCH.geojson', name: 'Romania → Switzerland', speed: 0.8 },
+                { file: 'baltic express.geojson', name: 'Switzerland → Helsinki (Baltic Express)', speed: 0.5 },
+                { file: 'centraleurope.geojson', name: 'Linz → Prague → Bratislava', speed: 1.0 },
+                { file: 'venice.geojson', name: 'Switzerland → Venice', speed: 0.9 }
+            ];
+
+            // Load all route files
+            const routePromises = routeFiles.map(routeInfo => 
+                fetch(`data/${routeInfo.file}`)
+                    .then(res => res.json())
+                    .then(data => ({ ...routeInfo, data }))
+            );
+
+            Promise.all(routePromises)
+                .then(routeDataArray => {
+                    const routes = [];
+                    
+                    // Process each route file
+                    routeDataArray.forEach((routeInfo, routeIndex) => {
+                        const { data, name, speed } = routeInfo;
+                        
+                        // Process each feature in the GeoJSON
+                        if (data.features && data.features.length > 0) {
+                            let allCoords = [];
+                            
+                            // For Baltic Express, include all features (land + ferry)
+                            // For other routes, only include the first feature
+                            const featuresToProcess = routeInfo.file === 'baltic express.geojson' 
+                                ? data.features 
+                                : [data.features[0]];
+                            
+                            featuresToProcess.forEach(feature => {
+                                let coords;
+                                
+                                switch (feature.geometry.type) {
+                                    case 'Polygon':
+                                        coords = feature.geometry.coordinates[0];
+                                        break;
+                                    case 'MultiLineString':
+                                        coords = feature.geometry.coordinates.flat();
+                                        break;
+                                    default:
+                                        coords = feature.geometry.coordinates;
+                                }
+                                
+                                // Add coordinates to the combined route
+                                allCoords = allCoords.concat(coords);
+                            });
+                            
+                            routes.push({
+                                type: 'Feature',
+                                geometry: { type: 'LineString', coordinates: allCoords },
+                                properties: {
+                                    routeId: routeIndex,
+                                    name: name,
+                                    speed: speed,
+                                    color: ROUTE_COLORS[routeIndex % ROUTE_COLORS.length]
+                                }
+                            });
+                        }
+                    });
+
+                    // Store routes globally for basemap switching
+                    globalRoutes = routes;
+
+                    // Create legend with click functionality
+                    const legend = document.getElementById('legend');
+                    routes.forEach((route, i) => {
+                        const item = document.createElement('div');
+                        item.className = 'legend-item';
+                        item.innerHTML = `
+                            <div class="legend-color" style="background: ${route.properties.color}"></div>
+                            <span>${route.properties.name}</span>
+                        `;
+                        
+                        // Add click handler to redraw route
+                        item.addEventListener('click', () => {
+                            redrawRoute(i, route);
+                        });
+                        
+                        legend.appendChild(item);
+                    });
+
+                    // Add simple route layers - no glow, no pulses, just basic routes
+                    routes.forEach((route, i) => {
+                        const routeId = `route-${i}`;
+                        
+                        // Get appropriate opacity for current basemap
+                        const routeOpacity = currentBasemap === 'topo' ? 1.0 : 0.9;
+                        
+                        // Add source
+                        map.addSource(routeId, {
+                            type: 'geojson',
+                            data: route,
+                            lineMetrics: true
+                        });
+
+                        // Add simple opaque route layer with sharp gradient for step tracing
+                        map.addLayer({
+                            id: routeId,
+                            type: 'line',
+                            source: routeId,
+                            layout: {
+                                'line-cap': 'round',
+                                'line-join': 'round'
+                            },
+                            paint: {
+                                'line-width': 3,
+                                'line-opacity': routeOpacity,
+                                'line-gradient': [
+                                    'step',
+                                    ['line-progress'],
+                                    route.properties.color, // Full color from 0 to cutoff
+                                    1, 'rgba(0,0,0,0)' // Transparent after cutoff
+                                ]
+                            }
+                        });
+                    });
+
+                    // Start simple route tracing animation
+                    startSimpleTracingAnimation(routes);
+                })
+                .catch(err => console.error('Could not load routes:', err));
+        });
+
+        // Simple animation tracking
+        let routeAnimationFrames = new Map();
+        let trackingEnabled = false;
+        let cameraAnimationFrame = null;
+
+        function startSimpleTracingAnimation(routes) {
+            // For now, just show all routes immediately - we'll add tracing back later
+            routes.forEach((route, i) => {
+                const routeId = `route-${i}`;
+                // Routes are already visible, nothing to do
+            });
+        }
+
+        // Function to sample route coordinates based on distance for camera tracking
+        function sampleRouteCoordinates(coordinates, numSamples = 10) {
+            // Calculate cumulative distances along the route
+            const distances = [0];
+            let totalDistance = 0;
+            
+            for (let i = 1; i < coordinates.length; i++) {
+                const dx = coordinates[i][0] - coordinates[i-1][0];
+                const dy = coordinates[i][1] - coordinates[i-1][1];
+                const segmentDistance = Math.sqrt(dx * dx + dy * dy);
+                totalDistance += segmentDistance;
+                distances.push(totalDistance);
+            }
+            
+            // Sample waypoints based on distance progress
+            const samples = [];
+            for (let i = 0; i < numSamples; i++) {
+                const progress = i / (numSamples - 1); // 0 to 1
+                const targetDistance = progress * totalDistance;
+                
+                // Find the coordinate pair that contains this distance
+                let coordIndex = 0;
+                for (let j = 1; j < distances.length; j++) {
+                    if (distances[j] >= targetDistance) {
+                        coordIndex = j - 1;
+                        break;
+                    }
+                }
+                
+                // Interpolate between coordinates based on distance
+                if (coordIndex < coordinates.length - 1) {
+                    const segmentProgress = (targetDistance - distances[coordIndex]) / (distances[coordIndex + 1] - distances[coordIndex]);
+                    const coord1 = coordinates[coordIndex];
+                    const coord2 = coordinates[coordIndex + 1];
+                    
+                    const interpolatedCoord = [
+                        coord1[0] + (coord2[0] - coord1[0]) * segmentProgress,
+                        coord1[1] + (coord2[1] - coord1[1]) * segmentProgress
+                    ];
+                    
+                    samples.push({
+                        coord: interpolatedCoord,
+                        progress: progress
+                    });
+                } else {
+                    samples.push({
+                        coord: coordinates[coordinates.length - 1],
+                        progress: progress
+                    });
+                }
+            }
+            
+            return samples;
+        }
+
+        // Catmull-Rom spline interpolation for smooth curved camera movement
+        function catmullRomSpline(p0, p1, p2, p3, t) {
+            const t2 = t * t;
+            const t3 = t2 * t;
+            
+            return [
+                0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3),
+                0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)
+            ];
+        }
+
+        // Route redraw with step tracing animation and optional camera tracking
+        function simpleRedrawRoute(routeIndex, route) {
+            const routeId = `route-${routeIndex}`;
+            
+            // Cancel any existing animations
+            if (routeAnimationFrames.has(routeId)) {
+                cancelAnimationFrame(routeAnimationFrames.get(routeId));
+                routeAnimationFrames.delete(routeId);
+            }
+            if (cameraAnimationFrame) {
+                cancelAnimationFrame(cameraAnimationFrame);
+                cameraAnimationFrame = null;
+            }
+            
+            // Fade out first
+            map.setPaintProperty(routeId, 'line-opacity', 0);
+            
+            // Wait, then start tracing
+            setTimeout(() => {
+                // Reset route to show nothing using step gradient
+                map.setPaintProperty(routeId, 'line-gradient', [
+                    'step',
+                    ['line-progress'],
+                    route.properties.color,
+                    0, 'rgba(0,0,0,0)' // Nothing visible initially
+                ]);
+                
+                // Set opacity back to visible
+                const currentBasemap = document.getElementById('basemap-select').value;
+                const routeOpacity = currentBasemap === 'topo' ? 1.0 : 0.9;
+                map.setPaintProperty(routeId, 'line-opacity', routeOpacity);
+                
+                // Prepare camera tracking if enabled
+                let trackingWaypoints = [];
+                let currentWaypointIndex = 0;
+                let nextWaypointIndex = 1;
+                if (trackingEnabled) {
+                    trackingWaypoints = sampleRouteCoordinates(route.geometry.coordinates, 10);
+                }
+                
+                // Start step tracing animation
+                const speedMultiplier = trackingEnabled ? 0.3 : 1.0;
+                const duration = (3000 / route.properties.speed) * (1 / speedMultiplier); // Duration based on route speed
+                const startTime = performance.now();
+                
+                function animate(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    // Use linear progress when tracking is enabled, eased when not
+                    const easedProgress = trackingEnabled ? progress : (progress < 0.5 
+                        ? 2 * progress * progress 
+                        : 1 - Math.pow(-2 * progress + 2, 3) / 2);
+                    
+                    // Update step gradient to trace the route as a step function
+                    // Show solid color from 0 to current progress, then transparent
+                    map.setPaintProperty(routeId, 'line-gradient', [
+                        'step',
+                        ['line-progress'],
+                        route.properties.color,
+                        easedProgress, 'rgba(0,0,0,0)'
+                    ]);
+                    
+                    // Update camera position if tracking is enabled - smooth curved movement
+                    if (trackingEnabled && trackingWaypoints.length > 0) {
+                        let targetWaypoint = null;
+                        
+                        // Find which waypoints we should be between based on current progress
+                        for (let i = 0; i < trackingWaypoints.length - 1; i++) {
+                            if (easedProgress >= trackingWaypoints[i].progress && easedProgress <= trackingWaypoints[i + 1].progress) {
+                                currentWaypointIndex = i;
+                                nextWaypointIndex = i + 1;
+                                break;
+                            }
+                        }
+                        
+                        // If we're at the end, just use the last waypoint
+                        if (easedProgress >= trackingWaypoints[trackingWaypoints.length - 1].progress) {
+                            targetWaypoint = trackingWaypoints[trackingWaypoints.length - 1].coord;
+                        } else if (currentWaypointIndex < trackingWaypoints.length && nextWaypointIndex < trackingWaypoints.length) {
+                            const currentWP = trackingWaypoints[currentWaypointIndex];
+                            const nextWP = trackingWaypoints[nextWaypointIndex];
+                            
+                            // Calculate how far we are between these two waypoints
+                            const segmentProgress = (easedProgress - currentWP.progress) / (nextWP.progress - currentWP.progress);
+                            const clampedSegmentProgress = Math.max(0, Math.min(1, segmentProgress));
+                            
+                            // Get control points for smooth spline curve
+                            const p0 = currentWaypointIndex > 0 ? trackingWaypoints[currentWaypointIndex - 1].coord : currentWP.coord;
+                            const p1 = currentWP.coord;
+                            const p2 = nextWP.coord;
+                            const p3 = nextWaypointIndex < trackingWaypoints.length - 1 ? trackingWaypoints[nextWaypointIndex + 1].coord : nextWP.coord;
+                            
+                            // Use Catmull-Rom spline for smooth curved movement
+                            targetWaypoint = catmullRomSpline(p0, p1, p2, p3, clampedSegmentProgress);
+                        }
+                        
+                        if (targetWaypoint) {
+                            map.setCenter(targetWaypoint);
+                        }
+                    }
+                    
+                    if (progress < 1) {
+                        const frameId = requestAnimationFrame(animate);
+                        routeAnimationFrames.set(routeId, frameId);
+                    } else {
+                        routeAnimationFrames.delete(routeId);
+                        // Ensure it's fully visible at the end
+                        map.setPaintProperty(routeId, 'line-gradient', [
+                            'step',
+                            ['line-progress'],
+                            route.properties.color,
+                            1, 'rgba(0,0,0,0)'
+                        ]);
+                    }
+                }
+                
+                const frameId = requestAnimationFrame(animate);
+                routeAnimationFrames.set(routeId, frameId);
+                
+            }, 500); // Wait 500ms after fade out before starting trace
+        }
+
+        // Add subtle zoom-based styling
+        map.on('zoom', () => {
+            const zoom = map.getZoom();
+            const opacity = Math.max(0.6, Math.min(1, (zoom - 3) / 4));
+            
+            // Keep terrain strong and visible
+            map.setPaintProperty('hillshade', 'raster-opacity', 0.8 * opacity);
+        });
+
+        // Add navigation controls
+        map.addControl(new maplibregl.NavigationControl({
+            showCompass: false,
+            showZoom: true
+        }), 'top-right');
+
+        // Add fullscreen control
+        map.addControl(new maplibregl.FullscreenControl(), 'top-right');
+
+        // Simple function to redraw a specific route
+        function redrawRoute(routeIndex, route) {
+            simpleRedrawRoute(routeIndex, route);
+        }
+
+        // Store route states globally for basemap switching
+        let globalRoutes = [];
+        let routeAnimationStates = new Map();
+        let currentBasemap = 'positron'; // Track current basemap
+
+        // Function to get appropriate colors for current basemap
+        function getRouteColors(basemapType) {
+            return basemapType === 'topo' ? TOPO_ROUTE_COLORS : ROUTE_COLORS;
+        }
+
+        // Add tracking toggle functionality
+        document.getElementById('tracking-toggle').addEventListener('change', function(e) {
+            trackingEnabled = e.target.checked;
+        });
+
+        // Add basemap selector functionality
+        document.getElementById('basemap-select').addEventListener('change', function(e) {
+            const selectedStyle = e.target.value;
+            const newStyle = BASEMAP_STYLES[selectedStyle];
+            currentBasemap = selectedStyle;
+            const routeColors = getRouteColors(selectedStyle);
+            
+            // Clear previous state to avoid conflicts
+            routeAnimationStates.clear();
+            
+            // Change basemap style
+            map.setStyle(newStyle);
+            
+            map.once('style.load', () => {
+                // Re-add terrain for styles that need it
+                if (selectedStyle !== 'humanitarian' && selectedStyle !== 'topo') {
+                    map.addSource('hillshade', {
+                        type: 'raster',
+                        tiles: [
+                            'https://basemaps.cartocdn.com/rastertiles/voyager_hillshade/{z}/{x}/{y}.png'
+                        ],
+                        tileSize: 256
+                    });
+                    map.addLayer({
+                        id: 'hillshade',
+                        type: 'raster',
+                        source: 'hillshade',
+                        paint: { 
+                            'raster-opacity': selectedStyle === 'dark' ? 0.4 : 0.8,
+                            'raster-contrast': 0.5,
+                            'raster-brightness-max': 1.5
+                        }
+                    }, map.getStyle().layers[0].id);
+                }
+                
+                // Re-add all route layers with updated colors for the new basemap
+                console.log(`Restoring ${globalRoutes.length} routes for basemap: ${selectedStyle}`);
+                
+                globalRoutes.forEach((route, i) => {
+                    const routeId = `route-${i}`;
+                    const newColor = routeColors[i % routeColors.length];
+                    
+                    console.log(`Restoring route ${i} with color ${newColor}`);
+                    
+                    // Update route color for new basemap
+                    route.properties.color = newColor;
+                    
+                    // Re-add source
+                    map.addSource(routeId, {
+                        type: 'geojson',
+                        data: route,
+                        lineMetrics: true
+                    });
+
+                    // Get appropriate opacity for current basemap
+                    const routeOpacity = selectedStyle === 'topo' ? 1.0 : 0.9;
+
+                    // Add simple opaque route layer with step gradient (same as default)
+                    map.addLayer({
+                        id: routeId,
+                        type: 'line',
+                        source: routeId,
+                        layout: {
+                            'line-cap': 'round',
+                            'line-join': 'round'
+                        },
+                        paint: {
+                            'line-width': 3,
+                            'line-opacity': routeOpacity,
+                            'line-gradient': [
+                                'step',
+                                ['line-progress'],
+                                newColor, // Full color from 0 to cutoff
+                                1, 'rgba(0,0,0,0)' // Transparent after cutoff
+                            ]
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
