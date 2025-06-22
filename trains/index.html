@@ -4,8 +4,72 @@
 
 <head>
     <meta charset="utf-8">
-    <title>European Train Routes - Financial Times Style</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Train Journeys by Arinbjörn | Interactive European Railway Map</title>
+    <meta name="description" content="Explore long-distance train routes across Europe taken by Arinbjörn Kolbeinsson. Interactive map with animated route tracing and camera tracking.">
+    <meta name="keywords" content="Arinbjörn Kolbeinsson, train travel, European railways, interactive map, train routes, rail travel, Europe travel, railway visualization">
+    <meta name="author" content="Arinbjörn Kolbeinsson">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://arinbjorn.is/trains/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Social media meta tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@arinbjornkol">
+    <meta name="twitter:title" content="Train Journeys by Arinbjörn | Interactive European Railway Map">
+    <meta name="twitter:description" content="Explore long-distance train routes across Europe with interactive animations and camera tracking.">
+    <meta name="twitter:image" content="https://arinbjorn.is/trains/preview.jpg">
+    
+    <meta property="og:title" content="Train Journeys by Arinbjörn | Interactive European Railway Map">
+    <meta property="og:url" content="https://arinbjorn.is/trains/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://arinbjorn.is/trains/preview.jpg">
+    <meta property="og:description" content="Explore long-distance train routes across Europe taken by Arinbjörn Kolbeinsson. Interactive map with animated route tracing and camera tracking.">
+    <meta property="og:site_name" content="Arinbjörn Kolbeinsson">
+
+    <!-- Structured data for search engines -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Train Journeys by Arinbjörn",
+        "description": "Interactive map showing long-distance train routes across Europe taken by Arinbjörn Kolbeinsson",
+        "url": "https://arinbjorn.is/trains/",
+        "author": {
+            "@type": "Person",
+            "name": "Arinbjörn Kolbeinsson",
+            "url": "https://arinbjorn.is",
+            "sameAs": [
+                "https://scholar.google.co.uk/citations?user=MiI7lj0AAAAJ&hl=en",
+                "https://github.com/arinbjornk",
+                "https://www.linkedin.com/in/arinbjorn",
+                "https://bsky.app/profile/arinbjorn.is",
+                "https://x.com/arinbjornkol"
+            ]
+        },
+        "mainEntity": {
+            "@type": "Map",
+            "name": "European Train Routes by Arinbjörn",
+            "description": "Interactive visualization of train journeys across Europe"
+        },
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Home",
+                    "item": "https://arinbjorn.is"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Train Journeys",
+                    "item": "https://arinbjorn.is/trains/"
+                }
+            ]
+        }
+    }
+    </script>
     <!-- MapLibre GL JS -->
     <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
     <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
@@ -97,6 +161,22 @@
             color: #ffffff;
         }
 
+        .map-overlay.dark-theme .attributions p {
+            color: #aaa;
+        }
+
+        .map-overlay.dark-theme .attributions a {
+            color: #aaa;
+        }
+
+        .map-overlay.dark-theme .attributions a:hover {
+            color: #ffffff;
+        }
+
+        .map-overlay.dark-theme .legend-item.animating::after {
+            color: #ffffff;
+        }
+
         .map-overlay.dark-theme .basemap-btn {
             background: rgba(255, 255, 255, 0.1);
             border-color: rgba(255, 255, 255, 0.2);
@@ -153,6 +233,47 @@
             width: 16px;
             height: 3px;
             border-radius: 2px;
+            position: relative;
+        }
+
+        .legend-item {
+            position: relative;
+        }
+
+        .legend-item.animating::after {
+            content: '';
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            width: 14px;
+            height: 14px;
+            background-image: url('train-wheel.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transform: translateY(-50%);
+            animation: trainWheel 1.5s linear infinite;
+            transform-origin: center center;
+        }
+
+        .legend-item.completed::after {
+            content: '✓';
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            color: #4CAF50;
+            font-weight: bold;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes trainWheel {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
         }
 
         .maplibregl-ctrl-logo {
@@ -261,6 +382,28 @@
 
         .back-link:hover {
             opacity: 0.7;
+        }
+
+        .attributions {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .attributions p {
+            font-size: 10px;
+            line-height: 1.4;
+            color: #999;
+            margin: 0;
+        }
+
+        .attributions a {
+            color: #999;
+            text-decoration: none;
+        }
+
+        .attributions a:hover {
+            color: var(--primary-color);
         }
 
         /* Desktop header styling */
@@ -376,6 +519,16 @@
                 padding: 4px 6px;
             }
 
+            .attributions {
+                margin-top: 10px;
+                padding-top: 10px;
+                display: none;
+            }
+
+            .map-overlay.expanded .attributions {
+                display: block;
+            }
+
             /* Dark theme mobile adjustments */
             .map-overlay.dark-theme .expand-button {
                 color: #ffffff;
@@ -391,12 +544,12 @@
 <body>
     <div id="map"></div>
     <div class="map-overlay">
-        <h3>Arinbjörn's Train Journeys</h3>
+        <h3>Train Journeys by Arinbjörn</h3>
         <div class="mobile-header">
-            <h3>Arinbjörn's Train Journeys</h3>
+            <h3>Train Journeys by Arinbjörn</h3>
             <button class="expand-button" id="expand-btn">▲</button>
         </div>
-        <p>Long-distance train routes I've taken across Europe. Each journey traces at different speeds reflecting the actual travel times.</p>
+        <p>Long-distance train routes Arinbjörn has taken across Europe. Click any route below to watch it trace out on the map.</p>
         <p style="margin-top: 15px; font-size: 11px;"><a href="../index.html" class="back-link">← arinbjorn.is</a></p>
         <div class="legend" id="legend"></div>
         <div class="basemap-selector">
@@ -410,11 +563,16 @@
             </div>
         </div>
         <div class="camera-mode">
-            <label>Camera Mode:</label>
+            <label>View Mode:</label>
             <div class="camera-buttons">
-                <button class="camera-btn active" data-mode="static">Fixed</button>
-                <button class="camera-btn" data-mode="tracking">Tracking</button>
+                <button class="camera-btn active" data-mode="static">Static View</button>
+                <button class="camera-btn" data-mode="tracking">Follow Route</button>
             </div>
+        </div>
+        <div class="attributions">
+            <p>Rail data: <a href="https://signal.eu.org/osm" target="_blank">signal.eu.org/osm</a><br>
+            Maps: Carto, OpenStreetMap, Stamen, Stadia Maps<br>
+            Built with MapLibre GL JS</p>
         </div>
     </div>
 
@@ -549,7 +707,7 @@
                 { file: 'caledonian.geojson', name: 'London → Edinburgh (Caledonian Sleeper)', speed: 0.8 },
                 { file: 'GBCH.geojson', name: 'London → Switzerland', speed: 1.2 },
                 { file: 'ITA.geojson', name: 'Bari → Switzerland', speed: 1.5 },
-                { file: 'ROMCH.geojson', name: 'Romania → Switzerland', speed: 0.8 },
+                { file: 'ROMCH.geojson', name: 'Bucharest → Switzerland', speed: 0.8 },
                 { file: 'baltic express.geojson', name: 'Switzerland → Helsinki (Baltic Express)', speed: 0.5 },
                 { file: 'centraleurope.geojson', name: 'Linz → Prague → Bratislava', speed: 1.0 },
                 { file: 'venice.geojson', name: 'Switzerland → Venice', speed: 0.9 }
@@ -619,6 +777,7 @@
                     routes.forEach((route, i) => {
                         const item = document.createElement('div');
                         item.className = 'legend-item';
+                        item.id = `legend-item-${i}`;
                         item.innerHTML = `
                             <div class="legend-color" style="background: ${route.properties.color}"></div>
                             <span>${route.properties.name}</span>
@@ -626,6 +785,10 @@
                         
                         // Add click handler to redraw route
                         item.addEventListener('click', () => {
+                            // Set animating state
+                            item.classList.remove('completed');
+                            item.classList.add('animating');
+                            
                             redrawRoute(i, route);
                             
                             // On mobile, collapse the panel after clicking a route
@@ -694,6 +857,12 @@
             // Animate all routes on initial load with stagger
             routes.forEach((route, i) => {
                 setTimeout(() => {
+                    // Set animating state for initial load
+                    const legendItem = document.getElementById(`legend-item-${i}`);
+                    if (legendItem) {
+                        legendItem.classList.add('animating');
+                    }
+                    
                     simpleRedrawRoute(i, route);
                 }, i * 400); // 400ms stagger between each route
             });
@@ -879,6 +1048,13 @@
                             route.properties.color,
                             1, 'rgba(0,0,0,0)'
                         ]);
+                        
+                        // Update legend item state to completed
+                        const legendItem = document.getElementById(`legend-item-${routeIndex}`);
+                        if (legendItem) {
+                            legendItem.classList.remove('animating');
+                            legendItem.classList.add('completed');
+                        }
                     }
                 }
                 
