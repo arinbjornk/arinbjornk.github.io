@@ -9,15 +9,29 @@
     <!-- MapLibre GL JS -->
     <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
     <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=MetricWeb:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Fonts matching your website -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400&display=swap" rel="stylesheet">
     <style>
+        /* CSS Variables matching your website */
+        :root {
+            --primary-color: #252525;
+            --text-color: #333333;
+            --background-card: rgba(255, 255, 255, 0.25);
+            --theme-rail: #8B4513;      /* Retro brown for railways */
+            --theme-vintage: #D2691E;   /* Vintage orange */
+            --transition-standard: all 0.3s ease;
+        }
+
         html,
         body {
             margin: 0;
             padding: 0;
             height: 100%;
-            font-family: 'MetricWeb', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: #f6f2e7;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #65C0D4;
         }
 
         #map {
@@ -29,23 +43,83 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            background: rgba(246, 242, 231, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-            max-width: 300px;
+            background: var(--background-card);
+            backdrop-filter: blur(30px);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 350px;
             font-size: 14px;
-            line-height: 1.4;
-            color: #333;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            line-height: 1.5;
+            color: var(--text-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: var(--transition-standard);
+        }
+
+        .map-overlay.dark-theme {
+            background: rgba(0, 0, 0, 0.7);
+            color: #ffffff;
+        }
+
+        .map-overlay.dark-theme h3 {
+            color: #ffffff;
+        }
+
+        .map-overlay.dark-theme p {
+            color: #cccccc;
+        }
+
+        .map-overlay.dark-theme .basemap-selector label {
+            color: #cccccc;
+        }
+
+        .map-overlay.dark-theme .camera-mode label {
+            color: #cccccc;
+        }
+
+        .map-overlay.dark-theme .camera-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .map-overlay.dark-theme .camera-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .map-overlay.dark-theme .camera-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: #ffffff;
+        }
+
+        .map-overlay.dark-theme .back-link {
+            color: #ffffff;
+        }
+
+        .map-overlay.dark-theme .basemap-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .map-overlay.dark-theme .basemap-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .map-overlay.dark-theme .basemap-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: #ffffff;
         }
 
         .map-overlay h3 {
+            font-family: 'Source Serif 4', serif;
             margin: 0 0 10px 0;
             font-size: 16px;
-            font-weight: 600;
-            color: #990f3d;
+            font-weight: 400;
+            color: var(--primary-color);
         }
 
         .map-overlay p {
@@ -55,7 +129,7 @@
 
         .legend {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 8px;
             margin-top: 15px;
         }
@@ -99,34 +173,217 @@
             color: #666;
         }
 
-        .basemap-selector select {
-            width: 100%;
-            padding: 6px 8px;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            background: white;
-            font-size: 12px;
-            color: #333;
+        .basemap-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
         }
 
-        .tracking-toggle {
+        .basemap-btn {
+            flex: 1;
+            min-width: 50px;
+            padding: 6px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            font-size: 10px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition-standard);
+        }
+
+        .basemap-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .basemap-btn.active {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .camera-mode {
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
 
-        .tracking-toggle label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .camera-mode label {
+            display: block;
+            margin-bottom: 8px;
             font-size: 12px;
             font-weight: 500;
             color: #666;
-            cursor: pointer;
         }
 
-        .tracking-toggle input[type="checkbox"] {
-            margin: 0;
+        .camera-buttons {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .camera-btn {
+            flex: 1;
+            padding: 6px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            font-size: 10px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition-standard);
+        }
+
+        .camera-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .camera-btn.active {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition-standard);
+        }
+
+        .back-link:hover {
+            opacity: 0.7;
+        }
+
+        /* Desktop header styling */
+        .map-overlay h3 {
+            font-family: 'Source Serif 4', serif;
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--primary-color);
+        }
+
+        /* Hide mobile elements on desktop */
+        .mobile-header {
+            display: none;
+        }
+
+        .expand-button {
+            display: none;
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .map-overlay {
+                position: fixed;
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                max-width: none;
+                border-radius: 1rem 1rem 0 0;
+                padding: 1rem;
+                transform: translateY(calc(100% - 80px));
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+
+            .map-overlay.expanded {
+                transform: translateY(0);
+            }
+
+            .map-overlay > h3:not(.mobile-header h3) {
+                display: none; /* Hide desktop header on mobile */
+            }
+
+            .mobile-header h3 {
+                font-size: 14px;
+                margin: 0;
+            }
+
+            .map-overlay p {
+                font-size: 12px;
+                margin: 0 0 8px 0;
+                display: none; /* Hide description when collapsed */
+            }
+
+            .map-overlay.expanded p {
+                display: block;
+            }
+
+            .mobile-header {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+                cursor: pointer;
+            }
+
+            .expand-button {
+                display: block !important;
+                background: none;
+                border: none;
+                color: var(--text-color);
+                font-size: 18px;
+                cursor: pointer;
+                padding: 4px;
+                border-radius: 50%;
+                transition: var(--transition-standard);
+            }
+
+            .expand-button:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .legend {
+                display: none;
+            }
+
+            .map-overlay.expanded .legend {
+                display: flex;
+            }
+
+            .basemap-buttons {
+                gap: 4px;
+            }
+
+            .basemap-btn {
+                font-size: 9px;
+                padding: 4px 6px;
+                min-width: 40px;
+            }
+
+            .camera-mode {
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+
+            .camera-mode label {
+                font-size: 11px;
+            }
+
+            .camera-btn {
+                font-size: 9px;
+                padding: 4px 6px;
+            }
+
+            /* Dark theme mobile adjustments */
+            .map-overlay.dark-theme .expand-button {
+                color: #ffffff;
+            }
+
+            .map-overlay.dark-theme .mobile-header h3 {
+                color: #ffffff;
+            }
         }
     </style>
 </head>
@@ -134,24 +391,30 @@
 <body>
     <div id="map"></div>
     <div class="map-overlay">
-        <h3>European Train Network</h3>
-        <p>Major railway corridors connecting European cities. Routes animate at different speeds reflecting real-world journey times.</p>
+        <h3>Arinbjörn's Train Journeys</h3>
+        <div class="mobile-header">
+            <h3>Arinbjörn's Train Journeys</h3>
+            <button class="expand-button" id="expand-btn">▲</button>
+        </div>
+        <p>Long-distance train routes I've taken across Europe. Each journey traces at different speeds reflecting the actual travel times.</p>
+        <p style="margin-top: 15px; font-size: 11px;"><a href="../index.html" class="back-link">← arinbjorn.is</a></p>
         <div class="legend" id="legend"></div>
         <div class="basemap-selector">
-            <label for="basemap-select">Map Style:</label>
-            <select id="basemap-select">
-                <option value="positron">Clean Terrain</option>
-                <option value="voyager">Detailed Terrain</option>
-                <option value="humanitarian">Humanitarian OSM</option>
-                <option value="topo">Topographic</option>
-                <option value="dark">Dark Mode</option>
-            </select>
+            <label>Map Style:</label>
+            <div class="basemap-buttons">
+                <button class="basemap-btn active" data-style="positron">Clean</button>
+                <button class="basemap-btn" data-style="voyager">Detailed</button>
+                <button class="basemap-btn" data-style="humanitarian">OSM</button>
+                <button class="basemap-btn" data-style="topo">Topo</button>
+                <button class="basemap-btn" data-style="dark">Dark</button>
+            </div>
         </div>
-        <div class="tracking-toggle">
-            <label>
-                <input type="checkbox" id="tracking-toggle" />
-                Camera Tracking
-            </label>
+        <div class="camera-mode">
+            <label>Camera Mode:</label>
+            <div class="camera-buttons">
+                <button class="camera-btn active" data-mode="static">Fixed</button>
+                <button class="camera-btn" data-mode="tracking">Tracking</button>
+            </div>
         </div>
     </div>
 
@@ -364,6 +627,16 @@
                         // Add click handler to redraw route
                         item.addEventListener('click', () => {
                             redrawRoute(i, route);
+                            
+                            // On mobile, collapse the panel after clicking a route
+                            if (window.innerWidth <= 768) {
+                                const overlay = document.querySelector('.map-overlay');
+                                const expandBtn = document.getElementById('expand-btn');
+                                if (overlay.classList.contains('expanded')) {
+                                    overlay.classList.remove('expanded');
+                                    expandBtn.textContent = '▲';
+                                }
+                            }
                         });
                         
                         legend.appendChild(item);
@@ -384,6 +657,7 @@
                         });
 
                         // Add simple opaque route layer with sharp gradient for step tracing
+                        // Start with routes invisible (0 progress) for the initial animation
                         map.addLayer({
                             id: routeId,
                             type: 'line',
@@ -399,7 +673,7 @@
                                     'step',
                                     ['line-progress'],
                                     route.properties.color, // Full color from 0 to cutoff
-                                    1, 'rgba(0,0,0,0)' // Transparent after cutoff
+                                    0, 'rgba(0,0,0,0)' // Start completely invisible
                                 ]
                             }
                         });
@@ -417,10 +691,11 @@
         let cameraAnimationFrame = null;
 
         function startSimpleTracingAnimation(routes) {
-            // For now, just show all routes immediately - we'll add tracing back later
+            // Animate all routes on initial load with stagger
             routes.forEach((route, i) => {
-                const routeId = `route-${i}`;
-                // Routes are already visible, nothing to do
+                setTimeout(() => {
+                    simpleRedrawRoute(i, route);
+                }, i * 400); // 400ms stagger between each route
             });
         }
 
@@ -518,7 +793,7 @@
                 ]);
                 
                 // Set opacity back to visible
-                const currentBasemap = document.getElementById('basemap-select').value;
+                const currentBasemap = document.querySelector('.basemap-btn.active').dataset.style;
                 const routeOpacity = currentBasemap === 'topo' ? 1.0 : 0.9;
                 map.setPaintProperty(routeId, 'line-opacity', routeOpacity);
                 
@@ -646,14 +921,70 @@
             return basemapType === 'topo' ? TOPO_ROUTE_COLORS : ROUTE_COLORS;
         }
 
-        // Add tracking toggle functionality
-        document.getElementById('tracking-toggle').addEventListener('change', function(e) {
-            trackingEnabled = e.target.checked;
+        // Add camera mode functionality
+        document.querySelectorAll('.camera-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const selectedMode = e.target.dataset.mode;
+                
+                // If clicking the already active button, do nothing
+                if (e.target.classList.contains('active')) {
+                    return;
+                }
+                
+                // Remove active class from all camera buttons
+                document.querySelectorAll('.camera-btn').forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                e.target.classList.add('active');
+                
+                // Update tracking state
+                trackingEnabled = selectedMode === 'tracking';
+            });
+        });
+
+        // Add mobile expand/collapse functionality
+        document.getElementById('expand-btn').addEventListener('click', function() {
+            const overlay = document.querySelector('.map-overlay');
+            const isExpanded = overlay.classList.contains('expanded');
+            
+            if (isExpanded) {
+                overlay.classList.remove('expanded');
+                this.textContent = '▲';
+            } else {
+                overlay.classList.add('expanded');
+                this.textContent = '▼';
+            }
+        });
+
+        // Also allow tapping the header to expand/collapse
+        document.querySelector('.mobile-header').addEventListener('click', function(e) {
+            // Only trigger if clicking the header itself, not the button
+            if (e.target !== document.getElementById('expand-btn')) {
+                document.getElementById('expand-btn').click();
+            }
         });
 
         // Add basemap selector functionality
-        document.getElementById('basemap-select').addEventListener('change', function(e) {
-            const selectedStyle = e.target.value;
+        document.querySelectorAll('.basemap-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const selectedStyle = e.target.dataset.style;
+                
+                // If clicking the already active button, do nothing
+                if (e.target.classList.contains('active')) {
+                    return;
+                }
+                
+                // Remove active class from all buttons
+                document.querySelectorAll('.basemap-btn').forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                e.target.classList.add('active');
+                
+                // Toggle dark theme class on overlay
+                const overlay = document.querySelector('.map-overlay');
+                if (selectedStyle === 'dark') {
+                    overlay.classList.add('dark-theme');
+                } else {
+                    overlay.classList.remove('dark-theme');
+                }
             const newStyle = BASEMAP_STYLES[selectedStyle];
             currentBasemap = selectedStyle;
             const routeColors = getRouteColors(selectedStyle);
@@ -729,6 +1060,7 @@
                         }
                     });
                 });
+            });
             });
         });
     </script>
