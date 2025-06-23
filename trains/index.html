@@ -107,21 +107,29 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            background: var(--background-card);
-            backdrop-filter: blur(30px);
-            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px) saturate(200%);
+            -webkit-backdrop-filter: blur(10px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1.5rem;
             padding: 2rem;
             max-width: 350px;
             font-size: 14px;
             line-height: 1.5;
             color: var(--text-color);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            box-shadow: 
+                0 8px 32px rgba(31, 38, 135, 0.2), 
+                inset 0 2px 10px rgba(255, 255, 255, 0.3);
             transition: var(--transition-standard);
         }
 
         .map-overlay.dark-theme {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.3);
             color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3), 
+                inset 0 2px 10px rgba(255, 255, 255, 0.1);
         }
 
         .map-overlay.dark-theme h3 {
@@ -645,21 +653,21 @@
             topo: {
                 version: 8,
                 sources: {
-                    'stamen-terrain': {
+                    'opentopomap': {
                         type: 'raster',
-                        tiles: ['https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}.png'],
+                        tiles: ['https://a.tile.opentopomap.org/{z}/{x}/{y}.png'],
                         tileSize: 256,
-                        attribution: '© Stadia Maps, © Stamen Design, © OpenMapTiles, © OpenStreetMap contributors'
+                        attribution: '© OpenTopoMap (CC-BY-SA), © OpenStreetMap contributors'
                     }
                 },
                 layers: [
                     {
-                        id: 'stamen-terrain',
+                        id: 'opentopomap',
                         type: 'raster',
-                        source: 'stamen-terrain',
+                        source: 'opentopomap',
                         paint: {
-                            'raster-opacity': 0.9,
-                            'raster-saturation': -0.3
+                            'raster-opacity': 0.85,
+                            'raster-saturation': -0.2
                         }
                     }
                 ]
@@ -667,15 +675,41 @@
         };
 
         // Initialize map with globe projection (like Apple Maps)
+        // Center shifted left on desktop to show British Isles and accommodate legend placement
+        const isDesktop = window.innerWidth >= 768;
+        const mapCenter = isDesktop ? [5.0, 50.0] : [10.0, 50.0]; // Shift left on desktop to show UK
+        
+        // Detect system theme preference and set initial basemap
+        const prefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initialStyle = prefersDarkTheme ? 'dark' : 'positron';
+        const initialBasemapStyle = prefersDarkTheme ? BASEMAP_STYLES.dark : BASEMAP_STYLES.positron;
+        
         const map = new maplibregl.Map({
             container: 'map',
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-            center: [10.0, 50.0],
+            style: initialBasemapStyle,
+            center: mapCenter,
             zoom: 4.2,
             antialias: true,
             maxZoom: 10,
             minZoom: 2,
             projection: 'globe'
+        });
+
+        // Set initial button states and theme based on system preference
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update button states
+            document.querySelectorAll('.basemap-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.style === initialStyle) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Apply dark theme to overlay if dark basemap is selected
+            const overlay = document.querySelector('.map-overlay');
+            if (initialStyle === 'dark') {
+                overlay.classList.add('dark-theme');
+            }
         });
 
         // Route animation state
@@ -1090,7 +1124,7 @@
         // Store route states globally for basemap switching
         let globalRoutes = [];
         let routeAnimationStates = new Map();
-        let currentBasemap = 'positron'; // Track current basemap
+        let currentBasemap = initialStyle; // Track current basemap (starts with system preference)
 
         // Function to get appropriate colors for current basemap
         function getRouteColors(basemapType) {
@@ -1235,6 +1269,17 @@
                             ]
                         }
                     });
+                });
+                
+                // After re-adding routes, check and update legend states
+                // If any routes were animating, they should be marked as completed
+                // since the new basemap shows all routes fully drawn
+                globalRoutes.forEach((route, i) => {
+                    const legendItem = document.getElementById(`legend-item-${i}`);
+                    if (legendItem && legendItem.classList.contains('animating')) {
+                        legendItem.classList.remove('animating');
+                        legendItem.classList.add('completed');
+                    }
                 });
             });
             });
