@@ -478,6 +478,231 @@
       }
     }
 
+    /* Project cards styling */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+      width: 90%;
+    }
+
+    .project-card {
+      padding: 0;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: var(--transition-standard);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 320px;
+    }
+
+    .project-card:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .project-visual {
+      height: 140px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 1rem 1rem 0 0;
+    }
+
+    .project-content {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .project-card p {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: var(--text-color);
+      margin-bottom: 1.5rem;
+      flex: 1;
+      max-width: none;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--primary-color);
+      text-decoration: none;
+      border: 2px solid var(--primary-color);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: var(--transition-standard);
+      background: transparent;
+    }
+
+    .project-link:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .project-link-disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      border-color: #999;
+      color: #999;
+    }
+
+    .project-link-disabled:hover {
+      background: transparent;
+      color: #999;
+      transform: none;
+    }
+
+    /* Simple route tracing animation */
+    .train-animation {
+      position: relative;
+      width: 120px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .route-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--primary-color);
+      border-radius: 50%;
+    }
+
+    .start-dot {
+      top: 50%;
+      left: 20px;
+      transform: translateY(-50%);
+    }
+
+    .end-dot {
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+    }
+
+    .route-line {
+      position: absolute;
+      top: 50%;
+      left: 28px;
+      width: 64px;
+      height: 2px;
+      stroke: var(--primary-color);
+      stroke-width: 2;
+      fill: none;
+      stroke-dasharray: 64;
+      stroke-dashoffset: 64;
+      animation: routeTrace 4s ease-in-out infinite;
+      transform: translateY(-50%);
+    }
+
+    @keyframes routeTrace {
+      0% {
+        stroke-dasharray: 64;
+        stroke-dashoffset: 64;
+      }
+      25% {
+        stroke-dasharray: 64;
+        stroke-dashoffset: 0;
+      }
+      50% {
+        stroke-dasharray: 64;
+        stroke-dashoffset: 0;
+      }
+      75% {
+        stroke-dasharray: 64 64;
+        stroke-dashoffset: 0;
+      }
+      100% {
+        stroke-dasharray: 64 64;
+        stroke-dashoffset: -64;
+      }
+    }
+
+    /* Fast clock animation (120x speed) */
+    .time-animation {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .clock-face {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border: 3px solid var(--primary-color);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .clock-hand {
+      position: absolute;
+      background: var(--primary-color);
+      transform-origin: bottom center;
+      border-radius: 2px;
+      left: 50%;
+    }
+
+    .hour-hand {
+      width: 3px;
+      height: 24px;
+      bottom: 50%;
+      margin-left: -1.5px;
+      /* Animation will be applied via JavaScript */
+    }
+
+    .minute-hand {
+      width: 2px;
+      height: 32px;
+      bottom: 50%;
+      margin-left: -1px;
+      /* Animation will be applied via JavaScript */
+    }
+
+    .clock-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes hourRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes minuteRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
     /* Media queries */
     @media (max-width: 768px) {
       :root {
@@ -507,6 +732,19 @@
 
       .theme-category {
         width: 100%;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .project-card .project-content {
+        padding: 1.25rem;
+      }
+
+      .project-visual {
+        height: 120px;
       }
     }
   </style>
@@ -790,6 +1028,48 @@
       </div>
     </div>
 
+    <!-- Side Projects -->
+    <div class="dual">
+      <div class="container">
+        <div class="subtitle">Side Projects</div>
+        <p>Personal explorations and experimental projects where I combine creativity with code.</p>
+        <div class="projects-grid">
+          <div class="project-card">
+            <div class="project-visual">
+              <div class="train-animation">
+                <div class="route-dot start-dot"></div>
+                <div class="route-dot end-dot"></div>
+                <svg class="route-line">
+                  <path d="M 0 0 L 64 0" />
+                </svg>
+              </div>
+            </div>
+            <div class="project-content">
+              <h3>European Train Journeys</h3>
+              <p>Personal travel log of long-distance train routes I've actually taken across Europe, visualized on an interactive map with animated route tracing and camera tracking.</p>
+              <a href="/trains" class="project-link">View My Journeys →</a>
+            </div>
+          </div>
+          <div class="project-card">
+            <div class="project-visual">
+              <div class="time-animation">
+                <div class="clock-face">
+                  <div class="clock-hand hour-hand" id="hour-hand"></div>
+                  <div class="clock-hand minute-hand" id="minute-hand"></div>
+                  <div class="clock-center"></div>
+                </div>
+              </div>
+            </div>
+            <div class="project-content">
+              <h3>Hyper-local Time</h3>
+              <p>Location-based solar time display that adjusts to your exact position on Earth, showing true local solar time with dynamic backgrounds.</p>
+              <a href="time.html" class="project-link">View Solar Time →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Contact -->
     <div class="dual">
       <div class="container">
@@ -812,6 +1092,43 @@
 
   <script src="assets/js/fireworks.js"></script>
   <script src="assets/js/snow.js"></script>
+  <script>
+    // Initialize clock hands at random positions
+    document.addEventListener('DOMContentLoaded', function() {
+      const hourHand = document.getElementById('hour-hand');
+      const minuteHand = document.getElementById('minute-hand');
+      
+      if (hourHand && minuteHand) {
+        // Random starting positions (0-360 degrees)
+        const randomHourStart = Math.floor(Math.random() * 360);
+        const randomMinuteStart = Math.floor(Math.random() * 360);
+        
+        // Create dynamic keyframes that start from random positions
+        const hourKeyframes = `
+          @keyframes hourRotateRandom {
+            from { transform: rotate(${randomHourStart}deg); }
+            to { transform: rotate(${randomHourStart + 360}deg); }
+          }
+        `;
+        
+        const minuteKeyframes = `
+          @keyframes minuteRotateRandom {
+            from { transform: rotate(${randomMinuteStart}deg); }
+            to { transform: rotate(${randomMinuteStart + 360}deg); }
+          }
+        `;
+        
+        // Inject the dynamic keyframes into the page
+        const style = document.createElement('style');
+        style.textContent = hourKeyframes + minuteKeyframes;
+        document.head.appendChild(style);
+        
+        // Apply the animations with random starting points
+        hourHand.style.animation = 'hourRotateRandom 360s linear infinite';
+        minuteHand.style.animation = 'minuteRotateRandom 30s linear infinite';
+      }
+    });
+  </script>
   <script>
     // Get current date
       const now = new Date();
