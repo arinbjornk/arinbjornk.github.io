@@ -4,7 +4,7 @@
 <head>
   <title>Arinbjörn Kolbeinsson</title>
   <meta name="description"
-    content="Arinbjörn Kolbeinsson: Machine learning, personalised medicine, research, tensor methods and more">
+    content="Arinbjörn Kolbeinsson — Machine learning scientist at UVA and Imperial College London. Research in healthcare AI, foundation models and legal technology.">
   <meta name="keywords" content="Arinbjörn Kolbeinsson, machine learning scientist, personalised medicine, AI & law, tensor methods, deep learning, healthcare AI, legal AI" />
   <meta name="author" content="Arinbjörn Kolbeinsson" />
   <meta name="robots" content="index, follow" />
@@ -17,14 +17,14 @@
   <meta name="twitter:site" content="@arinbjornkol" />
   <meta name="twitter:title" content="Arinbjörn Kolbeinsson" />
   <meta name="twitter:description"
-    content="Machine learning, personalised medicine, research, tensor methods and more." />
+    content="Machine learning scientist at UVA and Imperial College London. Research in healthcare AI, foundation models and legal technology." />
   <meta name="twitter:image" content="favicons/apple-touch-icon.png" />
   <meta property="og:title" content="Arinbjörn Kolbeinsson" />
   <meta property="og:url" content="https://arinbjorn.is" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://arinbjorn.is/assets/images/banner.jpg" />
   <meta property="og:description"
-    content="Machine learning, personalised medicine, research, tensor methods and more." />
+    content="Machine learning scientist at UVA and Imperial College London. Research in healthcare AI, foundation models and legal technology." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,8 +37,8 @@
     /* Theme and base variables */
     :root {
       --primary-color: #252525;
-      --text-color: #333333;
-      --background-card: rgba(255, 255, 255, 0.25);
+      --text-color: #222222;
+      --background-card: rgba(255, 255, 255, 0.08);
       --theme-ml: #2064B0;      /* Darker blue */
       --theme-health: #207F73;  /* Darker teal */
       --theme-law: #663399;     /* Darker purple */
@@ -65,7 +65,7 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background-color: #65C0D4;
+      background-color: #78D0E8;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -138,33 +138,6 @@
       box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
     }
 
-    .container::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 4px;
-      height: 100%;
-      opacity: 0.7;
-      transition: var(--transition-standard);
-    }
-
-    .container:hover::before {
-      opacity: 1;
-    }
-
-    /* Theme indicators */
-    .theme-ml::before {
-      background-color: var(--theme-ml);
-    }
-
-    .theme-health::before {
-      background-color: var(--theme-health);
-    }
-
-    .theme-law::before {
-      background-color: var(--theme-law);
-    }
 
     /* Theme images */
     .theme-image {
@@ -278,6 +251,7 @@
       color: #eee;
       /* font-weight: normal; */
       font-weight: bold;
+      margin-bottom: 0.8rem;
     }
 
     .tag-ml {
@@ -355,6 +329,41 @@
       text-decoration: underline;
     }
 
+    /* Hero navigation */
+    .hero-nav {
+      margin-top: 2rem;
+      text-align: center;
+      opacity: 0.6;
+      transition: var(--transition-standard);
+    }
+
+    .hero-nav:hover {
+      opacity: 1;
+    }
+
+    .hero-nav a {
+      font-size: 0.95rem;
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition-standard);
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+    }
+
+    .hero-nav a:hover {
+      color: var(--primary-color);
+      background: rgba(255, 255, 255, 0.15);
+      text-decoration: none;
+    }
+
+    .nav-separator {
+      color: var(--text-color);
+      opacity: 0.4;
+      margin: 0 0.5rem;
+      font-size: 0.8rem;
+    }
+
     /* Background animations */
     .background {
       width: 100%;
@@ -378,7 +387,7 @@
     }
 
     .gradient-body {
-      background-color: #E2F6F8;
+      background-color: #F0FAFB;
       position: absolute;
       inset: 0;
       display: flex;
@@ -388,7 +397,7 @@
     }
 
     .gradient-two {
-      background-color: #FFB74D;
+      background-color: #FFC66A;
       animation: rotate2 var(--speed) var(--easing) alternate infinite;
     }
 
@@ -396,7 +405,7 @@
       width: 100vh;
       height: 80vh;
       filter: blur(calc(100vh / 3));
-      background-color: #FFB74D;
+      background-color: #FFC66A;
       animation: rotate3 var(--speed) var(--easing) alternate infinite;
     }
 
@@ -404,7 +413,7 @@
       width: 50vh;
       height: 60vh;
       filter: blur(calc(50vh / 3));
-      background-color: #A4E7ED;
+      background-color: #B8EDF2;
       animation: rotate4 var(--speed) var(--easing) alternate infinite;
       border-radius: 20% 80% 120% 30% / 10% 30% 10% 70%;
     }
@@ -703,6 +712,99 @@
       to { transform: rotate(360deg); }
     }
 
+    /* Dark theme */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --primary-color: #f5f5f5;
+        --text-color: #e8e8e8;
+        --background-card: rgba(40, 50, 60, 0.2);
+        --theme-ml: #3b82f6;
+        --theme-health: #06b6d4;
+        --theme-law: #8b5cf6;
+      }
+
+      body {
+        background-color: #1e2a3a;
+      }
+
+      .gradient-body {
+        background-color: #152028;
+      }
+
+      .gradient-two {
+        background-color: #cc7a1c;
+      }
+
+      .gradient-three {
+        background-color: #cc7a1c;
+      }
+
+      .gradient-four {
+        background-color: #4a8b94;
+      }
+
+      /* Add additional dark gradients for more depth */
+      .gradient:first-child {
+        background-image: linear-gradient(hsl(220, 30%, 25%, 85%), hsl(270, 30%, 35%));
+      }
+
+      /* Adjust navigation for dark theme */
+      .hero-nav a:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Adjust project cards for dark theme */
+      .project-card {
+        background: rgba(40, 50, 60, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .project-card:hover {
+        background: rgba(40, 50, 60, 0.4);
+      }
+
+      /* Enhanced text shadows for dark theme */
+      h1 {
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+      }
+
+      .subtitle {
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Dark theme tag styles */
+      .tag-ml {
+        border-color: var(--theme-ml);
+        color: var(--theme-ml);
+      }
+
+      .tag-health {
+        border-color: var(--theme-health);
+        color: var(--theme-health);
+      }
+
+      .tag-law {
+        border-color: var(--theme-law);
+        color: var(--theme-law);
+      }
+
+      /* Fix research theme titles */
+      .theme-header h3,
+      .interest-category h3 {
+        color: var(--text-color);
+      }
+
+      /* Invert research figures for dark mode */
+      .theme-image {
+        filter: invert(1) hue-rotate(180deg);
+        opacity: 0.9;
+      }
+
+      .theme-image:hover {
+        opacity: 1;
+      }
+    }
+
     /* Media queries */
     @media (max-width: 768px) {
       :root {
@@ -780,7 +882,290 @@
     ],
     "jobTitle": "Machine-learning Scientist",
     "description": "I advance machine learning research and transform deep technical innovations into practical solutions across healthcare and legal domains.",
-    "image": "https://arinbjorn.is/assets/images/avatar.jpg"
+    "image": "https://arinbjorn.is/assets/images/avatar.jpg",
+    "affiliation": [
+      {
+        "@type": "Organization",
+        "name": "University of Virginia",
+        "url": "https://datascience.virginia.edu/people/arinbjorn-kolbeinsson"
+      },
+      {
+        "@type": "Organization",
+        "name": "Imperial College London",
+        "url": "https://profiles.imperial.ac.uk/arinbjorn.kolbeinsson11"
+      },
+      {
+        "@type": "Organization",
+        "name": "K01",
+        "url": "https://k01.is",
+        "foundingDate": "2024"
+      },
+      {
+        "@type": "Organization",
+        "name": "Regava",
+        "url": "https://regava.com"
+      }
+    ],
+    "alumniOf": [
+      {
+        "@type": "EducationalOrganization",
+        "name": "Imperial College London",
+        "url": "https://imperial.ac.uk"
+      },
+      {
+        "@type": "EducationalOrganization",
+        "name": "University of Iceland",
+        "url": "https://hi.is"
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ResearchProject",
+    "name": "Composable Interventions for Language Models",
+    "description": "Research on how different types of interventions interact when applied sequentially to foundation models, accepted to ICLR 2025.",
+    "url": "https://arxiv.org/abs/2407.06483",
+    "author": {
+      "@type": "Person",
+      "name": "Arinbjörn Kolbeinsson"
+    },
+    "funder": {
+      "@type": "Organization",
+      "name": "University of Virginia"
+    },
+    "datePublished": "2024",
+    "keywords": ["machine learning", "foundation models", "model interventions", "ICLR"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ResearchProject",
+    "name": "FluSmart Digital Flu Monitoring",
+    "description": "Digital flu monitoring program using wearable sensor data to detect early signs of influenza-like illness through machine learning.",
+    "url": "https://evidation.com/resources/evidation-launches-flusmart-a-direct-to-person-digital-flu-monitoring-program-to-better-understand-flu-in-everyday-life",
+    "author": {
+      "@type": "Person",
+      "name": "Arinbjörn Kolbeinsson"
+    },
+    "funder": {
+      "@type": "Organization",
+      "name": "Evidation Health"
+    },
+    "keywords": ["digital health", "time series", "wearable sensors", "influenza detection"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "name": "Composable Interventions for Language Models",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Arinbjörn Kolbeinsson"
+      },
+      {
+        "@type": "Person",
+        "name": "Kyle O'Brien"
+      },
+      {
+        "@type": "Person",
+        "name": "Thomas Hartvigsen"
+      }
+    ],
+    "datePublished": "2025",
+    "publisher": {
+      "@type": "Organization",
+      "name": "International Conference on Learning Representations (ICLR)"
+    },
+    "url": "https://arxiv.org/abs/2407.06483",
+    "keywords": ["machine learning", "language models", "model interventions", "composability"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "name": "Tensor Dropout for Robust Learning",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Arinbjörn Kolbeinsson"
+      },
+      {
+        "@type": "Person",
+        "name": "Jean Kossaifi"
+      },
+      {
+        "@type": "Person",
+        "name": "Paul Matthews"
+      }
+    ],
+    "datePublished": "2021",
+    "publisher": {
+      "@type": "Organization",
+      "name": "IEEE Journal of Selected Topics in Signal Processing"
+    },
+    "keywords": ["tensor methods", "deep learning", "robustness", "regularization"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOccupationalCredential",
+    "credentialCategory": "PhD",
+    "name": "PhD in Deep learning for health outcome prediction",
+    "educationalLevel": "Doctoral",
+    "dateCreated": "2021",
+    "recognizedBy": {
+      "@type": "EducationalOrganization",
+      "name": "Imperial College London",
+      "url": "https://imperial.ac.uk"
+    },
+    "about": {
+      "@type": "Person",
+      "name": "Arinbjörn Kolbeinsson"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOccupationalCredential",
+    "credentialCategory": "Bachelor",
+    "name": "BA in Law",
+    "educationalLevel": "Bachelor",
+    "dateCreated": "2024",
+    "recognizedBy": {
+      "@type": "EducationalOrganization",
+      "name": "University of Iceland",
+      "url": "https://hi.is"
+    },
+    "about": {
+      "@type": "Person",
+      "name": "Arinbjörn Kolbeinsson"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Machine Learning Research Consulting",
+    "serviceType": "Research Consulting",
+    "description": "Expert machine learning and AI research consulting specialising in healthcare applications, foundation models and legal technology systems.",
+    "provider": {
+      "@type": "Person",
+      "name": "Arinbjörn Kolbeinsson",
+      "url": "https://arinbjorn.is"
+    },
+    "areaServed": "Worldwide",
+    "availableLanguage": ["English", "Icelandic"],
+    "serviceArea": [
+      "Machine Learning",
+      "Healthcare AI",
+      "Foundation Models",
+      "Legal Technology",
+      "Tensor Methods",
+      "Digital Health"
+    ],
+    "potentialAction": {
+      "@type": "ContactAction",
+      "target": "mailto:arinbjorn@virginia.edu"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Technical Advisory Services",
+    "serviceType": "Technical Advisory",
+    "description": "Strategic AI guidance and technical advisory services for startups and enterprises implementing machine learning solutions in healthcare and legal domains.",
+    "provider": {
+      "@type": "Person",
+      "name": "Arinbjörn Kolbeinsson",
+      "url": "https://arinbjorn.is"
+    },
+    "areaServed": "Worldwide",
+    "availableLanguage": ["English", "Icelandic"],
+    "serviceArea": [
+      "AI Strategy",
+      "Machine Learning Implementation",
+      "Healthcare Technology",
+      "Technical Due Diligence"
+    ],
+    "potentialAction": {
+      "@type": "ContactAction",
+      "target": "mailto:arinbjorn@virginia.edu"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Speaking Engagements and Workshops",
+    "serviceType": "Speaking Engagements",
+    "description": "Keynote presentations and technical workshops on machine learning, healthcare AI, tensor methods and the intersection of AI and legal systems.",
+    "provider": {
+      "@type": "Person",
+      "name": "Arinbjörn Kolbeinsson",
+      "url": "https://arinbjorn.is"
+    },
+    "areaServed": "Worldwide",
+    "availableLanguage": ["English", "Icelandic"],
+    "serviceArea": [
+      "Machine Learning Education",
+      "Healthcare AI Training",
+      "Technical Workshops",
+      "Conference Speaking"
+    ],
+    "potentialAction": {
+      "@type": "ContactAction",
+      "target": "mailto:arinbjorn@virginia.edu"
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Research Partnerships and Collaboration",
+    "serviceType": "Research Partnerships",
+    "description": "Collaborative research opportunities in foundation models, healthcare AI, tensor methods and AI applications in legal systems. Open to academic and industry partnerships.",
+    "provider": {
+      "@type": "Person",
+      "name": "Arinbjörn Kolbeinsson",
+      "url": "https://arinbjorn.is"
+    },
+    "areaServed": "Worldwide",
+    "availableLanguage": ["English", "Icelandic"],
+    "serviceArea": [
+      "Foundation Models Research",
+      "Healthcare AI Research",
+      "Tensor Methods Research",
+      "Legal AI Research",
+      "Academic Collaboration",
+      "Industry Partnerships"
+    ],
+    "potentialAction": {
+      "@type": "ContactAction",
+      "target": "mailto:arinbjorn@virginia.edu"
+    }
   }
   </script>
 </head>
@@ -801,16 +1186,28 @@
     <!-- Profile -->
     <div class="title">
       <div class="profile-image">
-        <img src="assets/images/avatar.webp" alt="Profile of Arinbjörn Kolbeinsson">
+        <img src="assets/images/avatar.webp" alt="Arinbjörn Kolbeinsson — Machine learning scientist and researcher in healthcare AI and foundation models">
       </div>
       <h1>Arinbjörn Kolbeinsson</h1>
       <p>I advance machine learning research and transform deep technical innovations into practical solutions. My work spans developing
       efficient foundation models, applying deep learning to healthcare challenges and advancing AI applications in legal
       systems &mdash; bridging cutting-edge research with real-world impact.</p>
+
+      <nav class="hero-nav">
+        <a href="#research">Research</a>
+        <span class="nav-separator">•</span>
+        <a href="#projects">Projects</a>
+        <span class="nav-separator">•</span>
+        <a href="#education">Education</a>
+        <span class="nav-separator">•</span>
+        <a href="#publications">Publications</a>
+        <span class="nav-separator">•</span>
+        <a href="#contact">Contact</a>
+      </nav>
     </div>
 
     <!-- Research Themes -->
-    <div class="dual">
+    <div class="dual" id="research">
       <div class="container">
         <div class="subtitle">Research Themes</div>
         <div class="interests-grid">
@@ -859,7 +1256,7 @@
           <span class="theme-tag tag-ml">ML Methods</span>
           <div class="subtitle">Foundation Model Interventions</div>
         </div>
-        <img src="assets/images/composable.svg" alt="Foundation Models" class="theme-image"  style="background-color: white;">
+        <img src="assets/images/composable.svg" alt="Composable Interventions for Language Models research — ICLR 2025 foundation models project" class="theme-image"  style="background-color: white;">
         <p>At the University of Virginia, I conduct research on <a href='https://arxiv.org/abs/2407.06483'>Composable
           Interventions for Language Models</a>, which has been accepted to ICLR 2025. My work develops frameworks to study how different types of interventions -
         like knowledge editing, model compression, and machine unlearning - interact when applied sequentially to the same
@@ -876,7 +1273,7 @@
           <span class="theme-tag tag-health">Healthcare</span>
           <div class="subtitle">Time Series Machine Learning for Digital Health</div>
         </div>
-        <img src="assets/images/self-supervised.svg" alt="Foundation Models" class="theme-image"
+        <img src="assets/images/self-supervised.svg" alt="Self-supervised learning for healthcare time series and digital health monitoring" class="theme-image"
           style="background-color: white;">
         <p>At Evidation Health, I specialised in machine learning for health time series data. As part of the research team, I
         developed prediction models for <a
@@ -899,7 +1296,7 @@
           <span class="theme-tag tag-health">Healthcare</span>
           <div class="subtitle">Deep Learning for Health Biomarkers</div>
         </div>
-        <img src="assets/images/brain.svg" alt="Brain Research" class="theme-image" style="background-color: white;">
+        <img src="assets/images/brain.svg" alt="Deep learning for brain MRI analysis and health biomarker discovery research" class="theme-image" style="background-color: white;">
         <p>During my PhD at Imperial College London, I developed novel deep learning approaches for biomarker discovery from
         medical imaging and genomic data. My <a
           href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf'>doctoral research</a> introduced
@@ -919,7 +1316,7 @@
           <span class="theme-tag tag-ml">ML Methods</span>
           <div class="subtitle">Tensor Methods for robust Machine Learning</div>
         </div>
-        <img src="assets/images/surf_bernoulli_avgpool.png" alt="Tensor Methods" class="theme-image" style="background-color: white;">
+        <img src="assets/images/surf_bernoulli_avgpool.png" alt="Tensor Dropout regularisation method for robust deep learning networks" class="theme-image" style="background-color: white;">
         <p>My research also focuses on tensor methods for deep learning, making neural networks more robust and efficient. I developed <a
           href='https://arxiv.org/abs/1902.10758'>Tensor Dropout</a>, a novel stochastic regularisation technique that
         significantly improves model robustness to both random and adversarial noise without requiring adversarial training.
@@ -939,7 +1336,7 @@
           <span class="theme-tag tag-law">Legal</span>
           <div class="subtitle">AI & Legal Systems</div>
         </div>
-        <img src="assets/images/contracts.svg" alt="Legal AI" class="theme-image" style="background-color: white;">
+        <img src="assets/images/contracts.svg" alt="AI and legal systems research — dynamic contract standardisation and legal technology" class="theme-image" style="background-color: white;">
         <p>Recently completed legal studies at the University of Iceland, where my thesis research focused on <a
           href='https://arinbjorn.is/assets/theses/Kvikir-samningsstadlar-BA-IS.pdf'> Dynamic Contract Standardisation
           (thesis in Icelandic)</a> using AI systems. This work explored how machine learning can make standardised
@@ -951,7 +1348,7 @@
     </div>
 
     <!-- Education -->
-    <div class="dual">
+    <div class="dual" id="education">
       <div class="container">
         <div class="subtitle">Education</div>
         <ul>
@@ -988,7 +1385,7 @@
     </div>
 
     <!-- Publications -->
-    <div class="dual">
+    <div class="dual" id="publications">
       <div class="container">
         <div class="subtitle">Publication Spotlight</div>
         <ul>
@@ -1033,7 +1430,7 @@
     </div>
 
     <!-- Side Projects -->
-    <div class="dual">
+    <div class="dual" id="projects">
       <div class="container">
         <div class="subtitle">Side Projects</div>
         <p>Personal explorations and experimental projects where I combine creativity with code.</p>
@@ -1074,16 +1471,18 @@
       </div>
     </div>
 
-    <!-- Contact -->
-    <div class="dual">
+    <!-- Collaboration & Contact -->
+    <div class="dual" id="contact">
       <div class="container">
-        <div class="subtitle">Contact</div>
-        <p>Want to get in touch?<br>You can reach me at arinbjorn@virginia.edu, or find me on
+        <div class="subtitle">Contact & Collaborate</div>
+        <p>I collaborate with organisations on challenging problems in machine learning, healthcare AI and legal technology. Always open to meaningful research partnerships and advisory opportunities.</p>
+        <br>
+        <p>You can reach me at arinbjorn@virginia.edu, or find me on
           <a href="https://bsky.app/profile/arinbjorn.is">Bluesky</a>,
           <a href="https://www.threads.net/@arinbjornkol">Threads</a>,
           <a href="https://sigmoid.social/@arinbjorn">Mastodon</a>,
-          <a href="https:/linkedin.com/in/arinbjorn">LinkedIn</a> or
-          <a href="https:/github.com/arinbjornk">GitHub</a>.
+          <a href="https://linkedin.com/in/arinbjorn">LinkedIn</a> or
+          <a href="https://github.com/arinbjornk">GitHub</a>.
         </p>
       </div>
     </div>
