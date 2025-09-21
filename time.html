@@ -330,8 +330,8 @@
 
     <main role="main">
         <h1>Hyper-local Time</h1>
-        <div id="time" role="timer" aria-live="polite">--:--:--</div>
-        <div id="location" aria-live="polite">Awaiting location…</div>
+        <div id="time" role="timer" aria-live="polite">Loading...</div>
+        <div id="location" aria-live="polite">Requesting location access...</div>
     </main>
 
     <button class="info-button" id="info-button" aria-label="Information about hyper-local time" title="Learn more about solar time">
@@ -548,8 +548,23 @@
 
         function handleErr(err) {
             console.error('❌ GPS error object:', err);
-            document.getElementById('location').textContent =
-                `Error (${err.code}): ${err.message || 'unknown'}`;
+
+            // Fallback to demo mode for crawlers and users who deny location
+            if (err.code === 1 || err.code === 2) {
+                // Use a demo location (Reykjavik, Iceland as an example)
+                latitude = 64.1466;
+                longitude = -21.9426;
+                document.getElementById('location').textContent =
+                    `Demo: 64.14660°N, 21.94260°W (Reykjavik)`;
+
+                if (!intervalId) {
+                    startClock();
+                    intervalId = setInterval(startClock, 1000);
+                }
+            } else {
+                document.getElementById('location').textContent =
+                    `Error (${err.code}): ${err.message || 'unknown'}`;
+            }
         }
 
         // — GPS polling every 30 seconds —
