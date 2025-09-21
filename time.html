@@ -4,24 +4,39 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <title>Hyper-local Time</title>
-    <meta name="description" content="Hyper-local solar time display based on your current location">
-    <meta name="keywords" content="solar time, local time, location-based time, hyperlocal clock" />
+    <title>Hyper-local Time | Solar Time Calculator by GPS Location | Arinbjörn Kolbeinsson</title>
+    <meta name="description" content="Free Hyper-local Time calculator showing true solar time based on your exact GPS coordinates. Experience personalized time that follows the sun's position at your location with dynamic visual backgrounds. Built by machine learning scientist Arinbjörn Kolbeinsson.">
+    <meta name="keywords" content="hyper-local time, hyperlocal time calculator, solar time calculator, local time calculator, location-based time, GPS time calculator, astronomical time calculator, sundial time, solar elevation calculator, longitude time converter, true solar time, personalized clock, geographic time tool, celestial navigation, solar calculator, time zones calculator, astronomical calculator, sun position calculator, solar noon calculator, equation of time, apparent solar time" />
     <meta name="author" content="Arinbjörn Kolbeinsson" />
     <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <link rel="canonical" href="https://arinbjorn.is/time" />
+    <meta name="geo.region" content="Global" />
+    <meta name="geo.placename" content="Worldwide" />
+    <meta name="application-name" content="Hyper-local Time" />
+    <meta name="theme-color" content="#78D0E8" />
     
     <!-- Social media meta tags -->
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@arinbjornkol" />
-    <meta name="twitter:title" content="Hyper-local Time" />
-    <meta name="twitter:description" content="Solar time display based on your current location" />
+    <meta name="twitter:creator" content="@arinbjornkol" />
+    <meta name="twitter:title" content="Hyper-local Time | Solar Time Calculator by GPS Location" />
+    <meta name="twitter:description" content="Free Hyper-local Time calculator showing true solar time based on your exact GPS coordinates. Experience personalized time that follows the sun's position with dynamic visual backgrounds." />
     <meta name="twitter:image" content="https://arinbjorn.is/assets/images/banner_empty.jpg" />
-    <meta property="og:title" content="Hyper-local Time" />
+    <meta name="twitter:image:alt" content="Hyper-local Time solar calculator application interface" />
+    <meta property="og:title" content="Hyper-local Time | Solar Time Calculator by GPS Location" />
     <meta property="og:url" content="https://arinbjorn.is/time" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Arinbjörn Kolbeinsson" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:image" content="https://arinbjorn.is/assets/images/banner_empty.jpg" />
-    <meta property="og:description" content="Solar time display based on your current location" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Hyper-local Time solar calculator application interface" />
+    <meta property="og:description" content="Free Hyper-local Time calculator showing true solar time based on your exact GPS coordinates. Experience personalized time that follows the sun's position with dynamic visual backgrounds." />
+    <meta property="article:author" content="https://arinbjorn.is" />
+    <meta property="article:publisher" content="https://arinbjorn.is" />
     <style>
         /* ensure gradient covers full viewport and body honours safe areas */
         html,
@@ -34,7 +49,7 @@
 
         html {
             font-family: 'Avenir', 'Source Sans Pro', sans-serif;
-            scroll-behaviour: smooth;
+            scroll-behavior: smooth;
         }
 
         /* fluid type scale */
@@ -82,6 +97,151 @@
         footer a {
             color: inherit;
             text-decoration: none;
+        }
+
+        /* Info button and modal styles */
+        .info-button {
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 1rem) + 1rem);
+            right: calc(env(safe-area-inset-right, 1rem) + 1rem);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .info-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 90%;
+            width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            color: #ffffff;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .modal h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .modal h3 {
+            font-size: 1.2rem;
+            margin: 1.5rem 0 0.5rem 0;
+            color: #ffffff;
+        }
+
+        .modal p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: #f0f0f0;
+        }
+
+        .modal ul {
+            margin: 0.5rem 0 1rem 1.5rem;
+            color: #f0f0f0;
+        }
+
+        .modal li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Breadcrumb navigation */
+        .breadcrumb {
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 1rem) + 1rem);
+            left: calc(env(safe-area-inset-left, 1rem) + 1rem);
+            z-index: 1000;
+            font-size: 0.875rem;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .breadcrumb:hover {
+            opacity: 1;
+        }
+
+        .breadcrumb a {
+            color: inherit;
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-2px);
+        }
+
+        .breadcrumb-separator {
+            margin: 0 0.5rem;
+            opacity: 0.5;
         }
 
         /* Floating gradient styles */
@@ -164,9 +324,65 @@
         <!-- Floating gradients will be added here by JS -->
     </div>
 
-    <h1>Hyper-local Time</h1>
-    <div id="time">--:--:--</div>
-    <div id="location">Awaiting location…</div>
+    <nav class="breadcrumb" aria-label="Breadcrumb navigation">
+        <a href="https://arinbjorn.is" rel="noopener">← arinbjorn.is</a>
+    </nav>
+
+    <main role="main">
+        <h1>Hyper-local Time</h1>
+        <div id="time" role="timer" aria-live="polite">--:--:--</div>
+        <div id="location" aria-live="polite">Awaiting location…</div>
+    </main>
+
+    <button class="info-button" id="info-button" aria-label="Information about hyper-local time" title="Learn more about solar time">
+        i
+    </button>
+
+    <div class="modal" id="info-modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close" aria-label="Close information dialog">×</button>
+
+            <article>
+                <header>
+                    <h2 id="modal-title">About Hyper-local Solar Time</h2>
+                </header>
+
+                <section>
+                    <p>This application displays true solar time based on your exact geographic location. Unlike standard time zones, solar time reflects the actual position of the sun relative to your specific longitude, creating a truly personalized time experience.</p>
+                </section>
+
+                <section>
+                    <h3>How It Works</h3>
+                    <p>Solar time is calculated using fundamental astronomical principles:</p>
+                    <ul>
+                        <li><strong>Longitude-based offset:</strong> Each degree of longitude represents 4 minutes of time difference</li>
+                        <li><strong>Solar elevation calculation:</strong> Determines the sun's height above the horizon using your latitude and the current date</li>
+                        <li><strong>Dynamic background:</strong> Colors change based on solar elevation, creating visual representations of dawn, day, dusk, and night</li>
+                        <li><strong>Real-time updates:</strong> Continuously recalculates your position and solar time every second</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Features</h3>
+                    <ul>
+                        <li>GPS-based precise location detection</li>
+                        <li>Real-time solar time calculation using astronomical formulas</li>
+                        <li>Gradient backgrounds that shift with solar elevation</li>
+                        <li>Floating animation elements synchronized to time of day</li>
+                        <li>Responsive design optimized for all devices</li>
+                        <li>Privacy-focused: location data never leaves your device</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>About Solar Time</h3>
+                    <p>Solar time represents humanity's oldest method of timekeeping, based directly on the sun's apparent motion across the sky. Before the standardization of time zones in the 19th century, every location kept its own local solar time.</p>
+
+                    <p>This application brings back that personal connection to celestial mechanics, showing how time naturally flows according to your position on Earth and the sun's daily journey across your local sky.</p>
+                </section>
+            </article>
+        </div>
+    </div>
 
     <footer>
         <a href="https://arinbjorn.is" rel="noopener">arinbjorn.is</a>
@@ -365,6 +581,42 @@
         // Kick off and repeat every 30 s
         requestFix();
         setInterval(requestFix, 30_000);
+
+        // Modal functionality
+        const infoButton = document.getElementById('info-button');
+        const infoModal = document.getElementById('info-modal');
+        const modalClose = document.getElementById('modal-close');
+
+        function openModal() {
+            infoModal.classList.add('show');
+            infoModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            modalClose.focus();
+        }
+
+        function closeModal() {
+            infoModal.classList.remove('show');
+            infoModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            infoButton.focus();
+        }
+
+        infoButton.addEventListener('click', openModal);
+        modalClose.addEventListener('click', closeModal);
+
+        // Close modal when clicking outside content
+        infoModal.addEventListener('click', function(e) {
+            if (e.target === infoModal) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && infoModal.classList.contains('show')) {
+                closeModal();
+            }
+        });
     </script>
     <!-- Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKXHXJS3W7"></script>
@@ -378,6 +630,178 @@
     <!-- Cloudflare Web Analytics -->
     <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "624f497f171b466690913f2929d3fe60"}'></script>
     <!-- End Cloudflare Web Analytics -->
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Hyper-local Time",
+      "description": "A web application that displays true solar time based on your exact geographic location, showing hyper-local time that adjusts dynamically to your position on Earth.",
+      "url": "https://arinbjorn.is/time",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Web Browser",
+      "browserRequirements": "Requires JavaScript and geolocation access",
+      "author": {
+        "@type": "Person",
+        "name": "Arinbjörn Kolbeinsson",
+        "url": "https://arinbjorn.is"
+      },
+      "dateCreated": "2024",
+      "keywords": ["solar time", "local time", "location-based time", "hyperlocal clock", "astronomy", "sundial", "geographic time"],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Hyper-local Solar Time Display",
+      "applicationCategory": "TimeUtility",
+      "operatingSystem": "Web",
+      "description": "Real-time solar time calculator that uses your GPS coordinates to display the exact solar time for your location, with dynamic background colors that change based on solar elevation and time of day.",
+      "url": "https://arinbjorn.is/time",
+      "author": {
+        "@type": "Person",
+        "name": "Arinbjörn Kolbeinsson"
+      },
+      "featureList": [
+        "GPS-based location detection",
+        "Real-time solar time calculation",
+        "Dynamic background gradients based on solar elevation",
+        "Automatic time zone offset calculation",
+        "Responsive design for all devices"
+      ],
+      "screenshot": "https://arinbjorn.is/assets/images/time-app-screenshot.jpg"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": "Hyper-local Time Project",
+      "description": "An interactive web application exploring the concept of true solar time, demonstrating how time varies across geographic locations based on the sun's position.",
+      "creator": {
+        "@type": "Person",
+        "name": "Arinbjörn Kolbeinsson",
+        "url": "https://arinbjorn.is"
+      },
+      "dateCreated": "2024",
+      "genre": "Interactive Web Application",
+      "keywords": ["solar astronomy", "time calculation", "geographic visualization", "educational tool"],
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Arinbjörn Kolbeinsson",
+        "url": "https://arinbjorn.is"
+      }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is solar time?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Solar time is a method of timekeeping based on the actual position of the sun in the sky. Unlike standard time zones, solar time varies with your exact longitude, making it truly local to your geographic position."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is hyper-local time different from regular time?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Hyper-local time adjusts to your exact GPS coordinates, showing the true solar time for your specific location. This differs from standard time zones which average time across large geographic regions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does the background change colors?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The background colors represent the sun's elevation at your location. Dark blues indicate night, warm oranges show dawn/dusk, and bright blues represent daylight hours, creating a visual connection to the sun's position."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my location data stored or shared?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No, your location data is processed entirely in your browser and never transmitted to any servers. The application is privacy-focused and all calculations happen locally on your device."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Arinbjörn Kolbeinsson",
+          "item": "https://arinbjorn.is"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Hyper-local Time",
+          "item": "https://arinbjorn.is/time"
+        }
+      ]
+    }
+    </script>
+
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Use Hyper-local Time Calculator",
+      "description": "Step-by-step guide to using the hyper-local solar time calculator application",
+      "image": "https://arinbjorn.is/assets/images/time-app-screenshot.jpg",
+      "totalTime": "PT2M",
+      "supply": [
+        {
+          "@type": "HowToSupply",
+          "name": "Web browser with GPS access"
+        },
+        {
+          "@type": "HowToSupply",
+          "name": "Location permissions enabled"
+        }
+      ],
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Allow Location Access",
+          "text": "When prompted, allow the application to access your GPS location for accurate solar time calculation."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "View Your Solar Time",
+          "text": "Your hyper-local solar time will display automatically, updating every second based on your exact coordinates."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Observe Background Changes",
+          "text": "Watch as the background colors shift dynamically based on the sun's elevation at your location."
+        }
+      ]
+    }
+    </script>
 </body>
 
 </html>
