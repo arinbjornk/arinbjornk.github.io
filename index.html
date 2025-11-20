@@ -5,7 +5,8 @@
   <title>Arinbjörn Kolbeinsson</title>
   <meta name="description"
     content="Arinbjörn Kolbeinsson — Machine learning scientist at UVA and Imperial College London. Research in healthcare AI, foundation models and legal technology.">
-  <meta name="keywords" content="Arinbjörn Kolbeinsson, machine learning scientist, personalised medicine, AI & law, tensor methods, deep learning, healthcare AI, legal AI" />
+  <meta name="keywords"
+    content="Arinbjörn Kolbeinsson, machine learning scientist, personalised medicine, AI & law, tensor methods, deep learning, healthcare AI, legal AI" />
   <meta name="author" content="Arinbjörn Kolbeinsson" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://arinbjorn.is" />
@@ -39,9 +40,12 @@
       --primary-color: #252525;
       --text-color: #222222;
       --background-card: rgba(255, 255, 255, 0.08);
-      --theme-ml: #2064B0;      /* Darker blue */
-      --theme-health: #207F73;  /* Darker teal */
-      --theme-law: #663399;     /* Darker purple */
+      --theme-ml: #2064B0;
+      /* Darker blue */
+      --theme-health: #207F73;
+      /* Darker teal */
+      --theme-law: #663399;
+      /* Darker purple */
       --transition-standard: all 0.3s ease;
       --container-width: 70ch;
       --spacing-base: 1rem;
@@ -136,6 +140,70 @@
     .container:hover {
       /* transform: translateY(-2px); */
       box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Squircle Implementation */
+    .container,
+    .project-card,
+    .hero-nav a,
+    .theme-tag,
+    .theme-image,
+    .profile-image {
+      /* Fallback */
+      border-radius: 24px;
+    }
+
+    /* Squircle Implementation with 9-slice scaling */
+    /* This ensures corners don't stretch on wide elements */
+    @supports (-webkit-mask-box-image: url('assets/images/squircle.svg')) {
+
+      .container,
+      .project-card,
+      .hero-nav a,
+      .theme-image {
+        border-radius: 0 !important;
+
+        /* 9-slice scaling: 49% slice keeps the corners intact and stretches the middle 2% */
+        -webkit-mask-box-image-source: url('assets/images/squircle.svg');
+        -webkit-mask-box-image-slice: 49% fill;
+        -webkit-mask-box-image-width: 24px;
+        /* Explicit small radius for subtle look */
+        -webkit-mask-box-image-repeat: stretch;
+
+        /* Standard property for future compatibility */
+        mask-border-source: url('assets/images/squircle.svg');
+        mask-border-slice: 49% fill;
+        mask-border-width: 24px;
+        /* Explicit small radius */
+        mask-border-repeat: stretch;
+      }
+
+      /* Fix for borders: Simulate with inset shadow */
+      .container,
+      .project-card {
+        border: none !important;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15), 0 8px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Profile image needs specific handling - keep it circular */
+      .profile-image {
+        border-radius: 50% !important;
+        mask-image: none !important;
+        -webkit-mask-image: none !important;
+        -webkit-mask-box-image: none !important;
+        mask-border: none !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      }
+
+      /* Tags should use standard border radius for clean borders */
+      .theme-tag {
+        border-radius: 8px !important;
+        mask-image: none !important;
+        -webkit-mask-image: none !important;
+        -webkit-mask-box-image: none !important;
+        mask-border: none !important;
+      }
     }
 
 
@@ -246,7 +314,7 @@
     .theme-tag {
       display: inline-block;
       padding: 0.2rem 0.8rem;
-      border-radius: 8px;
+      border-radius: 16px;
       font-size: 0.8rem;
       color: #eee;
       /* font-weight: normal; */
@@ -275,21 +343,24 @@
 
     /* Update these styles in your CSS */
     .education-item {
-        position: relative;
-        padding-left: 1.5rem;  /* Changed from padding-right to padding-left */
-        padding-right: 0;      /* Remove right padding */
-        margin-bottom: 1.5rem;
+      position: relative;
+      padding-left: 1.5rem;
+      /* Changed from padding-right to padding-left */
+      padding-right: 0;
+      /* Remove right padding */
+      margin-bottom: 1.5rem;
     }
 
     .education-theme-indicator {
-        position: absolute;
-        left: 0;              /* Changed from right: 0 to left: 0 */
-        top: 0;
-        bottom: 0;
-        width: 4px;
-        border-radius: 2px;
-        opacity: 0.7;
-        transition: var(--transition-standard);
+      position: absolute;
+      left: 0;
+      /* Changed from right: 0 to left: 0 */
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 2px;
+      opacity: 0.7;
+      transition: var(--transition-standard);
     }
 
     .education-theme-indicator.theme-ml {
@@ -633,18 +704,22 @@
         stroke-dasharray: 64;
         stroke-dashoffset: 64;
       }
+
       25% {
         stroke-dasharray: 64;
         stroke-dashoffset: 0;
       }
+
       50% {
         stroke-dasharray: 64;
         stroke-dashoffset: 0;
       }
+
       75% {
         stroke-dasharray: 64 64;
         stroke-dashoffset: 0;
       }
+
       100% {
         stroke-dasharray: 64 64;
         stroke-dashoffset: -64;
@@ -703,13 +778,23 @@
     }
 
     @keyframes hourRotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     @keyframes minuteRotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     /* Dark theme */
@@ -858,9 +943,10 @@
     gtag('js', new Date());
     gtag('config', 'G-TKXHXJS3W7');
   </script>
-  
+
   <!-- Cloudflare Web Analytics -->
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "624f497f171b466690913f2929d3fe60"}'></script>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+    data-cf-beacon='{"token": "624f497f171b466690913f2929d3fe60"}'></script>
   <!-- End Cloudflare Web Analytics -->
 
   <script type="application/ld+json">
@@ -1186,12 +1272,15 @@
     <!-- Profile -->
     <div class="title">
       <div class="profile-image">
-        <img src="assets/images/avatar.webp" alt="Arinbjörn Kolbeinsson — Machine learning scientist and researcher in healthcare AI and foundation models">
+        <img src="assets/images/avatar.webp"
+          alt="Arinbjörn Kolbeinsson — Machine learning scientist and researcher in healthcare AI and foundation models">
       </div>
       <h1>Arinbjörn Kolbeinsson</h1>
-      <p>I advance machine learning research and transform deep technical innovations into practical solutions. My work spans developing
-      efficient foundation models, applying deep learning to healthcare challenges and advancing AI applications in legal
-      systems &mdash; bridging cutting-edge research with real-world impact.</p>
+      <p>I advance machine learning research and transform deep technical innovations into practical solutions. My work
+        spans developing
+        efficient foundation models, applying deep learning to healthcare challenges and advancing AI applications in
+        legal
+        systems &mdash; bridging cutting-edge research with real-world impact.</p>
 
       <nav class="hero-nav">
         <a href="#research">Research</a>
@@ -1256,13 +1345,19 @@
           <span class="theme-tag tag-ml">ML Methods</span>
           <div class="subtitle">Foundation Model Interventions</div>
         </div>
-        <img src="assets/images/composable.svg" alt="Composable Interventions for Language Models research — ICLR 2025 foundation models project" class="theme-image"  style="background-color: white;">
+        <img src="assets/images/composable.svg"
+          alt="Composable Interventions for Language Models research — ICLR 2025 foundation models project"
+          class="theme-image" style="background-color: white;">
         <p>At the University of Virginia, I conduct research on <a href='https://arxiv.org/abs/2407.06483'>Composable
-          Interventions for Language Models</a>, which has been accepted to ICLR 2025. My work develops frameworks to study how different types of interventions -
-        like knowledge editing, model compression, and machine unlearning - interact when applied sequentially to the same
-        model. With my collaborators, we have uncovered critical insights about
-        intervention interactions and identified gaps in current approaches. This research aims to enhance model control and
-        efficiency while maintaining performance, with implications for developing more robust multi-objective interventions.</p>
+            Interventions for Language Models</a>, which has been accepted to ICLR 2025. My work develops frameworks to
+          study how different types of interventions -
+          like knowledge editing, model compression, and machine unlearning - interact when applied sequentially to the
+          same
+          model. With my collaborators, we have uncovered critical insights about
+          intervention interactions and identified gaps in current approaches. This research aims to enhance model
+          control and
+          efficiency while maintaining performance, with implications for developing more robust multi-objective
+          interventions.</p>
       </div>
     </div>
 
@@ -1273,19 +1368,26 @@
           <span class="theme-tag tag-health">Healthcare</span>
           <div class="subtitle">Time Series Machine Learning for Digital Health</div>
         </div>
-        <img src="assets/images/self-supervised.svg" alt="Self-supervised learning for healthcare time series and digital health monitoring" class="theme-image"
+        <img src="assets/images/self-supervised.svg"
+          alt="Self-supervised learning for healthcare time series and digital health monitoring" class="theme-image"
           style="background-color: white;">
-        <p>At Evidation Health, I specialised in machine learning for health time series data. As part of the research team, I
-        developed prediction models for <a
-          href='https://evidation.com/resources/evidation-launches-flusmart-a-direct-to-person-digital-flu-monitoring-program-to-better-understand-flu-in-everyday-life'>FluSmart</a>,
-        a digital flu monitoring program that uses wearable sensor data to detect early signs of influenza-like illness. My
-        research advanced the field through novel applications of <a href='https://arxiv.org/abs/2112.13755'>self-supervised
-          learning for time series analysis</a> and development of <a
-          href='https://arxiv.org/abs/2307.16664'>generative models for wearable data</a>. In collaboration with
-        researchers from the University of Washington and Evidation, I contributed to <a
-          href='https://proceedings.mlr.press/v209/merrill23b/merrill23b.pdf'>Homekit2020</a>, a large-scale public benchmark for
-        wearable sensor data classification, containing over 14 million hours of multimodal health data. This work established
-        new frameworks for analysing temporal health data and addressing data scarcity challenges in medical research.</p>
+        <p>At Evidation Health, I specialised in machine learning for health time series data. As part of the research
+          team, I
+          developed prediction models for <a
+            href='https://evidation.com/resources/evidation-launches-flusmart-a-direct-to-person-digital-flu-monitoring-program-to-better-understand-flu-in-everyday-life'>FluSmart</a>,
+          a digital flu monitoring program that uses wearable sensor data to detect early signs of influenza-like
+          illness. My
+          research advanced the field through novel applications of <a
+            href='https://arxiv.org/abs/2112.13755'>self-supervised
+            learning for time series analysis</a> and development of <a
+            href='https://arxiv.org/abs/2307.16664'>generative models for wearable data</a>. In collaboration with
+          researchers from the University of Washington and Evidation, I contributed to <a
+            href='https://proceedings.mlr.press/v209/merrill23b/merrill23b.pdf'>Homekit2020</a>, a large-scale public
+          benchmark for
+          wearable sensor data classification, containing over 14 million hours of multimodal health data. This work
+          established
+          new frameworks for analysing temporal health data and addressing data scarcity challenges in medical research.
+        </p>
       </div>
     </div>
 
@@ -1296,16 +1398,25 @@
           <span class="theme-tag tag-health">Healthcare</span>
           <div class="subtitle">Deep Learning for Health Biomarkers</div>
         </div>
-        <img src="assets/images/brain.svg" alt="Deep learning for brain MRI analysis and health biomarker discovery research" class="theme-image" style="background-color: white;">
-        <p>During my PhD at Imperial College London, I developed novel deep learning approaches for biomarker discovery from
-        medical imaging and genomic data. My <a
-          href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf'>doctoral research</a> introduced
-        3D-ResNet architectures for brain MRI analysis, achieving state-of-the-art accuracy in brain age prediction using over
-        21,000 scans from UK Biobank. Through innovative interpretation methods and phenome-wide association analysis, I
-        identified crucial links, and their causality, between brain structure and systemic health, particularly cardiometabolic and cognitive
-        conditions.<br><br>I also developed receptive field networks for analysing genome sequences, demonstrating how deep learning
-        can leverage both local and global genomic structure for polygenic risk prediction. This work bridges the gap between
-        raw medical data and actionable health insights through interpretable deep learning models.</p>
+        <img src="assets/images/brain.svg"
+          alt="Deep learning for brain MRI analysis and health biomarker discovery research" class="theme-image"
+          style="background-color: white;">
+        <p>During my PhD at Imperial College London, I developed novel deep learning approaches for biomarker discovery
+          from
+          medical imaging and genomic data. My <a
+            href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf'>doctoral research</a>
+          introduced
+          3D-ResNet architectures for brain MRI analysis, achieving state-of-the-art accuracy in brain age prediction
+          using over
+          21,000 scans from UK Biobank. Through innovative interpretation methods and phenome-wide association analysis,
+          I
+          identified crucial links, and their causality, between brain structure and systemic health, particularly
+          cardiometabolic and cognitive
+          conditions.<br><br>I also developed receptive field networks for analysing genome sequences, demonstrating how
+          deep learning
+          can leverage both local and global genomic structure for polygenic risk prediction. This work bridges the gap
+          between
+          raw medical data and actionable health insights through interpretable deep learning models.</p>
       </div>
     </div>
 
@@ -1316,16 +1427,24 @@
           <span class="theme-tag tag-ml">ML Methods</span>
           <div class="subtitle">Tensor Methods for robust Machine Learning</div>
         </div>
-        <img src="assets/images/surf_bernoulli_avgpool.png" alt="Tensor Dropout regularisation method for robust deep learning networks" class="theme-image" style="background-color: white;">
-        <p>My research also focuses on tensor methods for deep learning, making neural networks more robust and efficient. I developed <a
-          href='https://arxiv.org/abs/1902.10758'>Tensor Dropout</a>, a novel stochastic regularisation technique that
-        significantly improves model robustness to both random and adversarial noise without requiring adversarial training.
-        Through collaborations between Samsung AI and Caltech, I contributed to <a
-          href='https://jmlr.org/papers/volume21/18-503/18-503.pdf'>Tensor Regression Networks</a>, demonstrating how tensor
-        methods can reduce parameter count while preserving model expressiveness. These innovations were particularly impactful
-        for medical imaging tasks, where they enabled more reliable predictions from 3D brain MRI data. My work established
-        theoretical foundations for using tensor methods in deep learning while delivering practical performance improvements on
-        real-world tasks.</p>
+        <img src="assets/images/surf_bernoulli_avgpool.png"
+          alt="Tensor Dropout regularisation method for robust deep learning networks" class="theme-image"
+          style="background-color: white;">
+        <p>My research also focuses on tensor methods for deep learning, making neural networks more robust and
+          efficient. I developed <a href='https://arxiv.org/abs/1902.10758'>Tensor Dropout</a>, a novel stochastic
+          regularisation technique that
+          significantly improves model robustness to both random and adversarial noise without requiring adversarial
+          training.
+          Through collaborations between Samsung AI and Caltech, I contributed to <a
+            href='https://jmlr.org/papers/volume21/18-503/18-503.pdf'>Tensor Regression Networks</a>, demonstrating how
+          tensor
+          methods can reduce parameter count while preserving model expressiveness. These innovations were particularly
+          impactful
+          for medical imaging tasks, where they enabled more reliable predictions from 3D brain MRI data. My work
+          established
+          theoretical foundations for using tensor methods in deep learning while delivering practical performance
+          improvements on
+          real-world tasks.</p>
       </div>
     </div>
 
@@ -1336,14 +1455,19 @@
           <span class="theme-tag tag-law">Legal</span>
           <div class="subtitle">AI & Legal Systems</div>
         </div>
-        <img src="assets/images/contracts.svg" alt="AI and legal systems research — dynamic contract standardisation and legal technology" class="theme-image" style="background-color: white;">
+        <img src="assets/images/contracts.svg"
+          alt="AI and legal systems research — dynamic contract standardisation and legal technology"
+          class="theme-image" style="background-color: white;">
         <p>Recently completed legal studies at the University of Iceland, where my thesis research focused on <a
-          href='https://arinbjorn.is/assets/theses/Kvikir-samningsstadlar-BA-IS.pdf'> Dynamic Contract Standardisation
-          (thesis in Icelandic)</a> using AI systems. This work explored how machine learning can make standardised
-        contracts more flexible while maintaining legal validity and protecting consumer rights. My combined expertise in AI
-        development and law enables me to bridge technical innovation with regulatory frameworks, particularly in areas like
-        contract automation and consumer protection. This interdisciplinary background provides unique insights into developing
-        AI systems that are both technically sophisticated and legally compliant.</p>
+            href='https://arinbjorn.is/assets/theses/Kvikir-samningsstadlar-BA-IS.pdf'> Dynamic Contract Standardisation
+            (thesis in Icelandic)</a> using AI systems. This work explored how machine learning can make standardised
+          contracts more flexible while maintaining legal validity and protecting consumer rights. My combined expertise
+          in AI
+          development and law enables me to bridge technical innovation with regulatory frameworks, particularly in
+          areas like
+          contract automation and consumer protection. This interdisciplinary background provides unique insights into
+          developing
+          AI systems that are both technically sophisticated and legally compliant.</p>
       </div>
     </div>
 
@@ -1389,37 +1513,50 @@
       <div class="container">
         <div class="subtitle">Publication Spotlight</div>
         <ul>
-          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Kyle O'Brien, Tianjin Huang, Shanghua Gao, Shiwei Liu,
+          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Kyle O'Brien, Tianjin Huang, Shanghua Gao, Shiwei
+            Liu,
             Jonathan Richard Schwarz, Anurag Vaidya,
-            Faisal Mahmood, Marinka Zitnik, Tianlong Chen and Thomas Hartvigsen. "Composable Interventions for Language Models".
+            Faisal Mahmood, Marinka Zitnik, Tianlong Chen and Thomas Hartvigsen. "Composable Interventions for Language
+            Models".
             International Conference on Learning Representations (ICLR 2025).</li>
-          <li>Mike A Merrill, Esteban Safranchik, <span class="highlight">Arinbjörn Kolbeinsson</span>, Piyusha Gade, Ernesto
+          <li>Mike A Merrill, Esteban Safranchik, <span class="highlight">Arinbjörn Kolbeinsson</span>, Piyusha Gade,
+            Ernesto
             Ramirez, Ludwig Schmidt, Luca Foschini,
             Tim Althoff. "Homekit2020: A benchmark for time series classification on a large mobile sensing dataset with
             laboratory tested ground
             truth of influenza infections". Conference on Health, Inference, and Learning (CHIL)
             (2023).</li>
-          <li>Georgios Efstathiadis, Patrick Emedom-Nnamdi, <span class="highlight">Arinbjörn Kolbeinsson</span>, Jukka-Pekka
+          <li>Georgios Efstathiadis, Patrick Emedom-Nnamdi, <span class="highlight">Arinbjörn Kolbeinsson</span>,
+            Jukka-Pekka
             Onnela, Junwei Lu. "STASIS: Reinforcement Learning Simulators for Human-Centric Real-World Environments"
             Trustworthy Machine Learning for Healthcare
             (2023).</li>
-          <li><span class="highlight">Arinbjörn Kolbeinsson</span> and Luca Foschini. "Generative models for wearables data."
+          <li><span class="highlight">Arinbjörn Kolbeinsson</span> and Luca Foschini. "Generative models for wearables
+            data."
             Workshop on Deep Generative Models for Health at NeurIPS
             (2023).</li>
           <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Naman Shukla, Akhil Gupta, Lavanya Marla, and Kartik
-            Yellepeddi. "Galactic Air Improves Ancillary Revenues with Dynamic Personalized Pricing." INFORMS Journal on Applied
+            Yellepeddi. "Galactic Air Improves Ancillary Revenues with Dynamic Personalized Pricing." INFORMS Journal on
+            Applied
             Analytics (2022).</li>
           <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Jean Kossaifi, Yannis Panagakis, Adrian Bulat, Anima
-            Anandkumar, Ioanna Tzoulaki, and Paul Matthews. "Tensor Dropout for Robust Learning," in IEEE Journal of Selected
+            Anandkumar, Ioanna Tzoulaki, and Paul Matthews. "Tensor Dropout for Robust Learning," in IEEE Journal of
+            Selected
             Topics in Signal Processing, doi: 10.1109/JSTSP.2021.3064182 (2021).</li>
-          <li>Akhil Gupta, Lavanya Marla, Ruoyu Sun, Naman Shukla and <span class="highlight">Arinbjörn Kolbeinsson</span>.
-            “PenDer: Incorporating Shape Constraints via Penalized Derivatives”. In Proceedings of the AAAI Conference on
+          <li>Akhil Gupta, Lavanya Marla, Ruoyu Sun, Naman Shukla and <span class="highlight">Arinbjörn
+              Kolbeinsson</span>.
+            “PenDer: Incorporating Shape Constraints via Penalized Derivatives”. In Proceedings of the AAAI Conference
+            on
             Artificial Intelligence (2021).</li>
-          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Sarah Filippi, Yannis Panagakis, Paul M. Matthews, Paul
-            Elliott, Abbas Dehghan, and Ioanna Tzoulaki. "Accelerated MRI-predicted brain ageing and its associations with
+          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Sarah Filippi, Yannis Panagakis, Paul M. Matthews,
+            Paul
+            Elliott, Abbas Dehghan, and Ioanna Tzoulaki. "Accelerated MRI-predicted brain ageing and its associations
+            with
             cardiometabolic and brain disorders." Scientific Reports 10, no. 1 (2020).</li>
-          <li>Kossaifi, Jean, Zachary C. Lipton, <span class="highlight">Arinbjörn Kolbeinsson</span>, Aran Khanna, Tommaso
-            Furlanello, and Anima Anandkumar. "Tensor regression networks." Journal of Machine Learning Research 21, no. 123
+          <li>Kossaifi, Jean, Zachary C. Lipton, <span class="highlight">Arinbjörn Kolbeinsson</span>, Aran Khanna,
+            Tommaso
+            Furlanello, and Anima Anandkumar. "Tensor regression networks." Journal of Machine Learning Research 21, no.
+            123
             (2020).</li>
           <li>
             See all on my <a href="https://scholar.google.co.uk/citations?user=MiI7lj0AAAAJ&hl=en"
@@ -1447,7 +1584,8 @@
             </div>
             <div class="project-content">
               <h3>European Train Journeys</h3>
-              <p>Personal travel log of long-distance train routes I've taken across Europe, visualised on an interactive map with animated route tracing.</p>
+              <p>Personal travel log of long-distance train routes I've taken across Europe, visualised on an
+                interactive map with animated route tracing.</p>
               <a href="/trains" class="project-link">To Trains →</a>
             </div>
           </div>
@@ -1463,7 +1601,8 @@
             </div>
             <div class="project-content">
               <h3>Hyper-local Time</h3>
-              <p>Location-based solar time display that adjusts to your exact position on Earth, showing true hyper-local solar time with dynamic backgrounds.</p>
+              <p>Location-based solar time display that adjusts to your exact position on Earth, showing true
+                hyper-local solar time with dynamic backgrounds.</p>
               <a href="time.html" class="project-link">View Time →</a>
             </div>
           </div>
@@ -1475,7 +1614,8 @@
     <div class="dual" id="contact">
       <div class="container">
         <div class="subtitle">Contact & Collaborate</div>
-        <p>I collaborate with organisations on challenging problems in machine learning, healthcare AI and legal technology. Always open to meaningful research partnerships and advisory opportunities.</p>
+        <p>I collaborate with organisations on challenging problems in machine learning, healthcare AI and legal
+          technology. Always open to meaningful research partnerships and advisory opportunities.</p>
         <br>
         <p>You can reach me at arinbjorn@virginia.edu, or find me on
           <a href="https://bsky.app/profile/arinbjorn.is">Bluesky</a>,
@@ -1493,19 +1633,24 @@
   </footer>
 
 
+  <script>
+    if ('paintWorklet' in CSS) {
+      CSS.paintWorklet.addModule('assets/js/squircle.js');
+    }
+  </script>
   <script src="assets/js/fireworks.js"></script>
   <script src="assets/js/snow.js"></script>
   <script>
     // Initialize clock hands at random positions
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const hourHand = document.getElementById('hour-hand');
       const minuteHand = document.getElementById('minute-hand');
-      
+
       if (hourHand && minuteHand) {
         // Random starting positions (0-360 degrees)
         const randomHourStart = Math.floor(Math.random() * 360);
         const randomMinuteStart = Math.floor(Math.random() * 360);
-        
+
         // Create dynamic keyframes that start from random positions
         const hourKeyframes = `
           @keyframes hourRotateRandom {
@@ -1513,19 +1658,19 @@
             to { transform: rotate(${randomHourStart + 360}deg); }
           }
         `;
-        
+
         const minuteKeyframes = `
           @keyframes minuteRotateRandom {
             from { transform: rotate(${randomMinuteStart}deg); }
             to { transform: rotate(${randomMinuteStart + 360}deg); }
           }
         `;
-        
+
         // Inject the dynamic keyframes into the page
         const style = document.createElement('style');
         style.textContent = hourKeyframes + minuteKeyframes;
         document.head.appendChild(style);
-        
+
         // Apply the animations with random starting points
         hourHand.style.animation = 'hourRotateRandom 360s linear infinite';
         minuteHand.style.animation = 'minuteRotateRandom 30s linear infinite';
@@ -1534,29 +1679,29 @@
   </script>
   <script>
     // Get current date
-      const now = new Date();
-      const month = now.getMonth() + 1; // Months are 0-indexed
-      const day = now.getDate();
+    const now = new Date();
+    const month = now.getMonth() + 1; // Months are 0-indexed
+    const day = now.getDate();
 
-      console.log("Current date:", month, day); // Log current date
+    console.log("Current date:", month, day); // Log current date
 
-      // Check if it's December 31st or January 1st for fireworks
-      const isNewYears = (month === 12 && day === 31) || (month === 1 && day === 1) || (month === 5 && day === 9);
-      console.log("isNewYears:", isNewYears);
+    // Check if it's December 31st or January 1st for fireworks
+    const isNewYears = (month === 12 && day === 31) || (month === 1 && day === 1) || (month === 5 && day === 9);
+    console.log("isNewYears:", isNewYears);
 
-      // Check if it's December or January, but not New Years Eve/Day 
-      const isWinter = (month === 12 || month === 1) && !isNewYears;
-      console.log("isWinter:", isWinter);
+    // Check if it's December or January, but not New Years Eve/Day 
+    const isWinter = (month === 12 || month === 1) && !isNewYears;
+    console.log("isWinter:", isWinter);
 
-      console.log("Should run fireworks?", isNewYears);
-      console.log("Should run snow?", isWinter);
+    console.log("Should run fireworks?", isNewYears);
+    console.log("Should run snow?", isWinter);
 
-      // Initialize effects based on conditions
-      if (isNewYears) {
-        console.log("Starting fireworks effect");
-        new FireworksEffect();
-      } else if (isWinter) {
-        console.log("Starting snow effect");
-        new SnowEffect();
-      }
+    // Initialize effects based on conditions
+    if (isNewYears) {
+      console.log("Starting fireworks effect");
+      new FireworksEffect();
+    } else if (isWinter) {
+      console.log("Starting snow effect");
+      new SnowEffect();
+    }
   </script>
