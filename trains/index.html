@@ -231,6 +231,7 @@
             padding: 4px 6px;
             border-radius: 4px;
             transition: background-color 0.2s ease;
+            touch-action: manipulation;
         }
 
         .legend-item:hover {
@@ -321,6 +322,7 @@
             color: var(--text-color);
             cursor: pointer;
             transition: var(--transition-standard);
+            touch-action: manipulation; /* Prevents double-tap zoom */
         }
 
         .basemap-btn:hover {
@@ -367,6 +369,7 @@
             color: var(--text-color);
             cursor: pointer;
             transition: var(--transition-standard);
+            touch-action: manipulation;
         }
 
         .camera-btn:hover {
@@ -501,6 +504,55 @@
             color: #999;
         }
 
+        .add-stop-link {
+            display: block;
+            font-size: 11px;
+            color: #888;
+            text-decoration: none;
+            cursor: pointer;
+            margin: 4px 0 8px 0;
+            touch-action: manipulation;
+        }
+
+        .add-stop-link:hover {
+            color: var(--primary-color);
+        }
+
+        .via-input-wrapper {
+            position: relative;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .via-input-wrapper .autocomplete-dropdown {
+            width: calc(100% - 38px); /* Account for remove button */
+        }
+
+        .via-input-wrapper .station-input {
+            flex: 1;
+        }
+
+        .via-input-wrapper .remove-via-btn {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            padding: 4px 8px;
+            font-size: 16px;
+            line-height: 1;
+            border-radius: 4px;
+            transition: var(--transition-standard);
+            touch-action: manipulation;
+        }
+
+        .via-input-wrapper .remove-via-btn:hover {
+            background: rgba(255, 0, 0, 0.1);
+            color: #c00;
+        }
+
         .create-route-btn {
             width: 100%;
             padding: 10px;
@@ -513,6 +565,7 @@
             cursor: pointer;
             transition: var(--transition-standard);
             margin-top: 4px;
+            touch-action: manipulation;
         }
 
         .create-route-btn:hover {
@@ -536,6 +589,7 @@
             font-size: 12px;
             cursor: pointer;
             transition: var(--transition-standard);
+            touch-action: manipulation;
         }
 
         .create-own-btn:hover {
@@ -565,6 +619,12 @@
             border-radius: 4px;
             margin-bottom: 4px;
             background: rgba(0, 0, 0, 0.03);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .user-route-item:hover {
+            background: rgba(0, 0, 0, 0.08);
         }
 
         .user-route-item .route-name {
@@ -572,6 +632,37 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .user-route-item .route-distance {
+            font-size: 10px;
+            color: #888;
+            white-space: nowrap;
+        }
+
+        .share-btn {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--text-color);
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition-standard);
+            touch-action: manipulation;
+        }
+
+        .share-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .share-btn.copied {
+            background: rgba(76, 175, 80, 0.1);
+            border-color: #4CAF50;
+            color: #4CAF50;
         }
 
         .user-route-item .delete-btn {
@@ -605,15 +696,50 @@
             color: var(--primary-color);
         }
 
+        /* Editable map title for create mode */
+        .map-title-input {
+            display: none;
+            width: 100%;
+            font-family: 'Source Serif 4', serif;
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--primary-color);
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.2);
+            padding: 0 0 4px 0;
+            margin: 0 0 10px 0;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .map-title-input::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        .map-title-input:focus {
+            border-bottom-color: var(--primary-color);
+        }
+
         /* Hide elements based on mode */
         .create-mode .default-legend,
         .create-mode .create-own-btn {
             display: none;
         }
 
+        .create-mode #overlay-title {
+            display: none;
+        }
+
+        .create-mode .map-title-input {
+            display: block;
+        }
+
         .default-mode .route-creator,
         .default-mode .user-routes-legend,
-        .default-mode .back-to-showcase {
+        .default-mode .back-to-showcase,
+        .default-mode .map-title-input {
             display: none;
         }
 
@@ -632,6 +758,24 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
+        .map-overlay.dark-theme .user-route-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .map-overlay.dark-theme .user-route-item .route-distance {
+            color: #999;
+        }
+
+        .map-overlay.dark-theme .share-btn {
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .map-overlay.dark-theme .share-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
         .map-overlay.dark-theme .user-routes-legend label {
             color: #cccccc;
         }
@@ -642,6 +786,19 @@
 
         .map-overlay.dark-theme .back-to-showcase:hover {
             color: #ffffff;
+        }
+
+        .map-overlay.dark-theme .map-title-input {
+            color: #ffffff;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .map-overlay.dark-theme .map-title-input::placeholder {
+            color: #888;
+        }
+
+        .map-overlay.dark-theme .map-title-input:focus {
+            border-bottom-color: rgba(255, 255, 255, 0.5);
         }
 
         /* Dark theme for route creator */
@@ -672,6 +829,23 @@
         .map-overlay.dark-theme .autocomplete-item:hover,
         .map-overlay.dark-theme .autocomplete-item.selected {
             background: rgba(255, 255, 255, 0.1);
+        }
+
+        .map-overlay.dark-theme .add-stop-link {
+            color: #888;
+        }
+
+        .map-overlay.dark-theme .add-stop-link:hover {
+            color: #fff;
+        }
+
+        .map-overlay.dark-theme .remove-via-btn {
+            color: #888;
+        }
+
+        .map-overlay.dark-theme .remove-via-btn:hover {
+            background: rgba(255, 100, 100, 0.2);
+            color: #f88;
         }
 
         /* Desktop header styling */
@@ -749,6 +923,7 @@
                 padding: 4px;
                 border-radius: 50%;
                 transition: var(--transition-standard);
+                touch-action: manipulation;
             }
 
             .expand-button:hover {
@@ -763,28 +938,36 @@
                 display: flex;
             }
 
-            .basemap-buttons {
-                gap: 4px;
-            }
-
-            .basemap-btn {
-                font-size: 9px;
-                padding: 4px 6px;
-                min-width: 40px;
-            }
-
+            /* Compact settings on mobile */
+            .basemap-selector,
             .camera-mode {
+                display: flex;
+                align-items: center;
+                gap: 8px;
                 margin-top: 10px;
                 padding-top: 10px;
             }
 
+            .basemap-selector label,
             .camera-mode label {
-                font-size: 11px;
+                font-size: 10px;
+                margin-bottom: 0;
+                white-space: nowrap;
+                min-width: fit-content;
             }
 
+            .basemap-buttons,
+            .camera-buttons {
+                flex: 1;
+                gap: 3px;
+                margin-top: 0;
+            }
+
+            .basemap-btn,
             .camera-btn {
                 font-size: 9px;
-                padding: 4px 6px;
+                padding: 4px 5px;
+                min-width: unset;
             }
 
             .attributions {
@@ -795,6 +978,26 @@
 
             .map-overlay.expanded .attributions {
                 display: block;
+            }
+
+            /* Prevent iOS auto-zoom on input focus */
+            .station-input,
+            .map-title-input {
+                font-size: 16px;
+            }
+
+            /* Hide title input on mobile when collapsed, show only when expanded */
+            .create-mode .map-title-input {
+                display: none !important;
+            }
+
+            .map-overlay.expanded.create-mode .map-title-input {
+                display: block !important;
+            }
+
+            /* Hide mobile header title when input is visible (to avoid duplication) */
+            .map-overlay.expanded.create-mode #mobile-header-title {
+                display: none;
             }
 
             /* Dark theme mobile adjustments */
@@ -813,8 +1016,9 @@
     <div id="map"></div>
     <div class="map-overlay default-mode" id="overlay">
         <h3 id="overlay-title">Train Journeys by Arinbjörn</h3>
+        <input type="text" class="map-title-input" id="map-title-input" placeholder="My Train Map" maxlength="40">
         <div class="mobile-header">
-            <h3>Train Journeys</h3>
+            <h3 id="mobile-header-title">Train Journeys</h3>
             <button class="expand-button" id="expand-btn">▲</button>
         </div>
         <p id="overlay-description">Long-distance train routes Arinbjörn has taken across Europe. Click any route below to watch it trace out on the map.</p>
@@ -823,13 +1027,14 @@
         <!-- Default mode: Arinbjörn's routes -->
         <div class="default-legend">
             <div class="legend" id="legend"></div>
-            <button class="create-own-btn" id="create-own-btn">+ Create your own train map</button>
+            <a href="https://trainmap.app" target="_blank" class="create-own-btn" style="text-decoration: none; text-align: center;">+ Create your own train map →</a>
         </div>
 
         <!-- Create mode: User's routes -->
         <div class="user-routes-legend">
             <label>Your Routes:</label>
             <div id="user-routes-list"></div>
+            <button class="share-btn" id="share-btn" style="display: none;">Share Map</button>
         </div>
 
         <div class="route-creator">
@@ -838,10 +1043,12 @@
                 <input type="text" class="station-input" id="from-station" placeholder="From station..." autocomplete="off">
                 <div class="autocomplete-dropdown" id="from-dropdown"></div>
             </div>
+            <div id="via-stations-container"></div>
             <div class="station-input-wrapper">
                 <input type="text" class="station-input" id="to-station" placeholder="To station..." autocomplete="off">
                 <div class="autocomplete-dropdown" id="to-dropdown"></div>
             </div>
+            <a class="add-stop-link" id="add-stop-link">+ add stop</a>
             <button class="create-route-btn" id="create-route-btn" disabled>Draw Route</button>
         </div>
 
@@ -1000,9 +1207,9 @@
             }
         });
 
-        // Check hash early to determine mode
+        // Create mode disabled - now on dedicated app at trainmap.app
         const initialHash = window.location.hash;
-        const startInCreateMode = initialHash.startsWith('#r=') || initialHash === '#create';
+        const startInCreateMode = false;
 
         // If starting in create mode, update UI immediately (before map loads)
         if (startInCreateMode) {
@@ -1011,6 +1218,7 @@
             overlay.classList.add('create-mode');
             document.getElementById('overlay-title').textContent = 'Create Your Train Map';
             document.getElementById('overlay-description').textContent = 'Search for stations and create your own train route map. Share it with friends!';
+            document.getElementById('mobile-header-title').textContent = 'My Train Map';
         }
 
         // Route animation state
@@ -1592,9 +1800,11 @@
         // USER ROUTE CREATION
         // ============================================
 
-        // Fetch route from signal.eu.org API
-        async function fetchTrainRoute(fromLon, fromLat, toLon, toLat) {
-            const url = `https://signal.eu.org/osm/eu/route/v1/train/${fromLon},${fromLat};${toLon},${toLat}?geometries=geojson&overview=full`;
+        // Fetch route from signal.eu.org API (supports multiple waypoints)
+        async function fetchTrainRoute(waypoints) {
+            // waypoints is array of {lon, lat} objects
+            const coordString = waypoints.map(w => `${w.lon},${w.lat}`).join(';');
+            const url = `https://signal.eu.org/osm/eu/route/v1/train/${coordString}?geometries=geojson&overview=full`;
 
             try {
                 const response = await fetch(url);
@@ -1626,9 +1836,12 @@
         let userRouteCounter = 0;
 
         // Add a user route to the map
-        async function addUserRoute(fromLon, fromLat, toLon, toLat, name) {
+        // waypoints: array of {lon, lat} objects
+        // name: route name string
+        // skipFitBounds: if true, don't fit map to this route (used when loading multiple routes)
+        async function addUserRoute(waypoints, name, skipFitBounds = false) {
             try {
-                const routeData = await fetchTrainRoute(fromLon, fromLat, toLon, toLat);
+                const routeData = await fetchTrainRoute(waypoints);
 
                 const routeIndex = globalRoutes.length + userRouteCounter;
                 const color = ROUTE_COLORS[routeIndex % ROUTE_COLORS.length];
@@ -1674,13 +1887,15 @@
                 // Animate the new route
                 animateUserRoute(routeId, routeData);
 
-                // Fit map to show the route
-                const coords = routeData.geometry.coordinates;
-                const bounds = coords.reduce((bounds, coord) => {
-                    return bounds.extend(coord);
-                }, new maplibregl.LngLatBounds(coords[0], coords[0]));
+                // Fit map to show the route (unless skipped)
+                if (!skipFitBounds) {
+                    const coords = routeData.geometry.coordinates;
+                    const bounds = coords.reduce((bounds, coord) => {
+                        return bounds.extend(coord);
+                    }, new maplibregl.LngLatBounds(coords[0], coords[0]));
 
-                map.fitBounds(bounds, { padding: 50 });
+                    map.fitBounds(bounds, { padding: 50 });
+                }
 
                 return routeData;
             } catch (error) {
@@ -1728,6 +1943,8 @@
         let stations = [];
         let selectedFromStation = null;
         let selectedToStation = null;
+        let viaStations = []; // Array of {element, dropdown, station} objects
+        let viaCounter = 0;
 
         // Load stations data
         fetch('data/stations.json')
@@ -1836,7 +2053,8 @@
         // Update create button state
         function updateCreateButton() {
             const btn = document.getElementById('create-route-btn');
-            btn.disabled = !(selectedFromStation && selectedToStation);
+            const allViaSelected = viaStations.every(v => v.station !== null);
+            btn.disabled = !(selectedFromStation && selectedToStation && allViaSelected);
         }
 
         // Initialize autocomplete
@@ -1848,6 +2066,56 @@
             selectedToStation = station;
         });
 
+        // Add a via station input
+        function addViaStation() {
+            const container = document.getElementById('via-stations-container');
+            const viaIndex = viaCounter++;
+            const inputId = `via-station-${viaIndex}`;
+            const dropdownId = `via-dropdown-${viaIndex}`;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'via-input-wrapper';
+            wrapper.id = `via-wrapper-${viaIndex}`;
+            wrapper.innerHTML = `
+                <input type="text" class="station-input" id="${inputId}" placeholder="Via station..." autocomplete="off">
+                <div class="autocomplete-dropdown" id="${dropdownId}"></div>
+                <button class="remove-via-btn" data-via-index="${viaIndex}">×</button>
+            `;
+
+            container.appendChild(wrapper);
+
+            // Track this via station
+            const viaObj = { index: viaIndex, element: wrapper, station: null };
+            viaStations.push(viaObj);
+
+            // Setup autocomplete for this input
+            setupAutocomplete(inputId, dropdownId, (station) => {
+                viaObj.station = station;
+            });
+
+            // Setup remove button
+            wrapper.querySelector('.remove-via-btn').addEventListener('click', () => {
+                removeViaStation(viaIndex);
+            });
+
+            updateCreateButton();
+        }
+
+        // Remove a via station input
+        function removeViaStation(viaIndex) {
+            const idx = viaStations.findIndex(v => v.index === viaIndex);
+            if (idx === -1) return;
+
+            const viaObj = viaStations[idx];
+            viaObj.element.remove();
+            viaStations.splice(idx, 1);
+
+            updateCreateButton();
+        }
+
+        // Add stop link handler
+        document.getElementById('add-stop-link').addEventListener('click', addViaStation);
+
         // Create route button handler
         document.getElementById('create-route-btn').addEventListener('click', async () => {
             if (!selectedFromStation || !selectedToStation) return;
@@ -1858,37 +2126,57 @@
             btn.disabled = true;
 
             try {
-                const routeName = `${selectedFromStation.n} → ${selectedToStation.n}`;
-                await addUserRoute(
-                    selectedFromStation.lon,
-                    selectedFromStation.lat,
-                    selectedToStation.lon,
-                    selectedToStation.lat,
-                    routeName
-                );
+                // Build waypoints array: from -> via stations (in order) -> to
+                const waypoints = [
+                    { lon: selectedFromStation.lon, lat: selectedFromStation.lat },
+                    ...viaStations.map(v => ({ lon: v.station.lon, lat: v.station.lat })),
+                    { lon: selectedToStation.lon, lat: selectedToStation.lat }
+                ];
+
+                // Build route name: "A → B → C"
+                const stationNames = [
+                    selectedFromStation.n,
+                    ...viaStations.map(v => v.station.n),
+                    selectedToStation.n
+                ];
+                const routeName = stationNames.join(' → ');
+
+                await addUserRoute(waypoints, routeName);
 
                 // Clear inputs after success
                 document.getElementById('from-station').value = '';
                 document.getElementById('to-station').value = '';
                 selectedFromStation = null;
                 selectedToStation = null;
+
+                // Clear via stations
+                viaStations.forEach(v => v.element.remove());
+                viaStations = [];
+
+                // On mobile, collapse the panel so user can see the route
+                if (window.innerWidth <= 768) {
+                    const overlay = document.querySelector('.map-overlay');
+                    const expandBtn = document.getElementById('expand-btn');
+                    if (overlay.classList.contains('expanded')) {
+                        overlay.classList.remove('expanded');
+                        expandBtn.textContent = '▲';
+                    }
+                }
             } catch (error) {
-                // Show helpful error message - mention city points as likely culprits
-                const fromIsCity = selectedFromStation.city;
-                const toIsCity = selectedToStation.city;
+                // Collect all stations to check for city points
+                const allStations = [
+                    selectedFromStation,
+                    ...viaStations.map(v => v.station),
+                    selectedToStation
+                ];
+                const cityPoints = allStations.filter(s => s && s.city);
 
-                if (fromIsCity || toIsCity) {
-                    // At least one is a city - suggest the city point(s) as the likely issue
-                    const cityList = [
-                        fromIsCity ? `"${selectedFromStation.n}"` : null,
-                        toIsCity ? `"${selectedToStation.n}"` : null
-                    ].filter(Boolean);
+                if (cityPoints.length > 0) {
+                    const cityList = cityPoints.map(s => `"${s.n}"`).join(', ');
+                    const firstCity = cityPoints[0];
+                    const suggestion = `"${firstCity.n} Hbf" or "${firstCity.n} Central"`;
 
-                    const suggestion = fromIsCity
-                        ? `"${selectedFromStation.n} Hbf" or "${selectedFromStation.n} Central"`
-                        : `"${selectedToStation.n} Hbf" or "${selectedToStation.n} Central"`;
-
-                    alert(`Could not find a route. ${cityList.join(' and ')} may be a city point rather than a station. Try selecting a specific station like ${suggestion}.`);
+                    alert(`Could not find a route. ${cityList} may be a city point rather than a station. Try selecting a specific station like ${suggestion}.`);
                 } else {
                     alert('Could not find a train route between those stations. They may not be connected by rail.');
                 }
@@ -1916,6 +2204,10 @@
             document.getElementById('overlay-title').textContent = 'Create Your Train Map';
             document.getElementById('overlay-description').textContent = 'Search for stations and create your own train route map. Share it with friends!';
 
+            // Update mobile header title
+            const mapTitle = document.getElementById('map-title-input').value.trim() || 'My Train Map';
+            document.getElementById('mobile-header-title').textContent = mapTitle;
+
             // Hide Arinbjörn's routes from the map
             globalRoutes.forEach((route, i) => {
                 const routeId = `route-${i}`;
@@ -1936,6 +2228,7 @@
             // Restore title and description
             document.getElementById('overlay-title').textContent = 'Train Journeys by Arinbjörn';
             document.getElementById('overlay-description').textContent = 'Long-distance train routes Arinbjörn has taken across Europe. Click any route below to watch it trace out on the map.';
+            document.getElementById('mobile-header-title').textContent = 'Train Journeys';
 
             // Show Arinbjörn's routes again
             globalRoutes.forEach((route, i) => {
@@ -1958,26 +2251,68 @@
 
             // Clear user routes list
             document.getElementById('user-routes-list').innerHTML = '';
+
+            // Clear via stations
+            viaStations.forEach(v => v.element.remove());
+            viaStations = [];
+
+            // Clear map title
+            document.getElementById('map-title-input').value = '';
         }
 
         // Update user routes list UI
         function updateUserRoutesList() {
             const list = document.getElementById('user-routes-list');
-            list.innerHTML = userRoutes.map((r, i) => `
+            list.innerHTML = userRoutes.map((r, i) => {
+                const distanceKm = Math.round(r.data.properties.distance / 1000);
+                return `
                 <div class="user-route-item" data-index="${i}">
                     <div class="legend-color" style="background: ${r.data.properties.color}; width: 16px; height: 3px; border-radius: 2px;"></div>
                     <span class="route-name">${r.data.properties.name}</span>
+                    <span class="route-distance">${distanceKm} km</span>
                     <button class="delete-btn" data-index="${i}">×</button>
                 </div>
-            `).join('');
+            `}).join('');
 
-            // Add delete handlers
+            // Add click handlers for replay
+            list.querySelectorAll('.user-route-item').forEach((item, i) => {
+                item.addEventListener('click', () => {
+                    const route = userRoutes[i];
+                    if (route) {
+                        animateUserRoute(route.id, route.data);
+
+                        // Fit map to show the route
+                        const coords = route.data.geometry.coordinates;
+                        const bounds = coords.reduce((bounds, coord) => {
+                            return bounds.extend(coord);
+                        }, new maplibregl.LngLatBounds(coords[0], coords[0]));
+                        map.fitBounds(bounds, { padding: 50 });
+
+                        // On mobile, collapse the panel
+                        if (window.innerWidth <= 768) {
+                            const overlay = document.querySelector('.map-overlay');
+                            const expandBtn = document.getElementById('expand-btn');
+                            if (overlay.classList.contains('expanded')) {
+                                overlay.classList.remove('expanded');
+                                expandBtn.textContent = '▲';
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Add delete handlers (stop propagation so it doesn't trigger replay)
             list.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const index = parseInt(e.target.dataset.index);
                     deleteUserRoute(index);
                 });
             });
+
+            // Show/hide share button based on whether there are routes
+            const shareBtn = document.getElementById('share-btn');
+            shareBtn.style.display = userRoutes.length > 0 ? 'block' : 'none';
         }
 
         // Delete a user route
@@ -2002,15 +2337,8 @@
             }
         }
 
-        // Button handlers
-        document.getElementById('create-own-btn').addEventListener('click', () => {
-            enterCreateMode();
-            history.replaceState(null, '', window.location.pathname + '#create');
-        });
-
-        document.getElementById('back-to-showcase').addEventListener('click', () => {
-            exitCreateMode();
-        });
+        // Create mode is now on dedicated app at trainmap.app
+        // This site only shows the showcase
 
         // ============================================
         // URL HASH ENCODING
@@ -2020,54 +2348,118 @@
         function encodeRoutesToHash() {
             if (userRoutes.length === 0) return;
 
+            const mapTitle = document.getElementById('map-title-input').value.trim();
+
             const routeStrings = userRoutes.map(r => {
                 const props = r.data.properties;
-                // Store as "fromLat,fromLon,toLat,toLon,name"
+                // Store waypoints from the route name (A → B → C format)
+                // We'll encode using coordinates from the geometry
+                // Format: "lat1,lon1,lat2,lon2,...,name" where coordinates are waypoints
                 const coords = r.data.geometry.coordinates;
                 const from = coords[0];
                 const to = coords[coords.length - 1];
+
+                // For now, encode start and end (via points are baked into the geometry)
+                // The name contains the full route info like "A → B → C"
                 const name = encodeURIComponent(props.name);
                 return `${from[1].toFixed(4)},${from[0].toFixed(4)},${to[1].toFixed(4)},${to[0].toFixed(4)},${name}`;
             });
 
-            window.location.hash = 'r=' + routeStrings.join('|');
+            // Format: #t=Title&r=routes or just #r=routes if no title
+            let hash = 'r=' + routeStrings.join('|');
+            if (mapTitle) {
+                hash = 't=' + encodeURIComponent(mapTitle) + '&' + hash;
+            }
+            window.location.hash = hash;
         }
 
-        // Decode routes from URL hash
-        function decodeRoutesFromHash() {
+        // Decode routes and title from URL hash
+        function decodeHashData() {
             const hash = window.location.hash;
-            if (!hash || !hash.startsWith('#r=')) return [];
+            if (!hash || hash.length < 2) return { title: null, routes: [] };
 
-            const routeStrings = hash.substring(3).split('|');
-            return routeStrings.map(str => {
+            const hashContent = hash.substring(1); // Remove #
+            let title = null;
+            let routeString = '';
+
+            // Parse hash parameters
+            if (hashContent.includes('&')) {
+                const parts = hashContent.split('&');
+                for (const part of parts) {
+                    if (part.startsWith('t=')) {
+                        title = decodeURIComponent(part.substring(2));
+                    } else if (part.startsWith('r=')) {
+                        routeString = part.substring(2);
+                    }
+                }
+            } else if (hashContent.startsWith('r=')) {
+                routeString = hashContent.substring(2);
+            } else if (hashContent.startsWith('t=')) {
+                title = decodeURIComponent(hashContent.substring(2));
+            }
+
+            if (!routeString) return { title, routes: [] };
+
+            const routes = routeString.split('|').map(str => {
                 const parts = str.split(',');
                 if (parts.length < 4) return null;
 
-                const fromLat = parseFloat(parts[0]);
-                const fromLon = parseFloat(parts[1]);
-                const toLat = parseFloat(parts[2]);
-                const toLon = parseFloat(parts[3]);
-                const name = parts.length > 4 ? decodeURIComponent(parts.slice(4).join(',')) : 'Shared Route';
+                // Parse coordinate pairs (always in lat,lon pairs)
+                const waypoints = [];
+                let i = 0;
+                while (i < parts.length - 1) {
+                    const lat = parseFloat(parts[i]);
+                    const lon = parseFloat(parts[i + 1]);
+                    if (isNaN(lat) || isNaN(lon)) break;
+                    waypoints.push({ lat, lon });
+                    i += 2;
+                }
 
-                if (isNaN(fromLat) || isNaN(fromLon) || isNaN(toLat) || isNaN(toLon)) return null;
+                if (waypoints.length < 2) return null;
 
-                return { fromLat, fromLon, toLat, toLon, name };
+                // Remaining parts are the name
+                const name = i < parts.length ? decodeURIComponent(parts.slice(i).join(',')) : 'Shared Route';
+
+                return { waypoints, name };
             }).filter(Boolean);
+
+            return { title, routes };
         }
 
         // Load routes from URL hash on page load
         async function loadRoutesFromHash() {
-            const routes = decodeRoutesFromHash();
+            const { title, routes } = decodeHashData();
+
+            // Set the map title if provided
+            if (title) {
+                document.getElementById('map-title-input').value = title;
+                document.getElementById('mobile-header-title').textContent = title;
+            } else {
+                document.getElementById('mobile-header-title').textContent = 'My Train Map';
+            }
+
             if (routes.length === 0) return;
 
             console.log(`Loading ${routes.length} routes from URL...`);
 
             for (const route of routes) {
                 try {
-                    await addUserRoute(route.fromLon, route.fromLat, route.toLon, route.toLat, route.name);
+                    // Convert waypoints from {lat, lon} to {lon, lat} for the API
+                    const waypoints = route.waypoints.map(w => ({ lon: w.lon, lat: w.lat }));
+                    await addUserRoute(waypoints, route.name, true); // skipFitBounds = true
                 } catch (error) {
                     console.error('Failed to load route from hash:', route.name, error);
                 }
+            }
+
+            // Fit map to show ALL user routes
+            if (userRoutes.length > 0) {
+                const allCoords = userRoutes.flatMap(r => r.data.geometry.coordinates);
+                const bounds = allCoords.reduce((bounds, coord) => {
+                    return bounds.extend(coord);
+                }, new maplibregl.LngLatBounds(allCoords[0], allCoords[0]));
+
+                map.fitBounds(bounds, { padding: 50 });
             }
         }
 
@@ -2080,6 +2472,56 @@
             return result;
         };
 
+        // Update hash and mobile header when title changes
+        document.getElementById('map-title-input').addEventListener('input', (e) => {
+            // Update mobile header to match
+            const title = e.target.value.trim() || 'My Train Map';
+            document.getElementById('mobile-header-title').textContent = title;
+
+            if (userRoutes.length > 0) {
+                encodeRoutesToHash();
+            }
+        });
+
+        // Share button handler
+        document.getElementById('share-btn').addEventListener('click', async () => {
+            const shareBtn = document.getElementById('share-btn');
+            const mapTitle = document.getElementById('map-title-input').value.trim() || 'My Train Map';
+            const shareUrl = window.location.href;
+
+            // Try Web Share API first (mainly mobile)
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: mapTitle,
+                        text: `Check out my train map: ${mapTitle}`,
+                        url: shareUrl
+                    });
+                } catch (err) {
+                    // User cancelled or error - ignore
+                    if (err.name !== 'AbortError') {
+                        console.error('Share failed:', err);
+                    }
+                }
+            } else {
+                // Fallback: copy to clipboard
+                try {
+                    await navigator.clipboard.writeText(shareUrl);
+                    const originalText = shareBtn.textContent;
+                    shareBtn.textContent = 'Link Copied!';
+                    shareBtn.classList.add('copied');
+                    setTimeout(() => {
+                        shareBtn.textContent = originalText;
+                        shareBtn.classList.remove('copied');
+                    }, 2000);
+                } catch (err) {
+                    console.error('Copy failed:', err);
+                    // Final fallback: prompt
+                    prompt('Copy this link:', shareUrl);
+                }
+            }
+        });
+
         // Load routes from hash once map is ready
         map.on('load', () => {
             if (startInCreateMode) {
@@ -2087,7 +2529,7 @@
                 isCreateMode = true;
 
                 // Load shared routes after a short delay for map to settle
-                if (initialHash.startsWith('#r=')) {
+                if (initialHash.startsWith('#r=') || initialHash.startsWith('#t=')) {
                     setTimeout(loadRoutesFromHash, 500);
                 }
             }
