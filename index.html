@@ -99,6 +99,10 @@
       margin-top: 1rem;
     }
 
+    .title p + p {
+      margin-top: 1rem;
+    }
+
     /* Layout components */
     .main {
       width: min(90%, 80rem);
@@ -236,6 +240,44 @@
       max-width: var(--container-width);
       margin-bottom: 4rem;
       animation: fadeIn 1s ease-out;
+    }
+
+    /* Work With Me section */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+      width: 90%;
+    }
+
+    .service-item {
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .service-item h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .service-item p {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 0;
+      color: var(--text-color);
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .profile-image {
@@ -1323,6 +1365,9 @@
         efficient foundation models, applying deep learning to healthcare challenges and advancing AI applications in
         legal
         systems, bridging cutting-edge research with real-world impact.</p>
+      <p>Currently: Research scientist at <a href="https://datascience.virginia.edu/people/arinbjorn-kolbeinsson">UVA</a> and
+        <a href="https://profiles.imperial.ac.uk/arinbjorn.kolbeinsson11">Imperial College</a>.
+        Co-founder of <a href="https://k01.is">K01</a> and <a href="https://regava.com">Regava</a>.</p>
 
       <nav class="hero-nav">
         <a href="#research">Research</a>
@@ -1628,17 +1673,34 @@
       </div>
     </div>
 
-    <!-- Collaboration & Contact -->
+    <!-- Work With Me -->
     <div class="dual" id="contact">
       <div class="container">
-        <div class="subtitle">Contact & Collaborate</div>
-        <p>I collaborate with organisations on challenging problems in machine learning, healthcare AI and legal
-          technology. Always open to meaningful research partnerships and advisory opportunities.</p>
-        <br>
-        <p>You can reach me at arinbjorn@virginia.edu, or find me on
+        <div class="subtitle">Work With Me</div>
+        <p>I help organisations solve complex problems at the intersection of machine learning, healthcare and legal technology.</p>
+
+        <div class="services-grid">
+          <div class="service-item">
+            <h3>Research Consulting</h3>
+            <p>Deep technical expertise in ML systems, foundation models, healthcare AI and biomedical applications.</p>
+          </div>
+          <div class="service-item">
+            <h3>Technical Advisory</h3>
+            <p>Strategic guidance for startups and enterprises building AI products in regulated domains.</p>
+          </div>
+          <div class="service-item">
+            <h3>Research Partnerships</h3>
+            <p>Academic and industry collaborations on foundation models, healthcare AI and legal technology.</p>
+          </div>
+          <div class="service-item">
+            <h3>Speaking & Workshops</h3>
+            <p>Keynotes and technical workshops on ML methods, AI in healthcare and AI governance.</p>
+          </div>
+        </div>
+
+        <p>Reach me at arinbjorn@virginia.edu, or connect on
           <a href="https://bsky.app/profile/arinbjorn.is">Bluesky</a>,
           <a href="https://www.threads.net/@arinbjornkol">Threads</a>,
-          <a href="https://sigmoid.social/@arinbjorn">Mastodon</a>,
           <a href="https://linkedin.com/in/arinbjorn">LinkedIn</a> or
           <a href="https://github.com/arinbjornk">GitHub</a>.
         </p>
