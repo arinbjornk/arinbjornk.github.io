@@ -4,7 +4,7 @@
 <head>
   <title>Arinbjörn Kolbeinsson</title>
   <meta name="description"
-    content="Arinbjörn Kolbeinsson — Machine learning scientist at UVA and Imperial College London. Research in healthcare AI, foundation models and legal technology.">
+    content="Arinbjörn Kolbeinsson. Machine learning scientist at UVA and Imperial College London. Research in healthcare AI, foundation models and legal technology.">
   <meta name="keywords"
     content="Arinbjörn Kolbeinsson, machine learning scientist, personalised medicine, AI & law, tensor methods, deep learning, healthcare AI, legal AI" />
   <meta name="author" content="Arinbjörn Kolbeinsson" />
@@ -30,7 +30,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400&display=swap"
     rel="stylesheet">
 
@@ -42,7 +42,7 @@
       --background-card: rgba(255, 255, 255, 0.08);
       --theme-ml: #2064B0;
       /* Darker blue */
-      --theme-health: #207F73;
+      --theme-biomedical: #207F73;
       /* Darker teal */
       --theme-law: #663399;
       /* Darker purple */
@@ -59,7 +59,7 @@
     }
 
     html {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Source Serif 4', serif;
       font-size: 16px;
       line-height: 1.5;
       scroll-behavior: smooth;
@@ -69,7 +69,7 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background-color: #78D0E8;
+      background-color: #d4dfe7;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -79,12 +79,13 @@
 
     /* Typography */
     h1 {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Outfit', sans-serif;
       font-size: clamp(2.5rem, 5vw, 4rem);
       font-weight: 600;
       color: var(--primary-color);
       letter-spacing: -0.02em;
       margin: var(--spacing-base) 0;
+      white-space: nowrap;
     }
 
     p {
@@ -92,6 +93,10 @@
       line-height: 1.7;
       color: var(--text-color);
       max-width: var(--container-width);
+    }
+
+    .container p + p {
+      margin-top: 1rem;
     }
 
     /* Layout components */
@@ -271,9 +276,9 @@
 
     /* Section styling */
     .subtitle {
-      font-family: 'Source Serif 4', serif;
+      font-family: 'Outfit', sans-serif;
       font-size: 2rem;
-      font-weight: 400;
+      font-weight: 500;
       margin-bottom: 1.5rem;
       color: var(--primary-color);
       display: flex;
@@ -313,6 +318,7 @@
     }
 
     .theme-tag {
+      font-family: 'Outfit', sans-serif;
       display: inline-block;
       padding: 0.2rem 0.8rem;
       border-radius: 16px;
@@ -330,10 +336,10 @@
       color: var(--theme-ml);
     }
 
-    .tag-health {
-      /* background-color: var(--theme-health); */
-      border: 2px solid var(--theme-health);
-      color: var(--theme-health)
+    .tag-biomedical {
+      /* background-color: var(--theme-biomedical); */
+      border: 2px solid var(--theme-biomedical);
+      color: var(--theme-biomedical)
     }
 
     .tag-law {
@@ -368,12 +374,40 @@
       background-color: var(--theme-ml);
     }
 
-    .education-theme-indicator.theme-health {
-      background-color: var(--theme-health);
+    .education-theme-indicator.theme-biomedical {
+      background-color: var(--theme-biomedical);
     }
 
     .education-theme-indicator.theme-law {
       background-color: var(--theme-law);
+    }
+
+    .education-content {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    .education-intro {
+      flex: 1;
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--text-color);
+    }
+
+    .education-list {
+      flex: 1;
+    }
+
+    .education-list ul {
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .education-content {
+        flex-direction: column;
+      }
     }
 
     /* Lists and links */
@@ -414,6 +448,7 @@
     }
 
     .hero-nav a {
+      font-family: 'Outfit', sans-serif;
       font-size: 0.95rem;
       color: var(--text-color);
       text-decoration: none;
@@ -454,7 +489,7 @@
       width: var(--size);
       height: 80vh;
       filter: blur(calc(var(--size) / 3));
-      background-image: linear-gradient(hsl(158, 82%, 57%, 85%), hsl(252, 82%, 57%));
+      background-image: linear-gradient(#b8c4cf, #c5cfd8);
       animation: rotate var(--speed) var(--easing) alternate infinite;
       border-radius: 30% 120% 120% 30% / 30% 30% 70% 70%;
       z-index: -1;
@@ -471,7 +506,7 @@
     }
 
     .gradient-two {
-      background-color: #FFC66A;
+      background-color: #cdd5dc;
       animation: rotate2 var(--speed) var(--easing) alternate infinite;
     }
 
@@ -479,7 +514,7 @@
       width: 100vh;
       height: 80vh;
       filter: blur(calc(100vh / 3));
-      background-color: #FFC66A;
+      background-color: #c0ccd6;
       animation: rotate3 var(--speed) var(--easing) alternate infinite;
     }
 
@@ -487,7 +522,7 @@
       width: 50vh;
       height: 60vh;
       filter: blur(calc(50vh / 3));
-      background-color: #B8EDF2;
+      background-color: #bfc9d4;
       animation: rotate4 var(--speed) var(--easing) alternate infinite;
       border-radius: 20% 80% 120% 30% / 10% 30% 10% 70%;
     }
@@ -607,6 +642,7 @@
     }
 
     .project-card h3 {
+      font-family: 'Outfit', sans-serif;
       font-size: 1.3rem;
       font-weight: 600;
       color: var(--primary-color);
@@ -624,6 +660,7 @@
     }
 
     .project-link {
+      font-family: 'Outfit', sans-serif;
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
@@ -636,6 +673,8 @@
       border-radius: 0.5rem;
       transition: var(--transition-standard);
       background: transparent;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
     }
 
     .project-link:hover {
@@ -807,7 +846,7 @@
         --text-color: #e8e8e8;
         --background-card: rgba(40, 50, 60, 0.2);
         --theme-ml: #3b82f6;
-        --theme-health: #06b6d4;
+        --theme-biomedical: #06b6d4;
         --theme-law: #8b5cf6;
       }
 
@@ -866,9 +905,9 @@
         color: var(--theme-ml);
       }
 
-      .tag-health {
-        border-color: var(--theme-health);
-        color: var(--theme-health);
+      .tag-biomedical {
+        border-color: var(--theme-biomedical);
+        color: var(--theme-biomedical);
       }
 
       .tag-law {
@@ -1276,14 +1315,14 @@
     <div class="title">
       <div class="profile-image">
         <img src="assets/images/avatar.webp"
-          alt="Arinbjörn Kolbeinsson — Machine learning scientist and researcher in healthcare AI and foundation models">
+          alt="Arinbjörn Kolbeinsson, machine learning scientist and researcher in healthcare AI and foundation models">
       </div>
       <h1>Arinbjörn Kolbeinsson</h1>
       <p>I advance machine learning research and transform deep technical innovations into practical solutions. My work
         spans developing
         efficient foundation models, applying deep learning to healthcare challenges and advancing AI applications in
         legal
-        systems &mdash; bridging cutting-edge research with real-world impact.</p>
+        systems, bridging cutting-edge research with real-world impact.</p>
 
       <nav class="hero-nav">
         <a href="#research">Research</a>
@@ -1314,15 +1353,15 @@
             </ul>
           </div>
 
-          <div class="interest-category theme-health">
+          <div class="interest-category theme-biomedical">
             <h3>
-              <span class="theme-tag tag-health">Healthcare</span><br>
-              Healthcare & Biomedicine
+              <span class="theme-tag tag-biomedical">Biomedical</span><br>
+              Biomedical & Life Sciences
             </h3>
             <ul>
               <li>Personalised health prediction using multi-modal data</li>
-              <li>Systems for brain MRI analysis and systemic health markers</li>
-              <li>Deep learning for time series analysis in healthcare</li>
+              <li>Molecular simulations and computational drug discovery</li>
+              <li>Deep learning for medical imaging and time series</li>
             </ul>
           </div>
 
@@ -1349,77 +1388,62 @@
           <div class="subtitle">Foundation Model Interventions</div>
         </div>
         <img src="assets/images/composable.svg"
-          alt="Composable Interventions for Language Models research — ICLR 2025 foundation models project"
+          alt="Composable Interventions for Language Models research, ICLR 2025 foundation models project"
           class="theme-image" style="background-color: white;">
         <p>At the University of Virginia, I conduct research on <a href='https://arxiv.org/abs/2407.06483'>Composable
-            Interventions for Language Models</a>, which has been accepted to ICLR 2025. My work develops frameworks to
-          study how different types of interventions -
-          like knowledge editing, model compression, and machine unlearning - interact when applied sequentially to the
-          same
-          model. With my collaborators, we have uncovered critical insights about
-          intervention interactions and identified gaps in current approaches. This research aims to enhance model
-          control and
-          efficiency while maintaining performance, with implications for developing more robust multi-objective
-          interventions.</p>
+            Interventions for Language Models</a>, which has been accepted to ICLR 2025.</p>
+        <p>My work develops frameworks to study how different types of interventions (knowledge editing, model compression, machine unlearning) interact when applied sequentially. With my collaborators, we have uncovered critical insights about intervention interactions and identified gaps in current approaches.</p>
+        <p>This research aims to enhance model control and efficiency while maintaining performance, with implications for developing more robust multi-objective interventions.</p>
       </div>
     </div>
 
     <!-- Health Analytics -->
     <div class="dual">
-      <div class="container theme-health">
+      <div class="container theme-biomedical">
         <div class="section-header">
-          <span class="theme-tag tag-health">Healthcare</span>
+          <span class="theme-tag tag-biomedical">Biomedical</span>
           <div class="subtitle">Time Series Machine Learning for Digital Health</div>
         </div>
         <img src="assets/images/self-supervised.svg"
           alt="Self-supervised learning for healthcare time series and digital health monitoring" class="theme-image"
           style="background-color: white;">
-        <p>At Evidation Health, I specialised in machine learning for health time series data. As part of the research
-          team, I
-          developed prediction models for <a
+        <p>At Evidation Health, I developed machine learning systems for detecting illness from wearable sensor data.</p>
+        <p>As part of the research team, I built prediction models for <a
             href='https://evidation.com/resources/evidation-launches-flusmart-a-direct-to-person-digital-flu-monitoring-program-to-better-understand-flu-in-everyday-life'>FluSmart</a>,
-          a digital flu monitoring program that uses wearable sensor data to detect early signs of influenza-like
-          illness. My
-          research advanced the field through novel applications of <a
-            href='https://arxiv.org/abs/2112.13755'>self-supervised
-            learning for time series analysis</a> and development of <a
-            href='https://arxiv.org/abs/2307.16664'>generative models for wearable data</a>. In collaboration with
-          researchers from the University of Washington and Evidation, I contributed to <a
-            href='https://proceedings.mlr.press/v209/merrill23b/merrill23b.pdf'>Homekit2020</a>, a large-scale public
-          benchmark for
-          wearable sensor data classification, containing over 14 million hours of multimodal health data. This work
-          established
-          new frameworks for analysing temporal health data and addressing data scarcity challenges in medical research.
-        </p>
+          a digital flu monitoring program that detects early signs of influenza-like illness. My research advanced the field through <a
+            href='https://arxiv.org/abs/2112.13755'>self-supervised learning for time series</a> and <a
+            href='https://arxiv.org/abs/2307.16664'>generative models for wearable data</a>.</p>
+        <p>In collaboration with the University of Washington, I contributed to <a
+            href='https://proceedings.mlr.press/v209/merrill23b/merrill23b.pdf'>Homekit2020</a>, a public benchmark containing over 14 million hours of multimodal health data. This work established new frameworks for temporal health analysis.</p>
       </div>
     </div>
 
     <!-- Brain Research -->
     <div class="dual">
-      <div class="container theme-health">
+      <div class="container theme-biomedical">
         <div class="section-header">
-          <span class="theme-tag tag-health">Healthcare</span>
+          <span class="theme-tag tag-biomedical">Biomedical</span>
           <div class="subtitle">Deep Learning for Health Biomarkers</div>
         </div>
         <img src="assets/images/brain.svg"
           alt="Deep learning for brain MRI analysis and health biomarker discovery research" class="theme-image"
           style="background-color: white;">
-        <p>During my PhD at Imperial College London, I developed novel deep learning approaches for biomarker discovery
-          from
-          medical imaging and genomic data. My <a
-            href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf'>doctoral research</a>
-          introduced
-          3D-ResNet architectures for brain MRI analysis, achieving state-of-the-art accuracy in brain age prediction
-          using over
-          21,000 scans from UK Biobank. Through innovative interpretation methods and phenome-wide association analysis,
-          I
-          identified crucial links, and their causality, between brain structure and systemic health, particularly
-          cardiometabolic and cognitive
-          conditions.<br><br>I also developed receptive field networks for analysing genome sequences, demonstrating how
-          deep learning
-          can leverage both local and global genomic structure for polygenic risk prediction. This work bridges the gap
-          between
-          raw medical data and actionable health insights through interpretable deep learning models.</p>
+        <p>During my PhD at Imperial College London, I developed novel deep learning approaches for biomarker discovery from medical imaging and genomic data.</p>
+        <p>My <a href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf'>doctoral research</a> introduced 3D-ResNet architectures for brain MRI analysis, achieving state-of-the-art accuracy in brain age prediction using over 21,000 scans from UK Biobank. Through innovative interpretation methods and phenome-wide association analysis, I identified crucial links between brain structure and systemic health, particularly cardiometabolic and cognitive conditions.</p>
+        <p>I also developed receptive field networks for analysing genome sequences, demonstrating how deep learning can leverage both local and global genomic structure for polygenic risk prediction.</p>
+      </div>
+    </div>
+
+    <!-- Computational Molecular Biology -->
+    <div class="dual">
+      <div class="container theme-biomedical">
+        <div class="section-header">
+          <span class="theme-tag tag-biomedical">Biomedical</span>
+          <div class="subtitle">Computational Molecular Biology</div>
+        </div>
+        <p>During my MRes at Imperial College London, I developed computational approaches for drug target characterisation combining molecular simulations with systems biology.</p>
+        <p>My <a href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-MRes-Report.pdf'>research</a> integrated molecular docking and dynamics simulations to study protein-ligand interactions, while applying multivariate statistical methods to metabolomics data from GC-MS experiments. I built network models linking metabolites to protein targets through pathway analysis, connecting molecular-level findings to broader biological systems.</p>
+        <p>This work established my foundations in cheminformatics and computational structural biology, bridging molecular modelling with data-driven approaches that would later inform my machine learning research.</p>
       </div>
     </div>
 
@@ -1428,26 +1452,14 @@
       <div class="container theme-ml">
         <div class="section-header">
           <span class="theme-tag tag-ml">ML Methods</span>
-          <div class="subtitle">Tensor Methods for robust Machine Learning</div>
+          <div class="subtitle">Tensor Methods for Robust Machine Learning</div>
         </div>
         <img src="assets/images/surf_bernoulli_avgpool.png"
           alt="Tensor Dropout regularisation method for robust deep learning networks" class="theme-image"
           style="background-color: white;">
-        <p>My research also focuses on tensor methods for deep learning, making neural networks more robust and
-          efficient. I developed <a href='https://arxiv.org/abs/1902.10758'>Tensor Dropout</a>, a novel stochastic
-          regularisation technique that
-          significantly improves model robustness to both random and adversarial noise without requiring adversarial
-          training.
-          Through collaborations between Samsung AI and Caltech, I contributed to <a
-            href='https://jmlr.org/papers/volume21/18-503/18-503.pdf'>Tensor Regression Networks</a>, demonstrating how
-          tensor
-          methods can reduce parameter count while preserving model expressiveness. These innovations were particularly
-          impactful
-          for medical imaging tasks, where they enabled more reliable predictions from 3D brain MRI data. My work
-          established
-          theoretical foundations for using tensor methods in deep learning while delivering practical performance
-          improvements on
-          real-world tasks.</p>
+        <p>My research also focuses on tensor methods for deep learning, making neural networks more robust and efficient.</p>
+        <p>I developed <a href='https://arxiv.org/abs/1902.10758'>Tensor Dropout</a>, a novel stochastic regularisation technique that significantly improves model robustness to both random and adversarial noise without requiring adversarial training.</p>
+        <p>Through collaborations between Samsung AI and Caltech, I contributed to <a href='https://jmlr.org/papers/volume21/18-503/18-503.pdf'>Tensor Regression Networks</a>, demonstrating how tensor methods can reduce parameter count while preserving model expressiveness. These innovations were particularly impactful for medical imaging tasks, enabling more reliable predictions from 3D brain MRI data.</p>
       </div>
     </div>
 
@@ -1459,18 +1471,13 @@
           <div class="subtitle">AI & Legal Systems</div>
         </div>
         <img src="assets/images/contracts.svg"
-          alt="AI and legal systems research — dynamic contract standardisation and legal technology"
+          alt="AI and legal systems research, dynamic contract standardisation and legal technology"
           class="theme-image" style="background-color: white;">
-        <p>Recently completed legal studies at the University of Iceland, where my thesis research focused on <a
-            href='https://arinbjorn.is/assets/theses/Kvikir-samningsstadlar-BA-IS.pdf'> Dynamic Contract Standardisation
-            (thesis in Icelandic)</a> using AI systems. This work explored how machine learning can make standardised
-          contracts more flexible while maintaining legal validity and protecting consumer rights. My combined expertise
-          in AI
-          development and law enables me to bridge technical innovation with regulatory frameworks, particularly in
-          areas like
-          contract automation and consumer protection. This interdisciplinary background provides unique insights into
-          developing
-          AI systems that are both technically sophisticated and legally compliant.</p>
+        <p>I recently completed legal studies at the University of Iceland, where my thesis research focused on <a
+            href='https://arinbjorn.is/assets/theses/Kvikir-samningsstadlar-BA-IS.pdf'>Dynamic Contract Standardisation
+            (thesis in Icelandic)</a> using AI systems.</p>
+        <p>This work explored how machine learning can make standardised contracts more flexible while maintaining legal validity and protecting consumer rights.</p>
+        <p>My combined expertise in AI development and law enables me to bridge technical innovation with regulatory frameworks, particularly in areas like contract automation and consumer protection.</p>
       </div>
     </div>
 
@@ -1478,36 +1485,43 @@
     <div class="dual" id="education">
       <div class="container">
         <div class="subtitle">Education</div>
-        <ul>
-          <li class="education-item">
-            <div class="education-theme-indicator theme-ml"></div>
-            <a href="assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf" class="education-title">
-              PhD: Deep learning for health outcome prediction
-            </a><br>
-            <span class="education-date">Imperial College London, 2021</span>
-          </li>
-          <li class="education-item">
-            <div class="education-theme-indicator theme-health"></div>
-            <a href="assets/theses/Arinbjorn-Kolbeinsson-MRes-Report.pdf" class="education-title">
-              MRes in Biomedical Research
-            </a><br>
-            <span class="education-date">Imperial College London, 2016</span>
-          </li>
-          <li class="education-item">
-            <div class="education-theme-indicator theme-health"></div>
-            <a href="assets/theses/Arinbjorn-Kolbeinsson-MEng-Report.pdf" class="education-title">
-              MEng in Bioengineering
-            </a><br>
-            <span class="education-date">Imperial College London, 2015</span>
-          </li>
-          <li class="education-item">
-            <div class="education-theme-indicator theme-law"></div>
-            <a href="assets/theses/Kvikir-samningsstadlar-BA-IS.pdf" class="education-title">
-              BA in Law
-            </a><br>
-            <span class="education-date">University of Iceland, 2024</span>
-          </li>
-        </ul>
+        <div class="education-content">
+          <div class="education-intro">
+            My research bridges machine learning and regulated domains. At Imperial College, I built foundations in bioengineering and biomedical research before completing a PhD in deep learning for healthcare. I added legal expertise to work effectively where law, policy and technology intersect.
+          </div>
+          <div class="education-list">
+            <ul>
+              <li class="education-item">
+                <div class="education-theme-indicator theme-ml"></div>
+                <a href="assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf" class="education-title">
+                  PhD: Deep learning for health outcome prediction
+                </a><br>
+                <span class="education-date">Imperial College London, 2021</span>
+              </li>
+              <li class="education-item">
+                <div class="education-theme-indicator theme-biomedical"></div>
+                <a href="assets/theses/Arinbjorn-Kolbeinsson-MRes-Report.pdf" class="education-title">
+                  MRes in Biomedical Research
+                </a><br>
+                <span class="education-date">Imperial College London, 2016</span>
+              </li>
+              <li class="education-item">
+                <div class="education-theme-indicator theme-biomedical"></div>
+                <a href="assets/theses/Arinbjorn-Kolbeinsson-MEng-Report.pdf" class="education-title">
+                  MEng in Bioengineering
+                </a><br>
+                <span class="education-date">Imperial College London, 2015</span>
+              </li>
+              <li class="education-item">
+                <div class="education-theme-indicator theme-law"></div>
+                <a href="assets/theses/Kvikir-samningsstadlar-BA-IS.pdf" class="education-title">
+                  BA in Law
+                </a><br>
+                <span class="education-date">University of Iceland, 2024</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1589,7 +1603,8 @@
               <h3>European Train Journeys</h3>
               <p>Personal travel log of long-distance train routes I've taken across Europe, visualised on an
                 interactive map with animated route tracing.</p>
-              <a href="/trains" class="project-link">To Trains →</a>
+              <a href="/trains" class="project-link">My Routes →</a>
+              <a href="https://trainmap.app" class="project-link" target="_blank">Create Your Own →</a>
             </div>
           </div>
           <div class="project-card">
