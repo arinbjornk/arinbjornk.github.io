@@ -147,11 +147,6 @@
       max-width: 90%;
     }
 
-    .container:hover {
-      /* transform: translateY(-2px); */
-      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
-    }
-
     /* Squircle Implementation */
     .container,
     .project-card,
@@ -188,11 +183,49 @@
         mask-border-repeat: stretch;
       }
 
-      /* Fix for borders: Simulate with inset shadow */
+      /* Fix for borders: Use background gradients for corner reflections since box-shadows get clipped by squircle mask */
       .container,
       .project-card {
         border: none !important;
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15), 0 8px 12px rgba(0, 0, 0, 0.1);
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+          inset 2px 2px 4px rgba(255, 255, 255, 0.2),
+          inset -1px -1px 2px rgba(255, 255, 255, 0.05),
+          0 8px 32px rgba(0, 0, 0, 0.1);
+        /* Corner reflections using background gradients - these render inside the mask */
+        background:
+          /* Top-left corner reflection */
+          radial-gradient(ellipse 35px 35px at 0% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 70%),
+          /* Top-right corner reflection */
+          radial-gradient(ellipse 30px 30px at 100% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 70%),
+          /* Bottom-left corner subtle reflection */
+          radial-gradient(ellipse 25px 25px at 0% 100%, rgba(255, 255, 255, 0.01) 0%, transparent 70%),
+          /* Bottom-right corner subtle shadow */
+          radial-gradient(ellipse 30px 30px at 100% 100%, rgba(0, 0, 0, 0.008) 0%, transparent 70%),
+          /* Base glass color */
+          rgba(255, 255, 255, 0.02) !important;
+      }
+
+      /* Disable hover effect on project cards */
+      .project-card,
+      .project-card:hover,
+      .project-card:focus,
+      .project-card:active {
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+          inset 2px 2px 4px rgba(255, 255, 255, 0.2),
+          inset -1px -1px 2px rgba(255, 255, 255, 0.05),
+          0 8px 32px rgba(0, 0, 0, 0.1) !important;
+        transform: none !important;
+        filter: none !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        background:
+          radial-gradient(ellipse 35px 35px at 0% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 70%),
+          radial-gradient(ellipse 30px 30px at 100% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 70%),
+          radial-gradient(ellipse 25px 25px at 0% 100%, rgba(255, 255, 255, 0.01) 0%, transparent 70%),
+          radial-gradient(ellipse 30px 30px at 100% 100%, rgba(0, 0, 0, 0.008) 0%, transparent 70%),
+          rgba(255, 255, 255, 0.02) !important;
       }
 
       /* Profile image needs specific handling - keep it circular */
@@ -653,18 +686,18 @@
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(15px);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      transition: var(--transition-standard);
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       min-height: 320px;
+      pointer-events: none;
     }
 
-    .project-card:hover {
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-      background: rgba(255, 255, 255, 0.2);
+    .project-card * {
+      pointer-events: auto;
     }
+
 
     .project-visual {
       height: 140px;
@@ -916,13 +949,22 @@
       background: rgba(255, 255, 255, 0.1);
     }
 
-    html.force-dark-theme .project-card {
-      background: rgba(40, 50, 60, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
+    html.force-dark-theme .project-card,
     html.force-dark-theme .project-card:hover {
-      background: rgba(40, 50, 60, 0.4);
+      backdrop-filter: blur(15px) !important;
+      -webkit-backdrop-filter: blur(15px) !important;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+        inset 2px 2px 4px rgba(255, 255, 255, 0.15),
+        inset -1px -1px 2px rgba(255, 255, 255, 0.03),
+        0 8px 32px rgba(0, 0, 0, 0.3) !important;
+      /* Corner reflections for dark theme - dark glass */
+      background:
+        radial-gradient(ellipse 35px 35px at 0% 0%, rgba(0, 0, 0, 0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 30px 30px at 100% 0%, rgba(0, 0, 0, 0.05) 0%, transparent 70%),
+        radial-gradient(ellipse 25px 25px at 0% 100%, rgba(0, 0, 0, 0.03) 0%, transparent 70%),
+        radial-gradient(ellipse 30px 30px at 100% 100%, rgba(0, 0, 0, 0.06) 0%, transparent 70%),
+        rgba(0, 0, 0, 0.15) !important;
     }
 
     html.force-dark-theme h1 {
@@ -1006,11 +1048,6 @@
       /* Adjust project cards for dark theme */
       .project-card {
         background: rgba(40, 50, 60, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .project-card:hover {
-        background: rgba(40, 50, 60, 0.4);
       }
 
       /* Enhanced text shadows for dark theme */
