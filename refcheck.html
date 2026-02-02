@@ -741,8 +741,8 @@
         const exportBtn = document.getElementById('exportBtn');
         const resetBtn = document.getElementById('resetBtn');
 
-        // arXiv proxy URL (Cloudflare Worker)
-        const ARXIV_PROXY_URL = 'https://arxiv-proxy.arinbjorn.workers.dev';
+        // Cloudflare Worker proxy (handles arXiv and Semantic Scholar)
+        const PROXY_URL = 'https://arxiv-proxy.arinbjorn.workers.dev';
 
         // Drag and drop
         [bibUpload, pdfUpload].forEach(box => {
@@ -1501,11 +1501,13 @@
                 try {
                     if (cleanTitle) {
                         const params = new URLSearchParams({
+                            service: 'ss',
+                            endpoint: '/graph/v1/paper/search',
                             query: cleanTitle,
                             limit: 5,
                             fields: 'title,authors,year,externalIds,paperId'
                         });
-                        const res = await fetchWithRateLimit(`https://api.semanticscholar.org/graph/v1/paper/search?${params}`);
+                        const res = await fetchWithRateLimit(`${PROXY_URL}?${params}`);
                         if (res.ok) {
                             const data = await res.json();
                             const papers = data.data || [];
@@ -1581,7 +1583,7 @@
             console.log(`Batch SS lookup: ${ids.length} papers with IDs`);
 
             try {
-                const res = await fetchWithRateLimit('https://api.semanticscholar.org/graph/v1/paper/batch', {
+                const res = await fetchWithRateLimit(`${PROXY_URL}?service=ss&endpoint=/graph/v1/paper/batch`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ids, fields: 'title,authors,year,externalIds,paperId' })
@@ -1643,7 +1645,7 @@
 
         async function queryArxiv(arxivId) {
             try {
-                const res = await fetch(`${ARXIV_PROXY_URL}?id=${encodeURIComponent(arxivId)}`);
+                const res = await fetch(`${PROXY_URL}?id=${encodeURIComponent(arxivId)}`);
                 if (res.ok) {
                     const data = await res.json();
                     if (data.error) {
@@ -1661,7 +1663,7 @@
         async function searchArxivByTitle(title) {
             if (!title || title.length < 10) return null;
             try {
-                const res = await fetch(`${ARXIV_PROXY_URL}?title=${encodeURIComponent(title)}`);
+                const res = await fetch(`${PROXY_URL}?title=${encodeURIComponent(title)}`);
                 if (res.ok) {
                     const data = await res.json();
                     if (data.results && data.results.length > 0) {
