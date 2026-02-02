@@ -1,0 +1,2214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reference Checker</title>
+    <meta name="description" content="Validate your BibTeX references against CrossRef, Semantic Scholar, and arXiv. Check for year mismatches, author discrepancies, and missing references.">
+    <link rel="icon" href="assets/favicon/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;1,8..60,400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        :root {
+            --bg: #d4dfe7;
+            --surface: rgba(255, 255, 255, 0.45);
+            --surface-hover: rgba(255, 255, 255, 0.65);
+            --border: rgba(255, 255, 255, 0.6);
+            --text: #222222;
+            --text-muted: #555555;
+            --accent: #3b6b96;
+            --accent-hover: #2d5577;
+            --success: #2d8a4e;
+            --success-bg: rgba(45, 138, 78, 0.12);
+            --warning: #b87a1a;
+            --warning-bg: rgba(184, 122, 26, 0.12);
+            --error: #c43d3d;
+            --error-bg: rgba(196, 61, 61, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .subtitle {
+            font-family: 'Source Serif 4', Georgia, serif;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            font-weight: 400;
+        }
+
+        .upload-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 600px) {
+            .upload-section {
+                grid-template-columns: 1fr;
+            }
+            .upload-section.minimized {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .upload-section.minimized {
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.6;
+            transform: scale(0.92);
+            transform-origin: top center;
+        }
+
+        .upload-section.minimized:hover {
+            opacity: 0.85;
+        }
+
+        .upload-section.minimized .upload-box {
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+        }
+
+        .upload-section.minimized .upload-icon {
+            display: none;
+        }
+
+        .upload-section.minimized .upload-box h3 {
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+
+        .upload-section.minimized .upload-box p {
+            display: none;
+        }
+
+        .upload-box {
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow:
+                inset 0 1px 1px rgba(255, 255, 255, 0.6),
+                0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .upload-box:hover {
+            background: var(--surface-hover);
+            transform: translateY(-2px);
+            box-shadow:
+                inset 0 1px 1px rgba(255, 255, 255, 0.6),
+                0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-box.dragover {
+            background: var(--surface-hover);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .upload-box input {
+            display: none;
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 56px;
+            margin: 0 auto 0.75rem;
+            position: relative;
+            background: linear-gradient(180deg, #f8f8f8 0%, #e8e8e8 100%);
+            border-radius: 3px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 8px;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+        }
+
+        .upload-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(225deg, transparent 50%, #d0d0d0 50%);
+        }
+
+        .upload-icon::after {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .upload-icon.bib::after {
+            content: 'BIB';
+            background: #6b8e5e;
+            color: white;
+        }
+
+        .upload-icon.pdf::after {
+            content: 'PDF';
+            background: #c43d3d;
+            color: white;
+        }
+
+        .upload-box h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+            color: var(--text);
+        }
+
+        .upload-box p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .beta-badge {
+            display: inline-block;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.15rem 0.5rem;
+            background: rgba(139, 92, 246, 0.15);
+            color: #7c3aed;
+            border-radius: 9999px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .progress-section {
+            margin-bottom: 2rem;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease, margin-bottom 0.4s ease;
+        }
+
+        .progress-section.active {
+            max-height: 60px;
+            opacity: 1;
+        }
+
+        .progress-section.collapsing {
+            max-height: 0;
+            opacity: 0;
+            margin-bottom: 0;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #5a8ab8);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .progress-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .results-section {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+        }
+
+        .results-section.active {
+            max-height: none;
+            opacity: 1;
+            overflow: visible;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 600px) {
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .summary-card {
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.25rem 1rem;
+            text-align: center;
+            box-shadow:
+                inset 0 1px 1px rgba(255, 255, 255, 0.6),
+                0 2px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .summary-card .number {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 1.2;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .summary-card .number .roll-digit {
+            display: inline-block;
+            position: relative;
+        }
+
+        .summary-card .number .roll-digit.rolling {
+            animation: rollUp 0.3s ease-out forwards;
+        }
+
+        @keyframes rollUp {
+            0% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .summary-card .label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 0.25rem;
+        }
+
+        .summary-card.valid .number { color: var(--success); }
+        .summary-card.errors .number { color: var(--error); }
+        .summary-card.warnings .number { color: var(--warning); }
+
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+        }
+
+        .result-item {
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            box-shadow:
+                inset 0 1px 1px rgba(255, 255, 255, 0.6),
+                0 2px 12px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .result-item:hover {
+            transform: translateX(3px);
+        }
+
+        .result-item.valid {
+            background: linear-gradient(90deg, var(--success-bg) 0%, var(--surface) 30%);
+        }
+        .result-item.error {
+            background: linear-gradient(90deg, var(--error-bg) 0%, var(--surface) 30%);
+        }
+        .result-item.warning {
+            background: linear-gradient(90deg, var(--warning-bg) 0%, var(--surface) 30%);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.35rem;
+        }
+
+        .result-key {
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            background: rgba(0, 0, 0, 0.04);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .result-sources {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .source-badge {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 500;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.06);
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+        }
+
+        .source-badge.found {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        a.source-badge {
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        a.source-badge:hover {
+            background: rgba(45, 138, 78, 0.25);
+            transform: scale(1.05);
+        }
+
+        .result-title {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .result-messages {
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .result-messages .error-msg {
+            color: var(--error);
+        }
+
+        .result-messages .warning-msg {
+            color: var(--warning);
+        }
+
+        .button-group {
+            margin-top: 2rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .export-btn {
+            font-family: 'Outfit', sans-serif;
+            padding: 0.85rem 1.75rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(59, 107, 150, 0.25);
+        }
+
+        .export-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 107, 150, 0.3);
+        }
+
+        .reset-btn {
+            font-family: 'Outfit', sans-serif;
+            padding: 0.85rem 1.75rem;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reset-btn:hover {
+            background: var(--surface-hover);
+            transform: translateY(-1px);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        footer a:hover {
+            color: var(--accent-hover);
+        }
+
+        .back-link {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        /* Info button and modal */
+        .info-button {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1rem;
+            font-style: italic;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .info-button:hover {
+            background: var(--surface-hover);
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #f0f4f8;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 520px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.06);
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .modal h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .modal h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin: 1.25rem 0 0.5rem 0;
+            color: var(--text);
+        }
+
+        .modal p, .modal li {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .modal ul {
+            margin: 0.5rem 0 0 1.25rem;
+        }
+
+        .modal li {
+            margin-bottom: 0.35rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p style="margin-bottom: 1.5rem;"><a href="https://arinbjorn.is" class="back-link">← arinbjorn.is</a></p>
+        <header>
+            <h1>Reference Checker</h1>
+            <p class="subtitle">Validate your references against CrossRef, Semantic Scholar &amp; arXiv</p>
+        </header>
+
+        <div class="upload-section">
+            <label class="upload-box" id="bibUpload">
+                <input type="file" accept=".bib" id="bibFile">
+                <div class="upload-icon bib"></div>
+                <h3>Upload .bib file</h3>
+                <p>BibTeX bibliography file</p>
+            </label>
+
+            <label class="upload-box" id="pdfUpload">
+                <input type="file" accept=".pdf" id="pdfFile">
+                <div class="upload-icon pdf"></div>
+                <h3>Upload PDF <span class="beta-badge">Beta</span></h3>
+                <p>Extract references from paper</p>
+            </label>
+        </div>
+
+        <div class="progress-section" id="progressSection">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p class="progress-text" id="progressText">Processing...</p>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <div class="summary" id="summary"></div>
+            <div class="results-list" id="resultsList"></div>
+            <div class="button-group">
+                <button class="export-btn" id="exportBtn">Export JSON</button>
+                <button class="reset-btn" id="resetBtn">Check Another</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>Uses <a href="https://www.crossref.org/" target="_blank">CrossRef</a>,
+               <a href="https://www.semanticscholar.org/" target="_blank">Semantic Scholar</a> &amp;
+               <a href="https://arxiv.org/" target="_blank">arXiv</a> APIs</p>
+        </footer>
+    </div>
+
+    <button class="info-button" id="info-button" aria-label="How it works">i</button>
+
+    <div class="modal" id="info-modal" role="dialog" aria-hidden="true">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+
+            <h2>How it works</h2>
+            <p>Upload a BibTeX file or PDF to validate your references against academic databases.</p>
+
+            <h3>Sources checked</h3>
+            <ul>
+                <li><strong>CR</strong> — CrossRef (DOIs, journals, conference proceedings)</li>
+                <li><strong>SS</strong> — Semantic Scholar (CS, biomedical, broad coverage)</li>
+                <li><strong>arXiv</strong> — arXiv preprints</li>
+            </ul>
+
+            <h3>What it catches</h3>
+            <ul>
+                <li>References not found in any database</li>
+                <li>Year mismatches between your entry and the source</li>
+                <li>Author name discrepancies</li>
+                <li>Missing fields (year, title)</li>
+            </ul>
+
+            <h3>Tips</h3>
+            <ul>
+                <li>Include DOIs or arXiv IDs in your .bib for faster, more accurate matching</li>
+                <li>Green badges link directly to the source</li>
+                <li>PDF extraction is experimental — .bib files work best</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Configure PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // State
+        let results = [];
+        let totalEntries = 0;
+
+        // DOM Elements
+        const bibFile = document.getElementById('bibFile');
+        const pdfFile = document.getElementById('pdfFile');
+        const bibUpload = document.getElementById('bibUpload');
+        const pdfUpload = document.getElementById('pdfUpload');
+        const progressSection = document.getElementById('progressSection');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const resultsSection = document.getElementById('resultsSection');
+        const summary = document.getElementById('summary');
+        const resultsList = document.getElementById('resultsList');
+        const exportBtn = document.getElementById('exportBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // arXiv proxy URL (Cloudflare Worker)
+        const ARXIV_PROXY_URL = 'https://arxiv-proxy.arinbjorn.workers.dev';
+
+        // Drag and drop
+        [bibUpload, pdfUpload].forEach(box => {
+            box.addEventListener('dragover', e => {
+                e.preventDefault();
+                box.classList.add('dragover');
+            });
+            box.addEventListener('dragleave', () => box.classList.remove('dragover'));
+            box.addEventListener('drop', e => {
+                e.preventDefault();
+                box.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (box === bibUpload && file.name.endsWith('.bib')) {
+                    processBibFile(file);
+                } else if (box === pdfUpload && file.name.endsWith('.pdf')) {
+                    processPdfFile(file);
+                }
+            });
+        });
+
+        bibFile.addEventListener('change', e => {
+            if (e.target.files[0]) processBibFile(e.target.files[0]);
+        });
+
+        pdfFile.addEventListener('change', e => {
+            if (e.target.files[0]) processPdfFile(e.target.files[0]);
+        });
+
+        exportBtn.addEventListener('click', () => {
+            const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'citation-results.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        resetBtn.addEventListener('click', () => {
+            results = [];
+            resultsSection.classList.remove('active');
+            progressSection.classList.remove('active', 'collapsing');
+            document.querySelector('.upload-section').classList.remove('minimized');
+            bibFile.value = '';
+            pdfFile.value = '';
+        });
+
+        // BibTeX Parser
+        function parseBibTeX(text) {
+            const entries = [];
+            // Match @type{key, ... }
+            const entryRegex = /@(\w+)\s*\{\s*([^,]+)\s*,([^@]*?)(?=\n\s*@|\n*$)/gs;
+            let match;
+
+            while ((match = entryRegex.exec(text)) !== null) {
+                const type = match[1].toLowerCase();
+                const key = match[2].trim();
+                const fieldsStr = match[3];
+
+                const entry = { type, key, source: 'bibtex' };
+
+                // Parse fields
+                const fieldRegex = /(\w+)\s*=\s*(?:\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}|"([^"]*)"|(\d+))/g;
+                let fieldMatch;
+
+                while ((fieldMatch = fieldRegex.exec(fieldsStr)) !== null) {
+                    const fieldName = fieldMatch[1].toLowerCase();
+                    const value = fieldMatch[2] || fieldMatch[3] || fieldMatch[4] || '';
+                    entry[fieldName] = value.trim();
+                }
+
+                entries.push(entry);
+            }
+
+            return entries;
+        }
+
+        // PDF Reference Extraction
+        async function extractReferencesFromPdf(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+            // Better text extraction handling two-column layouts
+            let allLines = [];
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const viewport = page.getViewport({ scale: 1.0 });
+                const pageWidth = viewport.width;
+
+                // Group text items by Y position
+                const items = textContent.items;
+                const lineMap = new Map();
+
+                for (const item of items) {
+                    const y = Math.round(item.transform[5] / 3) * 3;  // 3px tolerance
+                    if (!lineMap.has(y)) {
+                        lineMap.set(y, []);
+                    }
+                    lineMap.get(y).push({ x: item.transform[4], str: item.str });
+                }
+
+                // Detect if this page is two-column by analyzing X positions
+                const allX = items.map(it => it.transform[4]);
+                const midPage = pageWidth / 2;
+                const leftCount = allX.filter(x => x < midPage - 20).length;
+                const rightCount = allX.filter(x => x > midPage + 20).length;
+                const isTwoColumn = leftCount > 20 && rightCount > 20 &&
+                                    Math.min(leftCount, rightCount) / Math.max(leftCount, rightCount) > 0.3;
+
+                // Sort lines by Y (descending for top-to-bottom)
+                const sortedYs = [...lineMap.keys()].sort((a, b) => b - a);
+
+                if (isTwoColumn) {
+                    // Process left column first, then right column
+                    const leftLines = [];
+                    const rightLines = [];
+
+                    for (const y of sortedYs) {
+                        const lineItems = lineMap.get(y).sort((a, b) => a.x - b.x);
+                        const leftItems = lineItems.filter(it => it.x < midPage);
+                        const rightItems = lineItems.filter(it => it.x >= midPage);
+
+                        if (leftItems.length > 0) {
+                            const txt = leftItems.map(it => it.str).join(' ').trim();
+                            if (txt) leftLines.push(txt);
+                        }
+                        if (rightItems.length > 0) {
+                            const txt = rightItems.map(it => it.str).join(' ').trim();
+                            if (txt) rightLines.push(txt);
+                        }
+                    }
+
+                    allLines.push(...leftLines, ...rightLines);
+                } else {
+                    // Single column - process normally
+                    for (const y of sortedYs) {
+                        const lineItems = lineMap.get(y).sort((a, b) => a.x - b.x);
+                        const lineText = lineItems.map(it => it.str).join(' ').trim();
+                        if (lineText) {
+                            allLines.push(lineText);
+                        }
+                    }
+                }
+            }
+
+            const fullText = allLines.join('\n');
+            console.log('=== PDF TEXT EXTRACTION ===');
+            console.log('Total lines extracted:', allLines.length);
+            console.log('Last 2000 chars:', fullText.slice(-2000));
+
+            // Find the references section
+            const referencesText = extractReferencesSection(fullText);
+            if (!referencesText) {
+                console.warn('Could not find references section');
+                return [];
+            }
+
+            console.log('=== REFERENCES SECTION ===');
+            console.log('References text (first 2000 chars):', referencesText.slice(0, 2000));
+
+            // Detect the reference format pattern
+            const pattern = detectReferencePattern(referencesText);
+            console.log('Detected pattern:', pattern.type);
+
+            // Split into individual references using detected pattern
+            const rawRefs = splitReferences(referencesText, pattern);
+            console.log(`Found ${rawRefs.length} raw references`);
+
+            // Log first few raw refs for debugging
+            for (let i = 0; i < Math.min(3, rawRefs.length); i++) {
+                console.log(`Raw ref ${i + 1}:`, rawRefs[i].slice(0, 400));
+            }
+
+            // Parse each reference
+            const references = rawRefs
+                .map((ref, idx) => parseReference(ref, idx, pattern))
+                .filter(r => r !== null);
+
+            console.log('Parsed references:', references.length);
+            return references;
+        }
+
+        function extractReferencesSection(text) {
+            // Look for references section header - try multiple patterns
+            const headerPatterns = [
+                /\n\s*(References|REFERENCES)\s*\n/i,
+                /\n\s*(Bibliography|BIBLIOGRAPHY)\s*\n/i,
+                /\n\s*(Works Cited|WORKS CITED)\s*\n/i,
+                /\n\s*(Literature Cited|LITERATURE CITED)\s*\n/i,
+                /\n\s*(\d+\.?\s+References)\s*\n/i,
+                /\n(References|REFERENCES)$/m,  // References at end of line
+            ];
+
+            let startIdx = -1;
+            let matchedPattern = null;
+            for (const pattern of headerPatterns) {
+                const match = text.match(pattern);
+                if (match) {
+                    startIdx = match.index + match[0].length;
+                    matchedPattern = pattern.toString();
+                    console.log('Found references header at index', startIdx, 'with pattern:', matchedPattern);
+                    break;
+                }
+            }
+
+            if (startIdx === -1) {
+                // Fallback: look for first numbered reference [1] near end of document
+                const lastThird = text.slice(-Math.floor(text.length / 3));
+                const firstRef = lastThird.match(/\[\s*1\s*\]/);
+                if (firstRef) {
+                    console.log('Using fallback: found [1] marker in last third of document');
+                    return lastThird.slice(firstRef.index);
+                }
+
+                // Another fallback: look for dense area with years
+                console.log('No references section found');
+                return null;
+            }
+
+            // Find where references end (next major section or end)
+            const endPatterns = [
+                /\n\s*(Appendix|APPENDIX)\s*[A-Z]?\s*\n/i,
+                /\n\s*(Supplementary|SUPPLEMENTARY)/i,
+                /\n\s*(Acknowledgment|ACKNOWLEDGMENT|Acknowledgement|ACKNOWLEDGEMENT)/i,
+                /\n\s*(A\s+Appendix|A\.\s+Appendix)/i,
+                /\n\s*Checklist\s*\n/i,
+            ];
+
+            let endIdx = text.length;
+            for (const pattern of endPatterns) {
+                const match = text.slice(startIdx).match(pattern);
+                if (match) {
+                    endIdx = startIdx + match.index;
+                    console.log('Found end of references at index', endIdx);
+                    break;
+                }
+            }
+
+            const refSection = text.slice(startIdx, endIdx);
+            console.log('References section length:', refSection.length, 'chars');
+            return refSection;
+        }
+
+        function detectReferencePattern(text) {
+            // Count occurrences of different patterns
+            const patterns = {
+                bracketNum: (text.match(/\[\s*\d+\s*\]/g) || []).length,
+                dotNum: (text.match(/(?:^|\n)\s*\d{1,3}\.\s+[A-Z]/g) || []).length,
+                parenYear: (text.match(/\(\s*(?:19|20)\d{2}\s*\)/g) || []).length,
+            };
+
+            // Determine dominant pattern
+            if (patterns.bracketNum >= 3) {
+                return { type: 'bracket', regex: /\[\s*(\d+)\s*\]/g };
+            } else if (patterns.dotNum >= 3) {
+                return { type: 'dotnum', regex: /(?:^|\n)\s*(\d{1,3})\.\s+/g };
+            } else {
+                // Default to line-based with year detection
+                return { type: 'lines', regex: null };
+            }
+        }
+
+        function splitReferences(text, pattern) {
+            let refs = [];
+
+            if (pattern.type === 'bracket') {
+                // Split by [n] markers - but keep text between consecutive markers together
+                // Use regex to find all [n] positions
+                const markerRegex = /\[\s*(\d+)\s*\]/g;
+                const markers = [];
+                let match;
+                while ((match = markerRegex.exec(text)) !== null) {
+                    markers.push({ index: match.index, num: parseInt(match[1]), length: match[0].length });
+                }
+
+                // Extract text between markers
+                for (let i = 0; i < markers.length; i++) {
+                    const start = markers[i].index + markers[i].length;
+                    const end = i + 1 < markers.length ? markers[i + 1].index : text.length;
+                    const refText = text.slice(start, end).trim();
+
+                    // Join multi-line references (remove newlines)
+                    const joined = refText.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
+                    if (joined.length > 30) {
+                        refs.push(joined);
+                    }
+                }
+            } else if (pattern.type === 'dotnum') {
+                // Split by n. markers at start of line
+                const markerRegex = /(?:^|\n)\s*(\d{1,3})\.\s+/g;
+                const markers = [];
+                let match;
+                while ((match = markerRegex.exec(text)) !== null) {
+                    markers.push({ index: match.index, length: match[0].length });
+                }
+
+                for (let i = 0; i < markers.length; i++) {
+                    const start = markers[i].index + markers[i].length;
+                    const end = i + 1 < markers.length ? markers[i + 1].index : text.length;
+                    const refText = text.slice(start, end).trim();
+                    const joined = refText.replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
+                    if (joined.length > 30) {
+                        refs.push(joined);
+                    }
+                }
+            } else {
+                // Line-based: look for lines that start with author names
+                const lines = text.split(/\n+/);
+                let currentRef = '';
+
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (!trimmed) continue;
+
+                    // Check if this looks like a new reference (starts with author)
+                    const isNewRef = /^[A-Z][a-z]+,?\s+[A-Z]/.test(trimmed) ||
+                                    /^[A-Z][a-z]+\s+(?:and|&)\s+[A-Z]/.test(trimmed);
+
+                    if (isNewRef && currentRef.length > 50) {
+                        refs.push(currentRef.trim());
+                        currentRef = trimmed;
+                    } else {
+                        currentRef += ' ' + trimmed;
+                    }
+                }
+                if (currentRef.length > 50) refs.push(currentRef.trim());
+            }
+
+            // Final cleanup - ensure each ref looks reasonable
+            refs = refs.map(r => r.replace(/\s+/g, ' ').trim()).filter(r => {
+                // Must be at least 50 chars and contain a year
+                return r.length > 50 && /\b(?:19|20)\d{2}\b/.test(r);
+            });
+
+            return refs;
+        }
+
+        function parseReference(text, index, pattern) {
+            if (!text || text.length < 20) return null;
+
+            // Clean up: normalize whitespace, fix common PDF artifacts
+            let cleaned = text
+                .replace(/\s+/g, ' ')
+                .replace(/- /g, '')  // fix hyphenation
+                .replace(/ﬁ/g, 'fi').replace(/ﬂ/g, 'fl')  // fix ligatures
+                .trim();
+
+            // Extract year
+            const yearMatch = cleaned.match(/\b((?:19|20)\d{2})\b/);
+            const year = yearMatch ? yearMatch[1] : '';
+
+            // STRATEGY: Work from both ends - remove authors at start, venue at end
+            // What remains in the middle should be the title
+
+            let workingText = cleaned;
+
+            // === STEP 1: Remove venue/publication info from the END ===
+            // Common patterns that indicate where title ends:
+            const venuePatterns = [
+                /\.\s*In\s+(?:Proceedings|Proc\.|the\s+\d{4}|[A-Z]{2,})/i,  // In Proceedings, In WWW, etc.
+                /\.\s*(?:Proceedings|Proc\.)\s+(?:of\s+)?(?:the\s+)?/i,
+                /\.\s*(?:arXiv|arxiv)\s*,?\s*(?:preprint|:|\d{4})/i,  // arXiv, 2025 or arXiv:
+                /\.\s*(?:Journal|Trans\.|Transactions|IEEE|ACM|AAAI|NeurIPS|ICML|ICLR|EMNLP|ACL|NAACL|Neurology|Cold Spring Harbor|AI\s*,)/i,
+                /\.\s*\d+\s*\(\s*\d+\s*\)\s*:/,  // Journal volume(issue):
+                /,\s*pages?\s+\d+/i,
+                /,\s*pp?\.\s*\d+/i,
+                /\.\s*doi\s*:/i,
+                /\.\s*https?:\/\//i,
+                /\.\s*URL\s+/i,
+                /\.\s*Springer\s*,/i,  // Book publishers
+            ];
+
+            for (const pat of venuePatterns) {
+                const match = workingText.match(pat);
+                if (match && match.index > 30) {  // Keep at least 30 chars
+                    workingText = workingText.slice(0, match.index).trim();
+                    break;
+                }
+            }
+
+            // === STEP 2: Extract author info from the START ===
+            // Authors end with ". " followed by the title
+
+            let authorStr = '';
+
+            // Try patterns in order of specificity:
+
+            // Pattern 1: "et al." - "Smith, Jones, et al. Title"
+            const etAlMatch = workingText.match(/^(.+?et\s+al\.?)\s*\.?\s+(?=[A-Z])/i);
+            if (etAlMatch && etAlMatch[0].length < 500) {
+                authorStr = etAlMatch[1].trim();
+                workingText = workingText.slice(etAlMatch[0].length).trim();
+            }
+            // Pattern 2: Multiple authors with "and" - handles various name formats
+            else {
+                const multiAuthorMatch = workingText.match(/^(.+?(?:,\s+and\s+|,\s+&\s+|\s+and\s+)(?:[A-Z][a-zA-Z'-]*\.?\s+)*[A-Z][a-zA-Z'-]+)\.\s+(?=[A-Z])/);
+                if (multiAuthorMatch && multiAuthorMatch[0].length < 500) {
+                    authorStr = multiAuthorMatch[1].trim();
+                    workingText = workingText.slice(multiAuthorMatch[0].length).trim();
+                }
+                // Pattern 3: Single author - "FirstName LastName. Title"
+                else {
+                    const singleAuthorMatch = workingText.match(/^([A-Z][a-zA-Z'-]+(?:\s+[A-Z]\.?)?(?:\s+[A-Z][a-zA-Z'-]+){1,2})\.\s+(?=[A-Z])/);
+                    if (singleAuthorMatch && singleAuthorMatch[1].length < 50) {
+                        authorStr = singleAuthorMatch[1].trim();
+                        workingText = workingText.slice(singleAuthorMatch[0].length).trim();
+                    }
+                    // Pattern 4: Fallback - first sentence if it looks like authors
+                    else {
+                        const fallbackMatch = workingText.match(/^([^.]+)\.\s+(?=[A-Z])/);
+                        if (fallbackMatch && fallbackMatch[1].length < 300 && /(?:,|and\s+)[A-Z]/.test(fallbackMatch[1])) {
+                            authorStr = fallbackMatch[1].trim();
+                            workingText = workingText.slice(fallbackMatch[0].length).trim();
+                        }
+                    }
+                }
+            }
+
+            // Convert PDF author format to BibTeX-like format
+            // PDF format: "John Smith, Jane Doe, and Bob Lee" (comma separates authors)
+            // BibTeX format: "John Smith and Jane Doe and Bob Lee" (and separates authors)
+            if (authorStr) {
+                // First normalize "and" variants
+                authorStr = authorStr
+                    .replace(/,\s*and\s+/gi, ' and ')
+                    .replace(/,\s*&\s+/gi, ' and ')
+                    .replace(/\s+and\s+/gi, ' and ');
+
+                // Detect format: PDF uses "FirstName LastName, FirstName LastName"
+                // BibTeX uses "LastName, FirstName and LastName, FirstName"
+                // Key difference: in PDF, comma is followed by a full first name (2+ chars)
+                // In BibTeX, comma is followed by first name initial or short name
+
+                // Convert commas to " and " when they appear to separate different authors:
+                // - ", X. " -> keep (initial, same author)
+                // - ", Firstname " -> convert to " and " (new author)
+                // Note: Use unicode-aware pattern to handle accented names (Jürgen, José, etc.)
+                const beforeConvert = authorStr;
+                authorStr = authorStr.replace(/,\s+(?=([A-ZÀ-ÖØ-Þ][a-zà-öø-ÿ]{2,}|[A-ZÀ-ÖØ-Þ][a-zà-öø-ÿ]+-[A-ZÀ-ÖØ-Þ][a-zà-öø-ÿ]+)\s)/g, ' and ');
+                if (beforeConvert !== authorStr) {
+                    console.log(`Author format converted: "${beforeConvert}" → "${authorStr}"`);
+                }
+            }
+
+            // === STEP 3: Additional cleanup ===
+            // Remove leading quotes if title is quoted
+            workingText = workingText.replace(/^[""{]/, '').replace(/["""}]$/, '').trim();
+
+            // Remove trailing period
+            workingText = workingText.replace(/\.$/, '').trim();
+
+            // If still looks like author list or venue, this ref is probably malformed
+            if (/^[A-Z][a-z]+,\s+[A-Z]\.\s*,/.test(workingText)) {
+                console.log(`Ref ${index + 1}: Still looks like authors, skipping:`, workingText.slice(0, 100));
+                return null;
+            }
+            if (/^(?:pages?|pp\.?|doi:|https?:)/i.test(workingText)) {
+                console.log(`Ref ${index + 1}: Looks like venue info, skipping:`, workingText.slice(0, 100));
+                return null;
+            }
+
+            // Final validation
+            const title = workingText.slice(0, 300);
+            if (title.length < 10) {
+                console.log(`Ref ${index + 1}: Title too short, skipping:`, title);
+                return null;
+            }
+
+            console.log(`Ref ${index + 1} PARSED -> title: "${title.slice(0, 80)}...", author: "${authorStr.slice(0, 50)}..."`);
+
+            return {
+                key: `ref_${index + 1}`,
+                author: authorStr,
+                year: year,
+                title: title,
+                raw: cleaned.slice(0, 500),
+                source: 'pdf'  // Mark source for deterministic author parsing
+            };
+        }
+
+        // Clean title for API queries
+        function cleanTitleForQuery(title) {
+            return (title || '')
+                .replace(/\\[a-zA-Z]+\{([^}]*)\}/g, '$1')  // \command{text} -> text
+                .replace(/[{}]/g, '')                       // remove braces
+                .replace(/``|''/g, '"')                     // normalize quotes
+                .replace(/\s+/g, ' ')                       // normalize whitespace
+                .trim();
+        }
+
+        // Convert LaTeX escapes to Unicode characters
+        function latexToUnicode(str) {
+            if (!str) return str;
+            return str
+                // Umlauts: \"o → ö, {\"o} → ö, etc.
+                .replace(/\{?\\"([aouAOU])\}?/g, (_, c) => ({ a: 'ä', o: 'ö', u: 'ü', A: 'Ä', O: 'Ö', U: 'Ü' }[c] || c))
+                .replace(/\\"\{([aouAOU])\}/g, (_, c) => ({ a: 'ä', o: 'ö', u: 'ü', A: 'Ä', O: 'Ö', U: 'Ü' }[c] || c))
+                // Scandinavian: {\o} → ø, \o → ø
+                .replace(/\{?\\o\}?/g, 'ø').replace(/\{?\\O\}?/g, 'Ø')
+                .replace(/\{?\\aa\}?/g, 'å').replace(/\{?\\AA\}?/g, 'Å')
+                // Acute: \'e → é
+                .replace(/\{?\\'([aeiouyAEIOUY])\}?/g, (_, c) => ({ a: 'á', e: 'é', i: 'í', o: 'ó', u: 'ú', y: 'ý', A: 'Á', E: 'É', I: 'Í', O: 'Ó', U: 'Ú', Y: 'Ý' }[c] || c))
+                // Grave: \`e → è
+                .replace(/\{?\\`([aeiouAEIOU])\}?/g, (_, c) => ({ a: 'à', e: 'è', i: 'ì', o: 'ò', u: 'ù', A: 'À', E: 'È', I: 'Ì', O: 'Ò', U: 'Ù' }[c] || c))
+                // Circumflex: \^e → ê
+                .replace(/\{?\\\^([aeiouAEIOU])\}?/g, (_, c) => ({ a: 'â', e: 'ê', i: 'î', o: 'ô', u: 'û', A: 'Â', E: 'Ê', I: 'Î', O: 'Ô', U: 'Û' }[c] || c))
+                // Tilde: \~n → ñ
+                .replace(/\{?\\~([nNaAoO])\}?/g, (_, c) => ({ n: 'ñ', N: 'Ñ', a: 'ã', A: 'Ã', o: 'õ', O: 'Õ' }[c] || c))
+                // Cedilla: \c{c} → ç
+                .replace(/\\c\{([cC])\}/g, (_, c) => c === 'c' ? 'ç' : 'Ç')
+                // German eszett
+                .replace(/\{?\\ss\}?/g, 'ß')
+                // Clean up remaining braces
+                .replace(/[{}]/g, '');
+        }
+
+        // Parse authors - now deterministic based on source
+        // source='bibtex': "LastName, FirstName and LastName2, FirstName2"
+        // source='pdf': "FirstName LastName, FirstName2 LastName2, and FirstName3 LastName3"
+        function parseBibAuthors(authorStr, source = 'bibtex') {
+            if (!authorStr) return [];
+            const authors = [];
+
+            // Convert LaTeX escapes to Unicode first
+            let normalizedStr = latexToUnicode(authorStr);
+
+            // For PDF source: convert commas to "and" (commas separate authors, not first/last names)
+            if (source === 'pdf') {
+                normalizedStr = normalizedStr
+                    .replace(/,\s*and\s+/gi, ' and ')
+                    .replace(/,\s+/g, ' and ');
+            }
+
+            const parts = normalizedStr.split(/\s+and\s+/i);
+
+            for (const part of parts) {
+                const trimmed = part.trim();
+                if (!trimmed) continue;
+
+                // Skip "others" (BibTeX et al.)
+                if (trimmed.toLowerCase() === 'others') continue;
+
+                let firstName = '', lastName = '';
+
+                if (trimmed.includes(',') && source === 'bibtex') {
+                    // BibTeX format: "LastName, FirstName"
+                    const [last, first] = trimmed.split(',').map(s => s.trim());
+                    lastName = last;
+                    firstName = first || '';
+
+                    // Sanity check: if firstName has 3+ words, this might be wrong parsing
+                    const firstWords = firstName.split(/\s+/);
+                    if (firstWords.length >= 3) {
+                        console.log(`parseBibAuthors: Suspicious firstName "${firstName}" for lastName "${lastName}" - may be parsing error`);
+                    }
+                } else {
+                    // Format: "FirstName LastName" or "FirstName Middle LastName"
+                    const words = trimmed.split(/\s+/);
+                    if (words.length >= 2) {
+                        lastName = words[words.length - 1];
+                        firstName = words.slice(0, -1).join(' ');
+                    } else {
+                        lastName = words[0];
+                    }
+                }
+
+                // Normalize: remove accents, lowercase for comparison
+                const normalize = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
+                authors.push({
+                    first: firstName,
+                    last: lastName,
+                    firstNorm: normalize(firstName),
+                    lastNorm: normalize(lastName)
+                });
+            }
+            return authors;
+        }
+
+        // Parse authors from CrossRef format (array of {given, family})
+        function parseCrossRefAuthors(crAuthors) {
+            if (!crAuthors || !Array.isArray(crAuthors)) return [];
+            const normalize = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
+            return crAuthors.map(a => ({
+                first: a.given || '',
+                last: a.family || '',
+                firstNorm: normalize(a.given),
+                lastNorm: normalize(a.family)
+            }));
+        }
+
+        // Parse authors from Semantic Scholar format (array of {name})
+        function parseSSAuthors(ssAuthors) {
+            if (!ssAuthors || !Array.isArray(ssAuthors)) return [];
+            const normalize = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
+            return ssAuthors.map(a => {
+                const name = a.name || '';
+                const words = name.split(/\s+/);
+                const lastName = words[words.length - 1] || '';
+                const firstName = words.slice(0, -1).join(' ');
+                return {
+                    first: firstName,
+                    last: lastName,
+                    firstNorm: normalize(firstName),
+                    lastNorm: normalize(lastName)
+                };
+            });
+        }
+
+        // Parse authors from arXiv format (array of full name strings)
+        function parseArxivAuthors(arxivAuthors) {
+            if (!arxivAuthors || !Array.isArray(arxivAuthors)) return [];
+            const normalize = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
+            return arxivAuthors.map(name => {
+                const words = name.split(/\s+/);
+                const lastName = words[words.length - 1] || '';
+                const firstName = words.slice(0, -1).join(' ');
+                return {
+                    first: firstName,
+                    last: lastName,
+                    firstNorm: normalize(firstName),
+                    lastNorm: normalize(lastName)
+                };
+            });
+        }
+
+        // Compare two author lists, returns { lastNameIssues: [], firstNameIssues: [] }
+        function compareAuthors(bibAuthors, apiAuthors, sourceName) {
+            const issues = { lastNameWarnings: [], firstNameWarnings: [] };
+            if (!bibAuthors.length || !apiAuthors.length) return issues;
+
+            // Check each bib author against API authors
+            const apiLastNames = apiAuthors.map(a => a.lastNorm);
+
+            for (let i = 0; i < bibAuthors.length; i++) {
+                const bibAuthor = bibAuthors[i];
+                const bibLast = bibAuthor.lastNorm;
+                const bibFirst = bibAuthor.firstNorm;
+
+                // Find matching last name in API authors
+                const matchIdx = apiLastNames.findIndex(ln => ln === bibLast || ln.includes(bibLast) || bibLast.includes(ln));
+
+                if (matchIdx === -1 && bibLast.length > 1) {
+                    // Last name not found
+                    issues.lastNameWarnings.push(`Author "${bibAuthor.last}" not found in ${sourceName}`);
+                } else if (matchIdx !== -1 && bibFirst.length > 1) {
+                    // Last name found, check first name
+                    const apiFirst = apiAuthors[matchIdx].firstNorm;
+                    // Check if first names match (allow initial match like "j" matches "john")
+                    const firstInitial = bibFirst.charAt(0);
+                    const apiInitial = apiFirst.charAt(0);
+                    if (apiFirst && firstInitial !== apiInitial && !apiFirst.startsWith(bibFirst) && !bibFirst.startsWith(apiFirst)) {
+                        issues.firstNameWarnings.push(`First name "${bibAuthor.first}" may differ from ${sourceName} "${apiAuthors[matchIdx].first}"`);
+                    }
+                }
+            }
+
+            // Also check if API has authors not in BibTeX
+            const bibLastNames = bibAuthors.map(a => a.lastNorm);
+            for (const apiAuthor of apiAuthors) {
+                const apiLast = apiAuthor.lastNorm;
+                if (apiLast.length > 1 && !bibLastNames.some(bn => bn === apiLast || bn.includes(apiLast) || apiLast.includes(bn))) {
+                    issues.lastNameWarnings.push(`${sourceName} has author "${apiAuthor.last}" not in entry`);
+                }
+            }
+
+            return issues;
+        }
+
+        // Extract DOI from entry
+        function getDoi(entry) {
+            let doi = entry.doi || '';
+            // Clean DOI
+            doi = doi.replace(/^https?:\/\/(dx\.)?doi\.org\//i, '').trim();
+            return doi || null;
+        }
+
+        // API Functions - now accepts pre-fetched SS result from batch
+        async function queryCredSemantic(entry, batchedSS = null) {
+            const rawTitle = entry.title || '';
+            const cleanTitle = cleanTitleForQuery(rawTitle);
+            const doi = getDoi(entry);
+
+            let crossref = null;
+            let semantic = batchedSS; // Use batch result if provided
+
+            // CrossRef - try DOI first, then title search
+            // Note: Can't use User-Agent header in browser CORS requests
+            try {
+                if (doi) {
+                    // Direct DOI lookup
+                    const res = await fetch(`https://api.crossref.org/works/${encodeURIComponent(doi)}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        crossref = data.message;
+                    }
+                }
+
+                // Fall back to title search if DOI lookup failed
+                if (!crossref && cleanTitle) {
+                    const params = new URLSearchParams({ 'query.title': cleanTitle, rows: 5 });
+                    const res = await fetch(`https://api.crossref.org/works?${params}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        const items = data.message?.items || [];
+                        const bibYear = parseInt(entry.year) || null;
+
+                        // Find best match above threshold, considering year
+                        let bestMatch = null;
+                        let bestScore = 0;
+                        for (const item of items) {
+                            const itemTitle = (item.title || []).join(' ');
+                            let score = similarity(rawTitle, itemTitle);
+
+                            // If we have a bib year, check if CrossRef year is close
+                            if (bibYear && score > 0.75) {
+                                let itemYear = null;
+                                if (item['published-print']?.['date-parts']?.[0]?.[0]) {
+                                    itemYear = item['published-print']['date-parts'][0][0];
+                                } else if (item['published-online']?.['date-parts']?.[0]?.[0]) {
+                                    itemYear = item['published-online']['date-parts'][0][0];
+                                } else if (item.issued?.['date-parts']?.[0]?.[0]) {
+                                    itemYear = item.issued['date-parts'][0][0];
+                                }
+
+                                // If years differ by more than 2, likely wrong paper
+                                if (itemYear && Math.abs(itemYear - bibYear) > 2) {
+                                    console.log(`CrossRef: Rejecting "${itemTitle.slice(0,50)}" (year ${itemYear} vs bib ${bibYear})`);
+                                    continue; // Skip this result
+                                }
+                            }
+
+                            if (score > bestScore && score > 0.75) {
+                                bestScore = score;
+                                bestMatch = item;
+                            }
+                        }
+                        crossref = bestMatch;
+                    }
+                }
+            } catch (e) {
+                console.warn('CrossRef error:', e);
+            }
+
+            // Semantic Scholar - SKIP if we got result from batch
+            if (!semantic) {
+                // Delay before Semantic Scholar (they have stricter rate limits)
+                await delay(ssRateLimited ? ssBackoffMs : 500);
+
+                // Only do title search fallback (batch already tried DOI/arXiv ID)
+                try {
+                    if (cleanTitle) {
+                        const params = new URLSearchParams({
+                            query: cleanTitle,
+                            limit: 5,
+                            fields: 'title,authors,year,externalIds,paperId'
+                        });
+                        const res = await fetchWithRateLimit(`https://api.semanticscholar.org/graph/v1/paper/search?${params}`);
+                        if (res.ok) {
+                            const data = await res.json();
+                            const papers = data.data || [];
+                            const bibYear = parseInt(entry.year) || null;
+
+                            // Find best match above threshold, considering year
+                            let bestMatch = null;
+                            let bestScore = 0;
+                            for (const paper of papers) {
+                                let score = similarity(rawTitle, paper.title || '');
+
+                                // If we have a bib year, check if SS year is close
+                                if (bibYear && score > 0.75 && paper.year) {
+                                    if (Math.abs(paper.year - bibYear) > 2) {
+                                        console.log(`SS: Rejecting "${(paper.title || '').slice(0,50)}" (year ${paper.year} vs bib ${bibYear})`);
+                                        continue; // Skip this result
+                                    }
+                                }
+
+                                if (score > bestScore && score > 0.75) {
+                                    bestScore = score;
+                                    bestMatch = paper;
+                                }
+                            }
+                            semantic = bestMatch;
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Semantic Scholar error:', e);
+                }
+            } else {
+                console.log(`[${entry.key}] Using batch SS result`);
+            }
+
+            return { crossref, semantic };
+        }
+
+        // Delay helper for rate limiting
+        const delay = ms => new Promise(r => setTimeout(r, ms));
+
+        // Track rate limit state for Semantic Scholar
+        let ssRateLimited = false;
+        let ssBackoffMs = 1000;
+
+        // Batch lookup for Semantic Scholar - get multiple papers in ONE request
+        async function batchSemanticScholar(entries) {
+            const ssResults = new Map(); // key -> SS paper object
+
+            // Collect all identifiers
+            const ids = [];
+            const idToKey = new Map();
+
+            for (const entry of entries) {
+                const doi = getDoi(entry);
+                const arxivId = getArxivId(entry);
+
+                if (doi) {
+                    const ssId = `DOI:${doi}`;
+                    ids.push(ssId);
+                    idToKey.set(ssId, entry.key);
+                } else if (arxivId) {
+                    const ssId = `ARXIV:${arxivId}`;
+                    ids.push(ssId);
+                    idToKey.set(ssId, entry.key);
+                }
+            }
+
+            if (ids.length === 0) {
+                console.log('No DOIs or arXiv IDs for batch SS lookup');
+                return ssResults;
+            }
+
+            console.log(`Batch SS lookup: ${ids.length} papers with IDs`);
+
+            try {
+                const res = await fetchWithRateLimit('https://api.semanticscholar.org/graph/v1/paper/batch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids, fields: 'title,authors,year,externalIds,paperId' })
+                });
+
+                if (res.ok) {
+                    const papers = await res.json();
+                    // Response is array in same order as input ids
+                    for (let i = 0; i < papers.length; i++) {
+                        if (papers[i]) {
+                            const key = idToKey.get(ids[i]);
+                            ssResults.set(key, papers[i]);
+                        }
+                    }
+                    console.log(`Batch SS: found ${ssResults.size}/${ids.length} papers`);
+                } else {
+                    console.warn(`Batch SS failed: ${res.status}`);
+                }
+            } catch (e) {
+                console.warn('Batch SS error:', e);
+            }
+
+            return ssResults;
+        }
+
+        // Fetch with retry for rate-limited APIs
+        async function fetchWithRateLimit(url, options = {}) {
+            const maxRetries = 2;
+            let lastError;
+
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                try {
+                    const res = await fetch(url, options);
+
+                    if (res.status === 429) {
+                        // Rate limited - increase backoff
+                        ssRateLimited = true;
+                        ssBackoffMs = Math.min(ssBackoffMs * 2, 10000);
+                        console.warn(`Rate limited (429), backing off ${ssBackoffMs}ms...`);
+                        await delay(ssBackoffMs);
+                        continue;
+                    }
+
+                    // Success - gradually reduce backoff
+                    if (ssRateLimited && res.ok) {
+                        ssBackoffMs = Math.max(ssBackoffMs / 1.5, 1000);
+                    }
+
+                    return res;
+                } catch (e) {
+                    lastError = e;
+                    if (attempt < maxRetries) {
+                        await delay(1000 * (attempt + 1));
+                    }
+                }
+            }
+            throw lastError || new Error('Failed after retries');
+        }
+
+        async function queryArxiv(arxivId) {
+            try {
+                const res = await fetch(`${ARXIV_PROXY_URL}?id=${encodeURIComponent(arxivId)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.error) {
+                        console.warn('arXiv lookup failed:', data.error);
+                        return null;
+                    }
+                    return data;
+                }
+            } catch (e) {
+                console.warn('arXiv error:', e);
+            }
+            return null;
+        }
+
+        async function searchArxivByTitle(title) {
+            if (!title || title.length < 10) return null;
+            try {
+                const res = await fetch(`${ARXIV_PROXY_URL}?title=${encodeURIComponent(title)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.results && data.results.length > 0) {
+                        // Find best match by title similarity
+                        const cleanTitle = cleanTitleForQuery(title).toLowerCase();
+                        for (const result of data.results) {
+                            const resultTitle = (result.title || '').toLowerCase();
+                            const sim = similarity(cleanTitle, resultTitle);
+                            if (sim > 0.85) {
+                                console.log('arXiv title match found:', result.arxiv_id, 'similarity:', sim);
+                                return result;
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('arXiv title search error:', e);
+            }
+            return null;
+        }
+
+        function getArxivId(entry) {
+            // Check eprint field (most common)
+            const eprint = entry.eprint || '';
+            let match = eprint.match(/(\d{4}\.\d{4,5})/);
+            if (match) return match[1];
+
+            // Old format like hep-ph/9901234
+            match = eprint.match(/([a-z-]+\/\d{7})/i);
+            if (match) return match[1];
+
+            // Check arxivid field
+            const arxivid = entry.arxivid || '';
+            match = arxivid.match(/(\d{4}\.\d{4,5})/);
+            if (match) return match[1];
+
+            // Check URL field
+            const url = entry.url || '';
+            if (url.includes('arxiv.org')) {
+                match = url.match(/(\d{4}\.\d{4,5})/);
+                if (match) return match[1];
+            }
+
+            // Check note field
+            const note = entry.note || '';
+            if (note.toLowerCase().includes('arxiv')) {
+                match = note.match(/(\d{4}\.\d{4,5})/);
+                if (match) return match[1];
+            }
+
+            return null;
+        }
+
+        // Normalize text: remove LaTeX commands, braces, extra whitespace
+        function normalizeText(text) {
+            if (!text) return '';
+            return text
+                .replace(/\\[a-zA-Z]+\{([^}]*)\}/g, '$1')  // \command{text} -> text
+                .replace(/[{}]/g, '')                       // remove braces
+                .replace(/``|''/g, '"')                     // normalize quotes
+                .replace(/\s+/g, ' ')                       // normalize whitespace
+                .toLowerCase()
+                .trim();
+        }
+
+        // Levenshtein distance for proper string similarity
+        function levenshteinDistance(s1, s2) {
+            const m = s1.length, n = s2.length;
+            const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+
+            for (let i = 0; i <= m; i++) dp[i][0] = i;
+            for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+            for (let i = 1; i <= m; i++) {
+                for (let j = 1; j <= n; j++) {
+                    if (s1[i-1] === s2[j-1]) {
+                        dp[i][j] = dp[i-1][j-1];
+                    } else {
+                        dp[i][j] = 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+                    }
+                }
+            }
+            return dp[m][n];
+        }
+
+        function similarity(a, b) {
+            const s1 = normalizeText(a);
+            const s2 = normalizeText(b);
+            if (!s1 || !s2) return 0;
+
+            const maxLen = Math.max(s1.length, s2.length);
+            if (maxLen === 0) return 1;
+
+            const distance = levenshteinDistance(s1, s2);
+            return 1 - (distance / maxLen);
+        }
+
+        // Main validation
+        async function validateEntries(entries) {
+            results = [];
+            totalEntries = entries.length;
+
+            // Minimize upload section and show results immediately
+            document.querySelector('.upload-section').classList.add('minimized');
+            initializeLiveResults();
+            showProgress(true);
+
+            // PHASE 1: Batch lookup for Semantic Scholar (1 request for all papers with DOIs)
+            updateProgress(5, 'Batch querying Semantic Scholar...');
+            const ssBatchResults = await batchSemanticScholar(entries);
+            await delay(500);
+
+            // PHASE 2: Process each entry
+            for (let i = 0; i < entries.length; i++) {
+                const entry = entries[i];
+                updateProgress(10 + (i + 1) / entries.length * 85, `Checking ${i + 1}/${entries.length}`);
+
+                // Use batch SS result if available, otherwise query individually
+                const batchedSS = ssBatchResults.get(entry.key);
+                const { crossref, semantic } = await queryCredSemantic(entry, batchedSS);
+
+                // Query arXiv if entry has an arXiv ID (always, not just as fallback)
+                let arxiv = null;
+                const arxivId = getArxivId(entry);
+                if (arxivId) {
+                    arxiv = await queryArxiv(arxivId);
+                }
+                // If Semantic Scholar found it and has arXiv ID, use that
+                if (!arxiv && semantic?.externalIds?.ArXiv) {
+                    arxiv = { arxiv_id: semantic.externalIds.ArXiv, fromSS: true };
+                }
+                // Fallback: search arXiv by title only if no other source found it
+                if (!arxiv && !crossref && !semantic && entry.title) {
+                    arxiv = await searchArxivByTitle(entry.title);
+                }
+
+                const isReal = !!(crossref || semantic || arxiv);
+                const errors = [];
+                const warnings = [];
+
+                if (!isReal) {
+                    errors.push('Reference not found in CrossRef, Semantic Scholar, or arXiv');
+                }
+
+                const bibYear = entry.year || '';
+                const bibTitle = entry.title || '';
+
+                // Parse bib authors once for all comparisons (pass source for deterministic parsing)
+                const bibAuthors = parseBibAuthors(entry.author, entry.source || 'bibtex');
+                if (bibAuthors.length > 0) {
+                    console.log(`[${entry.key}] Parsed ${bibAuthors.length} authors (source: ${entry.source || 'bibtex'}):`, bibAuthors.map(a => `${a.first} ${a.last}`).join(', '));
+                }
+
+                // CrossRef validation
+                if (crossref) {
+                    // Year check
+                    let crYear = null;
+                    if (crossref['published-print']?.['date-parts']?.[0]?.[0]) {
+                        crYear = String(crossref['published-print']['date-parts'][0][0]);
+                    } else if (crossref['published-online']?.['date-parts']?.[0]?.[0]) {
+                        crYear = String(crossref['published-online']['date-parts'][0][0]);
+                    } else if (crossref.issued?.['date-parts']?.[0]?.[0]) {
+                        crYear = String(crossref.issued['date-parts'][0][0]);
+                    }
+
+                    if (crYear && bibYear && crYear !== bibYear) {
+                        errors.push(`Year mismatch: BibTeX has '${bibYear}', CrossRef has '${crYear}'`);
+                    }
+
+                    // Title similarity check
+                    const crTitle = (crossref.title || []).join(' ');
+                    if (crTitle && bibTitle) {
+                        const titleSim = similarity(bibTitle, crTitle);
+                        if (titleSim < 0.9) {
+                            warnings.push(`Title may differ: similarity ${(titleSim * 100).toFixed(1)}%`);
+                        }
+                    }
+
+                    // Author name comparison (only if we have authors to compare)
+                    if (entry.author && crossref.author) {
+                        const crAuthors = parseCrossRefAuthors(crossref.author);
+                        const authorIssues = compareAuthors(bibAuthors, crAuthors, 'CrossRef');
+                        warnings.push(...authorIssues.lastNameWarnings);
+                        warnings.push(...authorIssues.firstNameWarnings);
+                    }
+
+                    // Suggest DOI if missing (skip for PDF-extracted refs)
+                    if (crossref.DOI && !entry.doi && entry.source !== 'pdf') {
+                        warnings.push(`Missing DOI in BibTeX. Suggested: ${crossref.DOI}`);
+                    }
+                }
+
+                // Semantic Scholar validation
+                if (semantic) {
+                    // Year check (only if not already caught by CrossRef)
+                    if (!crossref) {
+                        const ssYear = semantic.year;
+                        if (ssYear && bibYear && String(ssYear) !== bibYear) {
+                            errors.push(`Year mismatch: BibTeX has '${bibYear}', Semantic Scholar has '${ssYear}'`);
+                        }
+                    }
+
+                    // Author name comparison (only if we have authors and CrossRef didn't already check)
+                    if (entry.author && !crossref && semantic.authors) {
+                        const ssAuthors = parseSSAuthors(semantic.authors);
+                        const authorIssues = compareAuthors(bibAuthors, ssAuthors, 'Semantic Scholar');
+                        warnings.push(...authorIssues.lastNameWarnings);
+                        warnings.push(...authorIssues.firstNameWarnings);
+                    }
+                }
+
+                // arXiv validation (skip if arXiv info came from SS, since SS already validated)
+                if (arxiv && !arxiv.fromSS) {
+                    const arxivTitle = arxiv.title || '';
+                    const titleSim = similarity(bibTitle, arxivTitle);
+                    if (titleSim < 0.75) {
+                        errors.push(`arXiv title mismatch: similarity ${(titleSim * 100).toFixed(1)}%`);
+                    } else if (titleSim < 0.9) {
+                        warnings.push(`arXiv title differs slightly: similarity ${(titleSim * 100).toFixed(1)}%`);
+                    }
+
+                    if (arxiv.year && bibYear && arxiv.year !== bibYear) {
+                        warnings.push(`Year differs: BibTeX has '${bibYear}', arXiv has '${arxiv.year}'`);
+                    }
+
+                    // Author name comparison (only if we have authors and other sources didn't already check)
+                    if (entry.author && !crossref && !semantic && arxiv.authors) {
+                        const arxivAuthors = parseArxivAuthors(arxiv.authors);
+                        const authorIssues = compareAuthors(bibAuthors, arxivAuthors, 'arXiv');
+                        warnings.push(...authorIssues.lastNameWarnings);
+                        warnings.push(...authorIssues.firstNameWarnings);
+                    }
+                }
+
+                // Check for missing fields (suppress author warning for PDF if we couldn't extract them)
+                if (!entry.year) warnings.push('Missing year field');
+                if (!entry.author && entry.source !== 'pdf') warnings.push('Missing author field');
+                if (!entry.title) errors.push('Missing title field');
+
+                // Build URLs for found sources
+                const urls = {};
+                if (crossref && crossref.DOI) {
+                    urls.crossref = `https://doi.org/${crossref.DOI}`;
+                }
+                if (semantic) {
+                    if (semantic.externalIds?.DOI) {
+                        urls.semantic_scholar = `https://doi.org/${semantic.externalIds.DOI}`;
+                    } else if (semantic.externalIds?.ArXiv) {
+                        urls.semantic_scholar = `https://arxiv.org/abs/${semantic.externalIds.ArXiv}`;
+                    } else if (semantic.paperId) {
+                        urls.semantic_scholar = `https://www.semanticscholar.org/paper/${semantic.paperId}`;
+                    }
+                }
+                if (arxiv && arxiv.arxiv_id) {
+                    urls.arxiv = `https://arxiv.org/abs/${arxiv.arxiv_id}`;
+                }
+
+                const result = {
+                    key: entry.key,
+                    title: entry.title || entry.raw || 'Unknown',
+                    is_real: isReal,
+                    crossref_found: !!crossref,
+                    semantic_scholar_found: !!semantic,
+                    arxiv_found: !!arxiv,
+                    urls,
+                    errors,
+                    warnings,
+                    arxiv_data: arxiv || undefined
+                };
+                results.push(result);
+
+                // Update UI live
+                addResultCard(result);
+                updateSummary();
+
+                // Rate limiting - shorter delay now since batch handles most SS lookups
+                await delay(ssRateLimited ? 1500 : 500);
+            }
+
+            showProgress(false);
+            displayResults(); // Final summary without progress indicator
+        }
+
+        function showProgress(show) {
+            if (show) {
+                progressSection.classList.remove('collapsing');
+                progressSection.classList.add('active');
+            } else {
+                // Gracefully collapse
+                progressSection.classList.add('collapsing');
+                progressSection.classList.remove('active');
+            }
+        }
+
+        function updateProgress(percent, text) {
+            progressFill.style.width = `${percent}%`;
+            progressText.textContent = text;
+        }
+
+        function displayResults() {
+            const valid = results.filter(r => r.is_real && r.errors.length === 0).length;
+            const withErrors = results.filter(r => r.errors.length > 0).length;
+            const withWarnings = results.filter(r => r.warnings.length > 0 && r.errors.length === 0).length;
+
+            summary.innerHTML = `
+                <div class="summary-card">
+                    <div class="number">${results.length}</div>
+                    <div class="label">Total</div>
+                </div>
+                <div class="summary-card valid">
+                    <div class="number">${valid}</div>
+                    <div class="label">Valid</div>
+                </div>
+                <div class="summary-card errors">
+                    <div class="number">${withErrors}</div>
+                    <div class="label">Errors</div>
+                </div>
+                <div class="summary-card warnings">
+                    <div class="number">${withWarnings}</div>
+                    <div class="label">Warnings</div>
+                </div>
+            `;
+
+            resultsList.innerHTML = results.map(r => {
+                const statusClass = r.errors.length > 0 ? 'error' :
+                                   r.warnings.length > 0 ? 'warning' : 'valid';
+
+                // Build source badges with links
+                const crBadge = r.crossref_found && r.urls?.crossref
+                    ? `<a href="${r.urls.crossref}" target="_blank" class="source-badge found">CR</a>`
+                    : `<span class="source-badge ${r.crossref_found ? 'found' : ''}">CR</span>`;
+                const ssBadge = r.semantic_scholar_found && r.urls?.semantic_scholar
+                    ? `<a href="${r.urls.semantic_scholar}" target="_blank" class="source-badge found">SS</a>`
+                    : `<span class="source-badge ${r.semantic_scholar_found ? 'found' : ''}">SS</span>`;
+                const arxivBadge = r.arxiv_found && r.urls?.arxiv
+                    ? `<a href="${r.urls.arxiv}" target="_blank" class="source-badge found">arXiv</a>`
+                    : `<span class="source-badge ${r.arxiv_found ? 'found' : ''}">arXiv</span>`;
+
+                return `
+                    <div class="result-item ${statusClass}">
+                        <div class="result-title">${escapeHtml((r.title || '').slice(0, 150))}${r.title?.length > 150 ? '...' : ''}</div>
+                        <div class="result-header">
+                            <span class="result-key">${escapeHtml(r.key)}</span>
+                            <div class="result-sources">
+                                ${crBadge}
+                                ${ssBadge}
+                                ${arxivBadge}
+                            </div>
+                        </div>
+                        <div class="result-messages">
+                            ${r.errors.map(e => `<div class="error-msg">• ${escapeHtml(e)}</div>`).join('')}
+                            ${r.warnings.map(w => `<div class="warning-msg">⚠ ${escapeHtml(w)}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            resultsSection.classList.add('active');
+        }
+
+        function initializeLiveResults() {
+            // Show results section with empty state
+            resultsSection.classList.add('active');
+            resultsList.innerHTML = '';
+
+            // Reset previous values for roll animation
+            prevSummaryValues = { checked: 0, valid: 0, errors: 0, warnings: 0 };
+
+            // Initialize summary with zeros (showing total expected)
+            summary.innerHTML = `
+                <div class="summary-card">
+                    <div class="number"><span class="roll-digit">0</span><span style="opacity:0.4">/${totalEntries}</span></div>
+                    <div class="label">Checked</div>
+                </div>
+                <div class="summary-card valid">
+                    <div class="number"><span class="roll-digit">0</span></div>
+                    <div class="label">Valid</div>
+                </div>
+                <div class="summary-card errors">
+                    <div class="number"><span class="roll-digit">0</span></div>
+                    <div class="label">Errors</div>
+                </div>
+                <div class="summary-card warnings">
+                    <div class="number"><span class="roll-digit">0</span></div>
+                    <div class="label">Warnings</div>
+                </div>
+            `;
+        }
+
+        // Track previous values for roll animation
+        let prevSummaryValues = { checked: 0, valid: 0, errors: 0, warnings: 0 };
+
+        function updateSummary() {
+            const valid = results.filter(r => r.is_real && r.errors.length === 0).length;
+            const withErrors = results.filter(r => r.errors.length > 0).length;
+            const withWarnings = results.filter(r => r.warnings.length > 0 && r.errors.length === 0).length;
+
+            const newValues = {
+                checked: results.length,
+                valid,
+                errors: withErrors,
+                warnings: withWarnings
+            };
+
+            // Update each card with roll animation if value changed
+            const cards = summary.querySelectorAll('.summary-card');
+            if (cards.length === 4) {
+                animateNumber(cards[0].querySelector('.number'), prevSummaryValues.checked, newValues.checked, `/${totalEntries}`);
+                animateNumber(cards[1].querySelector('.number'), prevSummaryValues.valid, newValues.valid);
+                animateNumber(cards[2].querySelector('.number'), prevSummaryValues.errors, newValues.errors);
+                animateNumber(cards[3].querySelector('.number'), prevSummaryValues.warnings, newValues.warnings);
+            }
+
+            prevSummaryValues = newValues;
+        }
+
+        function animateNumber(element, oldVal, newVal, suffix = '') {
+            if (!element || oldVal === newVal) return;
+
+            const suffixHtml = suffix ? `<span style="opacity:0.4">${suffix}</span>` : '';
+            element.innerHTML = `<span class="roll-digit rolling">${newVal}</span>${suffixHtml}`;
+
+            // Remove animation class after it completes
+            const digit = element.querySelector('.roll-digit');
+            if (digit) {
+                digit.addEventListener('animationend', () => {
+                    digit.classList.remove('rolling');
+                }, { once: true });
+            }
+        }
+
+        function addResultCard(r) {
+            const statusClass = r.errors.length > 0 ? 'error' :
+                               r.warnings.length > 0 ? 'warning' : 'valid';
+
+            // Build source badges with links
+            const crBadge = r.crossref_found && r.urls?.crossref
+                ? `<a href="${r.urls.crossref}" target="_blank" class="source-badge found">CR</a>`
+                : `<span class="source-badge ${r.crossref_found ? 'found' : ''}">CR</span>`;
+            const ssBadge = r.semantic_scholar_found && r.urls?.semantic_scholar
+                ? `<a href="${r.urls.semantic_scholar}" target="_blank" class="source-badge found">SS</a>`
+                : `<span class="source-badge ${r.semantic_scholar_found ? 'found' : ''}">SS</span>`;
+            const arxivBadge = r.arxiv_found && r.urls?.arxiv
+                ? `<a href="${r.urls.arxiv}" target="_blank" class="source-badge found">arXiv</a>`
+                : `<span class="source-badge ${r.arxiv_found ? 'found' : ''}">arXiv</span>`;
+
+            const card = document.createElement('div');
+            card.className = `result-item ${statusClass}`;
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(10px)';
+            card.innerHTML = `
+                <div class="result-title">${escapeHtml((r.title || '').slice(0, 150))}${r.title?.length > 150 ? '...' : ''}</div>
+                <div class="result-header">
+                    <span class="result-key">${escapeHtml(r.key)}</span>
+                    <div class="result-sources">
+                        ${crBadge}
+                        ${ssBadge}
+                        ${arxivBadge}
+                    </div>
+                </div>
+                <div class="result-messages">
+                    ${r.errors.map(e => `<div class="error-msg">• ${escapeHtml(e)}</div>`).join('')}
+                    ${r.warnings.map(w => `<div class="warning-msg">⚠ ${escapeHtml(w)}</div>`).join('')}
+                </div>
+            `;
+
+            resultsList.appendChild(card);
+
+            // Animate in
+            requestAnimationFrame(() => {
+                card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function processBibFile(file) {
+            const text = await file.text();
+            const entries = parseBibTeX(text);
+
+            if (entries.length === 0) {
+                alert('No BibTeX entries found in file');
+                return;
+            }
+
+            await validateEntries(entries);
+        }
+
+        async function processPdfFile(file) {
+            // Minimize upload section immediately
+            document.querySelector('.upload-section').classList.add('minimized');
+            updateProgress(0, 'Extracting text from PDF...');
+            showProgress(true);
+
+            try {
+                const references = await extractReferencesFromPdf(file);
+
+                if (references.length === 0) {
+                    alert('Could not extract references from PDF. Try uploading a .bib file instead.');
+                    showProgress(false);
+                    document.querySelector('.upload-section').classList.remove('minimized');
+                    return;
+                }
+
+                await validateEntries(references);
+            } catch (e) {
+                console.error('PDF processing error:', e);
+                alert('Error processing PDF: ' + e.message);
+                showProgress(false);
+                document.querySelector('.upload-section').classList.remove('minimized');
+            }
+        }
+
+        // Modal functionality
+        const infoButton = document.getElementById('info-button');
+        const infoModal = document.getElementById('info-modal');
+        const modalClose = document.getElementById('modal-close');
+
+        infoButton.addEventListener('click', () => {
+            infoModal.classList.add('show');
+            infoModal.setAttribute('aria-hidden', 'false');
+        });
+
+        modalClose.addEventListener('click', () => {
+            infoModal.classList.remove('show');
+            infoModal.setAttribute('aria-hidden', 'true');
+        });
+
+        infoModal.addEventListener('click', (e) => {
+            if (e.target === infoModal) {
+                infoModal.classList.remove('show');
+                infoModal.setAttribute('aria-hidden', 'true');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && infoModal.classList.contains('show')) {
+                infoModal.classList.remove('show');
+                infoModal.setAttribute('aria-hidden', 'true');
+            }
+        });
+    </script>
+</body>
+</html>
