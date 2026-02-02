@@ -1873,8 +1873,8 @@
                     }
                 }
 
-                // arXiv validation (skip if arXiv info came from SS, since SS already validated)
-                if (arxiv && !arxiv.fromSS) {
+                // arXiv validation (only when arXiv is the sole source - skip if SS/CR already validated)
+                if (arxiv && !arxiv.fromSS && !crossref && !semantic) {
                     const arxivTitle = arxiv.title || '';
                     const titleSim = similarity(bibTitle, arxivTitle);
                     if (titleSim < 0.75) {
@@ -1887,8 +1887,8 @@
                         warnings.push(`Year differs: BibTeX has '${bibYear}', arXiv has '${arxiv.year}'`);
                     }
 
-                    // Author name comparison (only if we have authors and other sources didn't already check)
-                    if (entry.author && !crossref && !semantic && arxiv.authors) {
+                    // Author name comparison
+                    if (entry.author && arxiv.authors) {
                         const arxivAuthors = parseArxivAuthors(arxiv.authors);
                         const authorIssues = compareAuthors(bibAuthors, arxivAuthors, 'arXiv');
                         warnings.push(...authorIssues.lastNameWarnings);
