@@ -31,21 +31,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&display=swap"
     rel="stylesheet">
 
   <style>
-    /* Theme and base variables */
+    /* ========================================
+       MAGAZINE-STYLE DESIGN SYSTEM
+       High-end academic journal aesthetic
+       ======================================== */
+
+    /* Color Palette */
     :root {
-      --primary-color: #252525;
-      --text-color: #222222;
-      --background-card: rgba(255, 255, 255, 0.08);
+      --bg-primary: #FAFBFC;
+      --bg-pure: #FFFFFF;
+      --text-primary: #1A1A1A;
+      --text-secondary: #6B7280;
+      --accent-rule: #1A1A1A;
+      --accent-subtle: #E5E7EB;
       --theme-ml: #2064B0;
-      /* Darker blue */
       --theme-biomedical: #207F73;
-      /* Darker teal */
       --theme-law: #663399;
-      /* Darker purple */
       --transition-standard: all 0.3s ease;
       --container-width: 70ch;
       --spacing-base: 1rem;
@@ -59,7 +64,7 @@
     }
 
     html {
-      font-family: 'Source Serif 4', serif;
+      font-family: 'Source Serif 4', Georgia, serif;
       font-size: 16px;
       line-height: 1.5;
       scroll-behavior: smooth;
@@ -69,7 +74,7 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background-color: #d4dfe7;
+      background-color: var(--bg-primary);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -77,44 +82,153 @@
       position: relative;
     }
 
-    /* Typography */
-    h1 {
+    /* ========================================
+       TYPOGRAPHY SYSTEM - The Star
+       ======================================== */
+
+    /* Section titles - dramatic, uppercase */
+    .section-title {
       font-family: 'Outfit', sans-serif;
-      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-size: clamp(3rem, 8vw, 6rem);
       font-weight: 600;
-      color: var(--primary-color);
-      letter-spacing: -0.02em;
-      margin: var(--spacing-base) 0;
-      white-space: nowrap;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      line-height: 1.0;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
     }
 
+    /* Section numbers - large decorative background elements */
+    .section-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(4rem, 12vw, 8rem);
+      font-weight: 700;
+      color: var(--accent-subtle);
+      letter-spacing: -0.05em;
+      line-height: 0.8;
+      position: absolute;
+      top: -0.5rem;
+      left: -1rem;
+      z-index: 0;
+      user-select: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .section-number.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Labels/Tags - small caps style */
+    .label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    /* Body text - generous line-height */
     p {
-      font-size: 1.2rem;
-      line-height: 1.7;
-      color: var(--text-color);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.15rem;
+      line-height: 1.85;
+      color: var(--text-primary);
       max-width: var(--container-width);
     }
 
     .container p + p {
-      margin-top: 1rem;
+      margin-top: 1.25rem;
     }
 
-    .title p + p {
-      margin-top: 1rem;
+    /* Hero name - massive */
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      margin: var(--spacing-base) 0;
+      line-height: 1.0;
     }
 
-    /* Layout components */
-    .main {
-      width: min(90%, 80rem);
-      margin: 5vh auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
+    /* Tagline - elegant italic */
+    .tagline {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-style: italic;
+      font-size: 1.35rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 60ch;
+      margin: 1.5rem auto;
+    }
+
+    /* Subtitle - section headers */
+    .subtitle {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
       position: relative;
       z-index: 1;
     }
 
+    /* ========================================
+       LAYOUT SYSTEM
+       ======================================== */
+
+    .main {
+      width: min(92%, 72rem);
+      margin: 8vh auto 4vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Section rule - bold horizontal dividers */
+    .section-rule {
+      border: none;
+      height: 3px;
+      background: var(--text-primary);
+      margin: 4rem 0;
+      width: 100%;
+    }
+
+    .section-rule-light {
+      border: none;
+      height: 1px;
+      background: var(--accent-subtle);
+      margin: 3rem 0;
+      width: 100%;
+    }
+
+    /* Container - clean, no glassmorphism */
+    .container {
+      width: 100%;
+      max-width: 72rem;
+      padding: 3rem 0;
+      background: transparent;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .container > * {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    /* Dual column layout */
     .dual {
       display: flex;
       flex-wrap: wrap;
@@ -123,203 +237,24 @@
       justify-content: center;
     }
 
-    /* Enhanced container styles with theme accents */
-    .container {
-      flex: 1 1 min(100%, 38rem);
-      min-width: 300px;
-      padding: 2.5rem;
-      border-radius: 1rem;
-      background: var(--background-card);
-      backdrop-filter: blur(30px);
-      transition: var(--transition-standard);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 70rem;
-      z-index: 2;
-    }
+    /* ========================================
+       HERO SECTION
+       ======================================== */
 
-    .container>* {
-      width: 100%;
-      max-width: 90%;
-    }
-
-    /* Squircle Implementation */
-    .container,
-    .project-card,
-    .hero-nav a,
-    .theme-tag,
-    .theme-image,
-    .profile-image {
-      /* Fallback */
-      border-radius: 24px;
-    }
-
-    /* Squircle Implementation with 9-slice scaling */
-    /* This ensures corners don't stretch on wide elements */
-    @supports (-webkit-mask-box-image: url('assets/images/squircle.svg')) {
-
-      .container,
-      .project-card,
-      .hero-nav a,
-      .theme-image {
-        border-radius: 0 !important;
-
-        /* 9-slice scaling: 49% slice keeps the corners intact and stretches the middle 2% */
-        -webkit-mask-box-image-source: url('assets/images/squircle.svg');
-        -webkit-mask-box-image-slice: 49% fill;
-        -webkit-mask-box-image-width: 24px;
-        /* Explicit small radius for subtle look */
-        -webkit-mask-box-image-repeat: stretch;
-
-        /* Standard property for future compatibility */
-        mask-border-source: url('assets/images/squircle.svg');
-        mask-border-slice: 49% fill;
-        mask-border-width: 24px;
-        /* Explicit small radius */
-        mask-border-repeat: stretch;
-      }
-
-      /* Fix for borders: Use background gradients for corner reflections since box-shadows get clipped by squircle mask */
-      .container,
-      .project-card {
-        border: none !important;
-        box-shadow:
-          inset 0 0 0 1px rgba(255, 255, 255, 0.15),
-          inset 2px 2px 4px rgba(255, 255, 255, 0.2),
-          inset -1px -1px 2px rgba(255, 255, 255, 0.05),
-          0 8px 32px rgba(0, 0, 0, 0.1);
-        /* Corner reflections using background gradients - these render inside the mask */
-        background:
-          /* Top-left corner reflection */
-          radial-gradient(ellipse 35px 35px at 0% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 70%),
-          /* Top-right corner reflection */
-          radial-gradient(ellipse 30px 30px at 100% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 70%),
-          /* Bottom-left corner subtle reflection */
-          radial-gradient(ellipse 25px 25px at 0% 100%, rgba(255, 255, 255, 0.01) 0%, transparent 70%),
-          /* Bottom-right corner subtle shadow */
-          radial-gradient(ellipse 30px 30px at 100% 100%, rgba(0, 0, 0, 0.008) 0%, transparent 70%),
-          /* Base glass color */
-          rgba(255, 255, 255, 0.02) !important;
-      }
-
-      /* Disable hover effect on project cards */
-      .project-card,
-      .project-card:hover,
-      .project-card:focus,
-      .project-card:active {
-        box-shadow:
-          inset 0 0 0 1px rgba(255, 255, 255, 0.15),
-          inset 2px 2px 4px rgba(255, 255, 255, 0.2),
-          inset -1px -1px 2px rgba(255, 255, 255, 0.05),
-          0 8px 32px rgba(0, 0, 0, 0.1) !important;
-        transform: none !important;
-        filter: none !important;
-        backdrop-filter: blur(15px) !important;
-        -webkit-backdrop-filter: blur(15px) !important;
-        background:
-          radial-gradient(ellipse 35px 35px at 0% 0%, rgba(255, 255, 255, 0.03) 0%, transparent 70%),
-          radial-gradient(ellipse 30px 30px at 100% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 70%),
-          radial-gradient(ellipse 25px 25px at 0% 100%, rgba(255, 255, 255, 0.01) 0%, transparent 70%),
-          radial-gradient(ellipse 30px 30px at 100% 100%, rgba(0, 0, 0, 0.008) 0%, transparent 70%),
-          rgba(255, 255, 255, 0.02) !important;
-      }
-
-      /* Profile image needs specific handling - keep it circular */
-      .profile-image {
-        border-radius: 50% !important;
-        mask-image: none !important;
-        -webkit-mask-image: none !important;
-        -webkit-mask-box-image: none !important;
-        mask-border: none !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-      }
-
-      /* Tags should use standard border radius for clean borders */
-      .theme-tag {
-        border-radius: 8px !important;
-        mask-image: none !important;
-        -webkit-mask-image: none !important;
-        -webkit-mask-box-image: none !important;
-        mask-border: none !important;
-      }
-    }
-
-
-    /* Theme images */
-    .theme-image {
-      width: 100%;
-      max-width: 500px;
-      height: auto;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transition: var(--transition-standard);
-      opacity: 0.85;
-    }
-
-    .theme-image:hover {
-      transform: scale(1.02);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Profile section */
-    .title {
+    .hero {
       text-align: center;
-      max-width: var(--container-width);
-      margin-bottom: 4rem;
-      animation: fadeIn 1s ease-out;
-    }
-
-    /* Work With Me section */
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-      margin: 1.5rem 0;
-      width: 90%;
-    }
-
-    .service-item {
-      padding: 1.25rem;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .service-item h3 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--primary-color);
-    }
-
-    .service-item p {
-      font-size: 0.95rem;
-      line-height: 1.5;
-      margin: 0;
-      color: var(--text-color);
-      opacity: 0.9;
-    }
-
-    @media (max-width: 768px) {
-      .services-grid {
-        grid-template-columns: 1fr;
-      }
+      max-width: 100%;
+      padding: 4rem 0 2rem;
+      animation: fadeIn 0.8s ease-out;
     }
 
     .profile-image {
-      width: 220px;
-      height: 220px;
+      width: 150px;
+      height: 150px;
       border-radius: 50%;
       overflow: hidden;
-      margin: 0 auto 2rem;
-      border: 4px solid rgba(255, 255, 255, 0.2);
+      margin: 0 auto 2.5rem;
+      border: 2px solid var(--accent-subtle);
       transition: var(--transition-standard);
     }
 
@@ -327,122 +262,233 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      filter: grayscale(15%);
       transition: var(--transition-standard);
     }
 
-    .profile-image:hover {
-      transform: scale(1.02);
-      border-color: rgba(255, 255, 255, 0.3);
+    .profile-image:hover img {
+      filter: grayscale(0%);
     }
 
-    /* Research themes section */
-    .interests-grid {
-      display: flex;
-      flex-direction: row;
-      gap: 2rem;
-      justify-content: space-between;
-      width: 90%;
+    /* Hero navigation - small caps */
+    .hero-nav {
+      margin-top: 2.5rem;
+      text-align: center;
     }
 
-    .theme-category {
-      flex: 1;
-      min-width: 0;
-    }
-
-    /* Section styling */
-    .subtitle {
+    .hero-nav a {
       font-family: 'Outfit', sans-serif;
-      font-size: 2rem;
+      font-size: 0.8rem;
       font-weight: 500;
-      margin-bottom: 1.5rem;
-      color: var(--primary-color);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      width: 90%;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border: none;
+      transition: var(--transition-standard);
+      padding: 0.5rem 0.75rem;
+      position: relative;
     }
 
-    /* Section headers and tags */
-    .section-header {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      width: 90%;
+    .hero-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0.25rem;
+      left: 0.75rem;
+      width: 0;
+      height: 1px;
+      background: var(--text-primary);
+      transition: width 0.3s ease;
     }
 
-    .section-header .theme-tag {
-      align-self: flex-start;
+    .hero-nav a:hover {
+      color: var(--text-primary);
     }
 
-    .highlight {
-      font-weight: bold;
+    .hero-nav a:hover::after {
+      width: calc(100% - 1.5rem);
     }
 
-    .theme-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
+    .nav-separator {
+      color: var(--accent-subtle);
+      margin: 0 0.25rem;
+      font-size: 0.6rem;
     }
 
-    .theme-header h3 {
-      font-size: 1.3rem;
-      font-weight: 500;
-      margin: 0;
+    /* Current position text */
+    .current-position {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-top: 1rem;
     }
+
+    .current-position a {
+      color: var(--text-primary);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent-subtle);
+      transition: var(--transition-standard);
+    }
+
+    .current-position a:hover {
+      border-bottom-color: var(--text-primary);
+    }
+
+    /* ========================================
+       THEME TAGS
+       ======================================== */
 
     .theme-tag {
       font-family: 'Outfit', sans-serif;
       display: inline-block;
-      padding: 0.2rem 0.8rem;
-      border-radius: 16px;
-      font-size: 0.8rem;
-      color: #eee;
-      /* font-weight: normal; */
-      font-weight: bold;
-      margin-bottom: 0.8rem;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      border: 1.5px solid;
+      border-radius: 2px;
     }
 
     .tag-ml {
-      /* background-color: var(--theme-ml);
-      background-color: var(--theme-ml); */
-      border: 2px solid var(--theme-ml);
+      border-color: var(--theme-ml);
       color: var(--theme-ml);
     }
 
     .tag-biomedical {
-      /* background-color: var(--theme-biomedical); */
-      border: 2px solid var(--theme-biomedical);
-      color: var(--theme-biomedical)
+      border-color: var(--theme-biomedical);
+      color: var(--theme-biomedical);
     }
 
     .tag-law {
-      /* background-color: var(--theme-law); */
-      border: 2px solid var(--theme-law);
+      border-color: var(--theme-law);
       color: var(--theme-law);
     }
 
-    /* Update these styles in your CSS */
+    /* Tags inside section headers - quiet label below heading */
+    .section-header .theme-tag {
+      border: none;
+      padding: 0;
+      margin-bottom: 0;
+      margin-top: -0.5rem;
+    }
+
+    /* ========================================
+       RESEARCH THEMES GRID
+       ======================================== */
+
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .theme-category {
+      position: relative;
+    }
+
+    .theme-category h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+
+    .theme-category ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .theme-category li {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .theme-category li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent-subtle);
+    }
+
+    /* ========================================
+       RESEARCH SECTIONS
+       ======================================== */
+
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-header .subtitle {
+      margin-bottom: 0;
+    }
+
+    .theme-image {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      margin: 1.5rem 0 2rem;
+      border: 1px solid var(--accent-subtle);
+    }
+
+    .theme-image:hover {
+      /* No transform - editorial style */
+    }
+
+    /* ========================================
+       EDUCATION SECTION
+       ======================================== */
+
+    .education-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+      width: 100%;
+    }
+
+    .education-intro {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.15rem;
+      line-height: 1.85;
+      color: var(--text-primary);
+    }
+
+    .education-list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
     .education-item {
       position: relative;
       padding-left: 1.5rem;
-      /* Changed from padding-right to padding-left */
-      padding-right: 0;
-      /* Remove right padding */
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
     }
 
     .education-theme-indicator {
       position: absolute;
       left: 0;
-      /* Changed from right: 0 to left: 0 */
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      border-radius: 2px;
-      opacity: 0.7;
-      transition: var(--transition-standard);
+      top: 0.25rem;
+      bottom: 0.25rem;
+      width: 3px;
+      border-radius: 1px;
     }
 
     .education-theme-indicator.theme-ml {
@@ -457,247 +503,83 @@
       background-color: var(--theme-law);
     }
 
-    .education-content {
-      display: flex;
-      gap: 2rem;
-      align-items: flex-start;
+    .education-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: var(--transition-standard);
     }
 
-    .education-intro {
-      flex: 1;
+    .education-title:hover {
+      border-bottom-color: var(--text-primary);
+    }
+
+    .education-date {
       font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: var(--text-color);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
     }
 
-    .education-list {
-      flex: 1;
-    }
+    /* ========================================
+       PUBLICATIONS
+       ======================================== */
 
-    .education-list ul {
-      margin: 0;
-    }
-
-    @media (max-width: 768px) {
-      .education-content {
-        flex-direction: column;
-      }
-    }
-
-    /* Lists and links */
-    ul {
+    .publications-list {
       list-style: none;
       padding: 0;
-      font-size: 1.1rem;
-      color: var(--text-color);
-      width: 90%;
-    }
-
-    li {
-      margin-bottom: 1.2rem;
-      line-height: 1.6;
-    }
-
-    a {
-      color: var(--primary-color);
-      text-decoration: underline;
-      transition: var(--transition-standard);
-    }
-
-    a:hover {
-      color: #065fd4;
-      text-decoration: underline;
-    }
-
-    /* Hero navigation */
-    .hero-nav {
-      margin-top: 2rem;
-      text-align: center;
-      opacity: 0.6;
-      transition: var(--transition-standard);
-    }
-
-    .hero-nav:hover {
-      opacity: 1;
-    }
-
-    .hero-nav a {
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.95rem;
-      color: var(--text-color);
-      text-decoration: none;
-      font-weight: 500;
-      transition: var(--transition-standard);
-      padding: 0.5rem 0.75rem;
-      border-radius: 4px;
-    }
-
-    .hero-nav a:hover {
-      color: var(--primary-color);
-      background: rgba(255, 255, 255, 0.15);
-      text-decoration: none;
-    }
-
-    .nav-separator {
-      color: var(--text-color);
-      opacity: 0.4;
-      margin: 0 0.5rem;
-      font-size: 0.8rem;
-    }
-
-    /* Background animations */
-    .background {
+      margin: 0;
       width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      overflow: hidden;
-      z-index: 0;
     }
 
-    .gradient {
-      --size: 100vh;
-      --speed: 25s;
-      --easing: cubic-bezier(0.8, 0.2, 0.2, 0.8);
-      width: var(--size);
-      height: 80vh;
-      filter: blur(calc(var(--size) / 3));
-      background-image: linear-gradient(#b8c4cf, #c5cfd8);
-      animation: rotate var(--speed) var(--easing) alternate infinite;
-      border-radius: 30% 120% 120% 30% / 30% 30% 70% 70%;
-      z-index: -1;
+    .publications-list li {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--accent-subtle);
     }
 
-    .gradient-body {
-      background-color: #F0FAFB;
-      position: absolute;
-      inset: 0;
-      display: flex;
-      place-content: center;
-      align-items: center;
-      overflow: hidden;
+    .publications-list li:last-child {
+      border-bottom: none;
     }
 
-    .gradient-two {
-      background-color: #cdd5dc;
-      animation: rotate2 var(--speed) var(--easing) alternate infinite;
+    .highlight {
+      font-weight: 600;
     }
 
-    .gradient-three {
-      width: 100vh;
-      height: 80vh;
-      filter: blur(calc(100vh / 3));
-      background-color: #c0ccd6;
-      animation: rotate3 var(--speed) var(--easing) alternate infinite;
-    }
+    /* ========================================
+       PROJECTS GRID
+       ======================================== */
 
-    .gradient-four {
-      width: 50vh;
-      height: 60vh;
-      filter: blur(calc(50vh / 3));
-      background-color: #bfc9d4;
-      animation: rotate4 var(--speed) var(--easing) alternate infinite;
-      border-radius: 20% 80% 120% 30% / 10% 30% 10% 70%;
-    }
-
-    /* Animation keyframes */
-    @keyframes rotate {
-      0% {
-        transform: translateX(0vw) translateY(0vh) rotate(40deg);
-      }
-
-      50% {
-        transform: translateX(60vw) translateY(20vh) rotate(360deg);
-      }
-
-      100% {
-        transform: translateX(60vw) translateY(0vh) rotate(110deg);
-      }
-    }
-
-    @keyframes rotate2 {
-      0% {
-        transform: translateX(60vw) translateY(15vh) rotate(0deg);
-      }
-
-      50% {
-        transform: translateX(50vw) translateY(200vh) rotate(360deg);
-      }
-
-      100% {
-        transform: translateX(10vw) translateY(15vh) rotate(0deg);
-      }
-    }
-
-    @keyframes rotate3 {
-      0% {
-        transform: translateX(50vw) translateY(400%) rotate(360deg);
-      }
-
-      50% {
-        transform: translateX(10vw) translateY(15vh) rotate(0deg);
-      }
-
-      100% {
-        transform: translateX(60vw) translateY(200vh) rotate(0deg);
-      }
-    }
-
-    @keyframes rotate4 {
-      0% {
-        transform: translateX(60vw) translateY(200%) rotate(0deg);
-      }
-
-      50% {
-        transform: translateX(0vw) translateY(100vh) rotate(360deg);
-      }
-
-      100% {
-        transform: translateX(0vw) translateY(120vh) rotate(360deg);
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Project cards styling */
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 2rem;
       margin-top: 2rem;
-      width: 90%;
+      width: 100%;
     }
 
     .project-card {
       padding: 0;
-      border-radius: 1rem;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: var(--bg-pure);
+      border: 1px solid var(--accent-subtle);
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       min-height: 320px;
-      pointer-events: none;
+      transition: var(--transition-standard);
     }
 
-    .project-card * {
-      pointer-events: auto;
+    .project-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     }
-
 
     .project-visual {
       height: 140px;
@@ -706,7 +588,8 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      border-radius: 1rem 1rem 0 0;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--accent-subtle);
     }
 
     .project-content {
@@ -718,17 +601,17 @@
 
     .project-card h3 {
       font-family: 'Outfit', sans-serif;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 600;
-      color: var(--primary-color);
-      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
       line-height: 1.3;
     }
 
     .project-card p {
       font-size: 0.95rem;
-      line-height: 1.5;
-      color: var(--text-color);
+      line-height: 1.6;
+      color: var(--text-secondary);
       margin-bottom: 1.5rem;
       flex: 1;
       max-width: none;
@@ -739,13 +622,14 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      font-size: 1rem;
+      font-size: 0.85rem;
       font-weight: 500;
-      color: var(--primary-color);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-primary);
       text-decoration: none;
-      border: 2px solid var(--primary-color);
+      border: 1.5px solid var(--text-primary);
       padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
       transition: var(--transition-standard);
       background: transparent;
       margin-right: 0.5rem;
@@ -753,25 +637,11 @@
     }
 
     .project-link:hover {
-      background: var(--primary-color);
-      color: white;
-      transform: translateX(4px);
+      background: var(--text-primary);
+      color: var(--bg-pure);
     }
 
-    .project-link-disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      border-color: #999;
-      color: #999;
-    }
-
-    .project-link-disabled:hover {
-      background: transparent;
-      color: #999;
-      transform: none;
-    }
-
-    /* Simple route tracing animation */
+    /* Project animations */
     .train-animation {
       position: relative;
       width: 120px;
@@ -785,7 +655,7 @@
       position: absolute;
       width: 8px;
       height: 8px;
-      background: var(--primary-color);
+      background: var(--text-primary);
       border-radius: 50%;
     }
 
@@ -807,7 +677,7 @@
       left: 28px;
       width: 64px;
       height: 2px;
-      stroke: var(--primary-color);
+      stroke: var(--text-primary);
       stroke-width: 2;
       fill: none;
       stroke-dasharray: 64;
@@ -817,33 +687,12 @@
     }
 
     @keyframes routeTrace {
-      0% {
-        stroke-dasharray: 64;
-        stroke-dashoffset: 64;
-      }
-
-      25% {
-        stroke-dasharray: 64;
-        stroke-dashoffset: 0;
-      }
-
-      50% {
-        stroke-dasharray: 64;
-        stroke-dashoffset: 0;
-      }
-
-      75% {
-        stroke-dasharray: 64 64;
-        stroke-dashoffset: 0;
-      }
-
-      100% {
-        stroke-dasharray: 64 64;
-        stroke-dashoffset: -64;
-      }
+      0% { stroke-dashoffset: 64; }
+      25% { stroke-dashoffset: 0; }
+      50% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -64; }
     }
 
-    /* Fast clock animation (120x speed) */
     .time-animation {
       position: relative;
       width: 80px;
@@ -854,145 +703,298 @@
       position: relative;
       width: 80px;
       height: 80px;
-      border: 3px solid var(--primary-color);
+      border: 2px solid var(--text-primary);
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
+      background: transparent;
     }
 
     .clock-hand {
       position: absolute;
-      background: var(--primary-color);
+      background: var(--text-primary);
       transform-origin: bottom center;
-      border-radius: 2px;
+      border-radius: 1px;
       left: 50%;
     }
 
     .hour-hand {
-      width: 3px;
-      height: 24px;
+      width: 2px;
+      height: 22px;
       bottom: 50%;
-      margin-left: -1.5px;
-      /* Animation will be applied via JavaScript */
+      margin-left: -1px;
     }
 
     .minute-hand {
-      width: 2px;
-      height: 32px;
+      width: 1.5px;
+      height: 30px;
       bottom: 50%;
-      margin-left: -1px;
-      /* Animation will be applied via JavaScript */
+      margin-left: -0.75px;
     }
 
     .clock-center {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 6px;
-      height: 6px;
-      background: var(--primary-color);
+      width: 4px;
+      height: 4px;
+      background: var(--text-primary);
       border-radius: 50%;
       transform: translate(-50%, -50%);
     }
 
-    @keyframes hourRotate {
-      from {
-        transform: rotate(0deg);
-      }
+    /* ========================================
+       SERVICES / WORK WITH ME
+       ======================================== */
 
-      to {
-        transform: rotate(360deg);
-      }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin: 2rem 0;
+      width: 100%;
     }
 
-    @keyframes minuteRotate {
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
+    .service-item {
+      padding: 0;
     }
 
-    /* Forced dark theme for fireworks nights - takes precedence over media query */
-    html.force-dark-theme {
-      --primary-color: #f5f5f5;
-      --text-color: #e8e8e8;
-      --background-card: rgba(40, 50, 60, 0.2);
-      --theme-ml: #3b82f6;
-      --theme-biomedical: #06b6d4;
-      --theme-law: #8b5cf6;
+    .service-item h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
     }
 
-    html.force-dark-theme body {
-      background-color: #1e2a3a;
+    .service-item p {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin: 0;
+      color: var(--text-secondary);
     }
 
-    html.force-dark-theme .gradient-body {
-      background-color: #152028;
+    /* ========================================
+       LINKS
+       ======================================== */
+
+    a {
+      color: var(--text-primary);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent-subtle);
+      transition: var(--transition-standard);
     }
 
-    html.force-dark-theme .gradient-two,
-    html.force-dark-theme .gradient-three {
-      background-color: #cc7a1c;
+    a:hover {
+      border-bottom-color: var(--text-primary);
     }
 
-    html.force-dark-theme .gradient-four {
-      background-color: #4a8b94;
-    }
+    /* ========================================
+       FLOATING NAV (Single Glass Element)
+       ======================================== */
 
-    html.force-dark-theme .gradient:first-child {
-      background-image: linear-gradient(hsl(220, 30%, 25%, 85%), hsl(270, 30%, 35%));
-    }
-
-    html.force-dark-theme .hero-nav a:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    html.force-dark-theme .project-card,
-    html.force-dark-theme .project-card:hover {
-      backdrop-filter: blur(15px) !important;
-      -webkit-backdrop-filter: blur(15px) !important;
+    .floating-nav {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      transform: translateX(10px);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.65) 0%,
+        rgba(255, 255, 255, 0.4) 100%
+      );
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
       box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-        inset 2px 2px 4px rgba(255, 255, 255, 0.15),
-        inset -1px -1px 2px rgba(255, 255, 255, 0.03),
-        0 8px 32px rgba(0, 0, 0, 0.3) !important;
-      /* Corner reflections for dark theme - dark glass */
-      background:
-        radial-gradient(ellipse 35px 35px at 0% 0%, rgba(0, 0, 0, 0.08) 0%, transparent 70%),
-        radial-gradient(ellipse 30px 30px at 100% 0%, rgba(0, 0, 0, 0.05) 0%, transparent 70%),
-        radial-gradient(ellipse 25px 25px at 0% 100%, rgba(0, 0, 0, 0.03) 0%, transparent 70%),
-        radial-gradient(ellipse 30px 30px at 100% 100%, rgba(0, 0, 0, 0.06) 0%, transparent 70%),
-        rgba(0, 0, 0, 0.15) !important;
+        0 2px 16px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      z-index: 100;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
     }
 
-    html.force-dark-theme h1 {
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+    .floating-nav.visible {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
     }
 
-    html.force-dark-theme .subtitle {
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    .floating-nav-item {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border: none;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      transition: color 0.25s ease, background 0.25s ease, opacity 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+      opacity: 0.6;
     }
 
-    html.force-dark-theme .tag-ml {
-      border-color: var(--theme-ml);
-      color: var(--theme-ml);
+    .floating-nav-item:hover {
+      color: var(--text-primary);
+      border: none;
+      opacity: 1;
     }
 
-    html.force-dark-theme .tag-biomedical {
-      border-color: var(--theme-biomedical);
-      color: var(--theme-biomedical);
+    .floating-nav-item.active {
+      color: var(--text-primary);
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.04);
     }
 
-    html.force-dark-theme .tag-law {
-      border-color: var(--theme-law);
-      color: var(--theme-law);
+    .floating-nav-number {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--accent-subtle);
+      min-width: 1.25rem;
     }
 
-    html.force-dark-theme .theme-header h3,
-    html.force-dark-theme .interest-category h3 {
-      color: var(--text-color);
+    .floating-nav-item.active .floating-nav-number {
+      color: var(--text-secondary);
+    }
+
+    /* Tier 3: Liquid glass refraction — Chromium only */
+    .floating-nav.liquid-glass {
+      backdrop-filter: url(#liquid-glass) blur(12px);
+      -webkit-backdrop-filter: url(#liquid-glass) blur(12px);
+    }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid var(--accent-subtle);
+      width: 100%;
+    }
+
+    footer p {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin: 0 auto;
+    }
+
+    /* ========================================
+       ANIMATIONS
+       ======================================== */
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========================================
+       DARK THEME
+       ======================================== */
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #1A1A1A;
+        --bg-pure: #222222;
+        --text-primary: #F5F5F5;
+        --text-secondary: #9CA3AF;
+        --accent-rule: #F5F5F5;
+        --accent-subtle: #374151;
+        --theme-ml: #60A5FA;
+        --theme-biomedical: #34D399;
+        --theme-law: #A78BFA;
+      }
+
+      .floating-nav {
+        background: linear-gradient(
+          135deg,
+          rgba(40, 40, 40, 0.55) 0%,
+          rgba(25, 25, 25, 0.35) 100%
+        );
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow:
+          0 2px 16px rgba(0, 0, 0, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+      }
+
+      .floating-nav-item.active {
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      .theme-image {
+        filter: invert(1) hue-rotate(180deg);
+        opacity: 0.9;
+      }
+
+      .profile-image img {
+        filter: grayscale(15%) brightness(0.95);
+      }
+
+      .profile-image:hover img {
+        filter: grayscale(0%) brightness(1);
+      }
+    }
+
+    /* Force dark theme for special occasions */
+    html.force-dark-theme {
+      --bg-primary: #1A1A1A;
+      --bg-pure: #222222;
+      --text-primary: #F5F5F5;
+      --text-secondary: #9CA3AF;
+      --accent-rule: #F5F5F5;
+      --accent-subtle: #374151;
+      --theme-ml: #60A5FA;
+      --theme-biomedical: #34D399;
+      --theme-law: #A78BFA;
+    }
+
+    html.force-dark-theme .floating-nav {
+      background: linear-gradient(
+        135deg,
+        rgba(40, 40, 40, 0.55) 0%,
+        rgba(25, 25, 25, 0.35) 100%
+      );
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow:
+        0 2px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    html.force-dark-theme .floating-nav-item.active {
+      background: rgba(255, 255, 255, 0.06);
     }
 
     html.force-dark-theme .theme-image {
@@ -1000,147 +1002,71 @@
       opacity: 0.9;
     }
 
-    html.force-dark-theme .theme-image:hover {
-      opacity: 1;
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+
+    @media (max-width: 900px) {
+      .interests-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .education-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-number {
+        font-size: clamp(3rem, 10vw, 5rem);
+      }
     }
 
-    /* Dark theme */
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --primary-color: #f5f5f5;
-        --text-color: #e8e8e8;
-        --background-card: rgba(40, 50, 60, 0.2);
-        --theme-ml: #3b82f6;
-        --theme-biomedical: #06b6d4;
-        --theme-law: #8b5cf6;
+    @media (max-width: 600px) {
+      .main {
+        margin: 4vh auto;
       }
 
-      body {
-        background-color: #1e2a3a;
-      }
-
-      .gradient-body {
-        background-color: #152028;
-      }
-
-      .gradient-two {
-        background-color: #cc7a1c;
-      }
-
-      .gradient-three {
-        background-color: #cc7a1c;
-      }
-
-      .gradient-four {
-        background-color: #4a8b94;
-      }
-
-      /* Add additional dark gradients for more depth */
-      .gradient:first-child {
-        background-image: linear-gradient(hsl(220, 30%, 25%, 85%), hsl(270, 30%, 35%));
-      }
-
-      /* Adjust navigation for dark theme */
-      .hero-nav a:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      /* Adjust project cards for dark theme */
-      .project-card {
-        background: rgba(40, 50, 60, 0.25);
-      }
-
-      /* Enhanced text shadows for dark theme */
       h1 {
-        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+        font-size: clamp(2.25rem, 10vw, 3.5rem);
       }
 
       .subtitle {
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        font-size: clamp(1.5rem, 5vw, 2rem);
       }
 
-      /* Dark theme tag styles */
-      .tag-ml {
-        border-color: var(--theme-ml);
-        color: var(--theme-ml);
-      }
-
-      .tag-biomedical {
-        border-color: var(--theme-biomedical);
-        color: var(--theme-biomedical);
-      }
-
-      .tag-law {
-        border-color: var(--theme-law);
-        color: var(--theme-law);
-      }
-
-      /* Fix research theme titles */
-      .theme-header h3,
-      .interest-category h3 {
-        color: var(--text-color);
-      }
-
-      /* Invert research figures for dark mode */
-      .theme-image {
-        filter: invert(1) hue-rotate(180deg);
-        opacity: 0.9;
-      }
-
-      .theme-image:hover {
-        opacity: 1;
-      }
-    }
-
-    /* Media queries */
-    @media (max-width: 768px) {
-      :root {
-        --container-width: 100%;
-      }
-
-      h1 {
-        font-size: clamp(1.8rem, 6vw, 2.5rem);
+      .section-rule {
+        margin: 3rem 0;
       }
 
       .container {
-        padding: 1.5rem;
-      }
-
-      .dual {
-        gap: 1rem;
+        padding: 2rem 0;
       }
 
       .profile-image {
-        width: 180px;
-        height: 180px;
+        width: 120px;
+        height: 120px;
       }
 
-      .subtitle {
-        font-size: 1.75rem;
-      }
-
-      .interests-grid {
-        flex-direction: column;
-      }
-
-      .theme-category {
-        width: 100%;
+      .floating-nav {
+        display: none;
       }
 
       .projects-grid {
         grid-template-columns: 1fr;
-        gap: 1rem;
       }
 
-      .project-card .project-content {
-        padding: 1.25rem;
-      }
-
-      .project-visual {
-        height: 120px;
+      .hero-nav a {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.5rem;
       }
     }
   </style>
+
   <!-- Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKXHXJS3W7"></script>
   <script>
@@ -1521,398 +1447,408 @@
 </head>
 
 <body>
-  <!-- Background -->
-  <div class="background">
-    <div class="gradient gradient-body"></div>
-    <div class="gradient gradient-body gradient-two"></div>
-    <div class="gradient gradient-body gradient-three"></div>
-    <div class="gradient gradient-body gradient-four"></div>
-  </div>
-
-  <!-- Add Snow Effect -->
+  <!-- Snow Effect Container -->
   <div id="snow-container"></div>
 
   <main class="main">
-    <!-- Profile -->
-    <div class="title">
+    <!-- Hero Section -->
+    <section class="hero">
       <div class="profile-image">
         <img src="assets/images/avatar.webp"
           alt="Arinbjörn Kolbeinsson, machine learning scientist and researcher in healthcare AI and foundation models">
       </div>
       <h1>Arinbjörn Kolbeinsson</h1>
-      <p>I advance machine learning research and transform deep technical innovations into practical solutions. My work
-        spans developing
-        efficient foundation models, applying deep learning to healthcare challenges and advancing AI applications in
-        legal
-        systems, bridging cutting-edge research with real-world impact.</p>
-      <p>Currently: Visiting scholar at <a href="https://datascience.virginia.edu/people/arinbjorn-kolbeinsson">UVA</a>.
-        Co-founder of <a href="https://k01.is">K01</a> and <a href="https://regava.com">Regava</a>.</p>
+      <p class="tagline">Advancing machine learning research and transforming deep technical innovations into practical solutions across healthcare and legal domains.</p>
+      <p class="current-position">Visiting scholar at <a href="https://datascience.virginia.edu/people/arinbjorn-kolbeinsson">UVA</a>. Co-founder of <a href="https://k01.is">K01</a> and <a href="https://regava.com">Regava</a>.</p>
 
       <nav class="hero-nav">
         <a href="#research">Research</a>
-        <span class="nav-separator">•</span>
-        <a href="#projects">Projects</a>
         <span class="nav-separator">•</span>
         <a href="#education">Education</a>
         <span class="nav-separator">•</span>
         <a href="#publications">Publications</a>
         <span class="nav-separator">•</span>
+        <a href="#projects">Projects</a>
+        <span class="nav-separator">•</span>
         <a href="#contact">Contact</a>
       </nav>
-    </div>
+    </section>
+
+    <hr class="section-rule">
 
     <!-- Research Themes -->
-    <div class="dual" id="research">
-      <div class="container">
-        <div class="subtitle">Research Themes</div>
-        <div class="interests-grid">
-          <div class="interest-category theme-ml">
-            <span class="theme-tag tag-ml">ML Methods</span><br>
-            <h3>Machine Learning Models and Systems
-            </h3>
-            <ul>
-              <li>Model interventions and editing for controllable AI</li>
-              <li>3D neural networks for medical computer vision</li>
-              <li>Tensor methods for robust and efficient deep learning</li>
-            </ul>
-          </div>
+    <section class="container fade-in" id="research">
+      <div class="section-number">01</div>
+      <div class="subtitle">Research Themes</div>
+      <div class="interests-grid">
+        <div class="theme-category">
+          <span class="theme-tag tag-ml">ML Methods</span>
+          <h3>Machine Learning Models and Systems</h3>
+          <ul>
+            <li>Model interventions and editing for controllable AI</li>
+            <li>3D neural networks for medical computer vision</li>
+            <li>Tensor methods for robust and efficient deep learning</li>
+          </ul>
+        </div>
 
-          <div class="interest-category theme-biomedical">
-            <h3>
-              <span class="theme-tag tag-biomedical">Biomedical</span><br>
-              Biomedical & Life Sciences
-            </h3>
-            <ul>
-              <li>Personalised health prediction using multi-modal data</li>
-              <li>Molecular simulations and computational drug discovery</li>
-              <li>Deep learning for medical imaging and time series</li>
-            </ul>
-          </div>
+        <div class="theme-category">
+          <span class="theme-tag tag-biomedical">Biomedical</span>
+          <h3>Biomedical & Life Sciences</h3>
+          <ul>
+            <li>Personalised health prediction using multi-modal data</li>
+            <li>Molecular simulations and computational drug discovery</li>
+            <li>Deep learning for medical imaging and time series</li>
+          </ul>
+        </div>
 
-          <div class="interest-category theme-law">
-            <h3>
-              <span class="theme-tag tag-law">Legal</span><br>
-              AI & Law
-            </h3>
-            <ul>
-              <li>Dynamic standardisation in legal contracts</li>
-              <li>AI governance and regulatory frameworks</li>
-              <li>Intersection of law and AI development</li>
-            </ul>
-          </div>
+        <div class="theme-category">
+          <span class="theme-tag tag-law">Legal</span>
+          <h3>AI & Law</h3>
+          <ul>
+            <li>Dynamic standardisation in legal contracts</li>
+            <li>AI governance and regulatory frameworks</li>
+            <li>Intersection of law and AI development</li>
+          </ul>
         </div>
       </div>
-    </div>
+    </section>
+
+    <hr class="section-rule-light">
 
     <!-- Foundation Models -->
-    <div class="dual">
-      <div class="container theme-ml">
-        <div class="section-header">
-          <span class="theme-tag tag-ml">ML Methods</span>
-          <div class="subtitle">Foundation Model Interventions</div>
-        </div>
-        <img src="assets/images/composable.svg"
-          alt="Composable Interventions for Language Models research, ICLR 2025 foundation models project"
-          class="theme-image" style="background-color: white;">
-        <p>At the University of Virginia, I conduct research on <a href='https://arxiv.org/abs/2407.06483'>Composable
-            Interventions for Language Models</a>, which has been accepted to ICLR 2025.</p>
-        <p>My work develops frameworks to study how different types of interventions (knowledge editing, model compression, machine unlearning) interact when applied sequentially. With my collaborators, we have uncovered critical insights about intervention interactions and identified gaps in current approaches.</p>
-        <p>This research aims to enhance model control and efficiency while maintaining performance, with implications for developing more robust multi-objective interventions.</p>
+    <section class="container fade-in" id="s02">
+      <div class="section-number">02</div>
+      <div class="section-header">
+        <div class="subtitle">Foundation Model Interventions</div>
+        <span class="theme-tag tag-ml">ML Methods</span>
       </div>
-    </div>
+      <img src="assets/images/composable.svg"
+        alt="Composable Interventions for Language Models research, ICLR 2025 foundation models project"
+        class="theme-image" style="background-color: white;">
+      <p>At the University of Virginia, I conduct research on <a href='https://arxiv.org/abs/2407.06483'>Composable Interventions for Language Models</a>, which has been accepted to ICLR 2025.</p>
+      <p>My work develops frameworks to study how different types of interventions (knowledge editing, model compression, machine unlearning) interact when applied sequentially. With my collaborators, we have uncovered critical insights about intervention interactions and identified gaps in current approaches.</p>
+      <p>This research aims to enhance model control and efficiency while maintaining performance, with implications for developing more robust multi-objective interventions.</p>
+    </section>
+
+    <hr class="section-rule-light">
 
     <!-- Health Analytics -->
-    <div class="dual">
-      <div class="container theme-biomedical">
-        <div class="section-header">
-          <span class="theme-tag tag-biomedical">Biomedical</span>
-          <div class="subtitle">Time Series Machine Learning for Digital Health</div>
-        </div>
-        <img src="assets/images/self-supervised.svg"
-          alt="Self-supervised learning for healthcare time series and digital health monitoring" class="theme-image"
-          style="background-color: white;">
-        <p>At Evidation Health, I developed machine learning systems for detecting illness from wearable sensor data.</p>
-        <p>As part of the research team, I built prediction models for <a
-            href='https://evidation.com/resources/evidation-launches-flusmart-a-direct-to-person-digital-flu-monitoring-program-to-better-understand-flu-in-everyday-life'>FluSmart</a>,
-          a digital flu monitoring program that detects early signs of influenza-like illness. My research advanced the field through <a
-            href='https://arxiv.org/abs/2112.13755'>self-supervised learning for time series</a> and <a
-            href='https://arxiv.org/abs/2307.16664'>generative models for wearable data</a>.</p>
-        <p>In collaboration with the University of Washington, I contributed to <a
-            href='https://proceedings.mlr.press/v209/merrill23b/merrill23b.pdf'>Homekit2020</a>, a public benchmark containing over 14 million hours of multimodal health data. This work established new frameworks for temporal health analysis.</p>
-        <p>This research resulted in patents on <a href='https://patents.google.com/patent/US12119115B2'>self-supervised learning from wearable data</a> and acute illness prediction systems.</p>
+    <section class="container fade-in" id="s03">
+      <div class="section-number">03</div>
+      <div class="section-header">
+        <div class="subtitle">Time Series Machine Learning for Digital Health</div>
+        <span class="theme-tag tag-biomedical">Biomedical</span>
       </div>
-    </div>
+      <img src="assets/images/self-supervised.svg"
+        alt="Self-supervised learning for healthcare time series and digital health monitoring" class="theme-image"
+        style="background-color: white;">
+      <p>At Evidation Health, I developed machine learning systems for detecting illness from wearable sensor data.</p>
+      <p>As part of the research team, I built prediction models for <a href='https://evidation.com/resources/evidation-launches-flusmart-a-direct-to-person-digital-flu-monitoring-program-to-better-understand-flu-in-everyday-life'>FluSmart</a>, a digital flu monitoring program that detects early signs of influenza-like illness. My research advanced the field through <a href='https://arxiv.org/abs/2112.13755'>self-supervised learning for time series</a> and <a href='https://arxiv.org/abs/2307.16664'>generative models for wearable data</a>.</p>
+      <p>In collaboration with the University of Washington, I contributed to <a href='https://proceedings.mlr.press/v209/merrill23b/merrill23b.pdf'>Homekit2020</a>, a public benchmark containing over 14 million hours of multimodal health data. This work established new frameworks for temporal health analysis.</p>
+      <p>This research resulted in patents on <a href='https://patents.google.com/patent/US12119115B2'>self-supervised learning from wearable data</a> and acute illness prediction systems.</p>
+    </section>
+
+    <hr class="section-rule-light">
 
     <!-- Brain Research -->
-    <div class="dual">
-      <div class="container theme-biomedical">
-        <div class="section-header">
-          <span class="theme-tag tag-biomedical">Biomedical</span>
-          <div class="subtitle">Deep Learning for Health Biomarkers</div>
-        </div>
-        <img src="assets/images/brain.svg"
-          alt="Deep learning for brain MRI analysis and health biomarker discovery research" class="theme-image"
-          style="background-color: white;">
-        <p>During my PhD at Imperial College London, I developed novel deep learning approaches for biomarker discovery from medical imaging and genomic data.</p>
-        <p>My <a href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf'>doctoral research</a> introduced 3D-ResNet architectures for brain MRI analysis, achieving state-of-the-art accuracy in brain age prediction using over 21,000 scans from UK Biobank. Through innovative interpretation methods and phenome-wide association analysis, I identified crucial links between brain structure and systemic health, particularly cardiometabolic and cognitive conditions.</p>
-        <p>I also developed receptive field networks for analysing genome sequences, demonstrating how deep learning can leverage both local and global genomic structure for polygenic risk prediction.</p>
+    <section class="container fade-in" id="s04">
+      <div class="section-number">04</div>
+      <div class="section-header">
+        <div class="subtitle">Deep Learning for Health Biomarkers</div>
+        <span class="theme-tag tag-biomedical">Biomedical</span>
       </div>
-    </div>
+      <img src="assets/images/brain.svg"
+        alt="Deep learning for brain MRI analysis and health biomarker discovery research" class="theme-image"
+        style="background-color: white;">
+      <p>During my PhD at Imperial College London, I developed novel deep learning approaches for biomarker discovery from medical imaging and genomic data.</p>
+      <p>My <a href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf'>doctoral research</a> introduced 3D-ResNet architectures for brain MRI analysis, achieving state-of-the-art accuracy in brain age prediction using over 21,000 scans from UK Biobank. Through innovative interpretation methods and phenome-wide association analysis, I identified crucial links between brain structure and systemic health, particularly cardiometabolic and cognitive conditions.</p>
+      <p>I also developed receptive field networks for analysing genome sequences, demonstrating how deep learning can leverage both local and global genomic structure for polygenic risk prediction.</p>
+    </section>
+
+    <hr class="section-rule-light">
 
     <!-- Computational Molecular Biology -->
-    <div class="dual">
-      <div class="container theme-biomedical">
-        <div class="section-header">
-          <span class="theme-tag tag-biomedical">Biomedical</span>
-          <div class="subtitle">Computational Molecular Biology</div>
-        </div>
-        <p>During my MRes at Imperial College London, I developed computational approaches for drug target characterisation combining molecular simulations with systems biology.</p>
-        <p>My <a href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-MRes-Report.pdf'>research</a> integrated molecular docking and dynamics simulations to study protein-ligand interactions, while applying multivariate statistical methods to metabolomics data from GC-MS experiments. I built network models linking metabolites to protein targets through pathway analysis, connecting molecular-level findings to broader biological systems.</p>
-        <p>This work established my foundations in cheminformatics and computational structural biology, bridging molecular modelling with data-driven approaches that would later inform my machine learning research.</p>
+    <section class="container fade-in" id="s05">
+      <div class="section-number">05</div>
+      <div class="section-header">
+        <div class="subtitle">Computational Molecular Biology</div>
+        <span class="theme-tag tag-biomedical">Biomedical</span>
       </div>
-    </div>
+      <p>During my MRes at Imperial College London, I developed computational approaches for drug target characterisation combining molecular simulations with systems biology.</p>
+      <p>My <a href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-MRes-Report.pdf'>research</a> integrated molecular docking and dynamics simulations to study protein-ligand interactions, while applying multivariate statistical methods to metabolomics data from GC-MS experiments. I built network models linking metabolites to protein targets through pathway analysis, connecting molecular-level findings to broader biological systems.</p>
+      <p>This work established my foundations in cheminformatics and computational structural biology, bridging molecular modelling with data-driven approaches that would later inform my machine learning research.</p>
+    </section>
+
+    <hr class="section-rule-light">
 
     <!-- Tensor Methods -->
-    <div class="dual">
-      <div class="container theme-ml">
-        <div class="section-header">
-          <span class="theme-tag tag-ml">ML Methods</span>
-          <div class="subtitle">Tensor Methods for Robust Machine Learning</div>
-        </div>
-        <img src="assets/images/surf_bernoulli_avgpool.png"
-          alt="Tensor Dropout regularisation method for robust deep learning networks" class="theme-image"
-          style="background-color: white;">
-        <p>My research also focuses on tensor methods for deep learning, making neural networks more robust and efficient.</p>
-        <p>I developed <a href='https://arxiv.org/abs/1902.10758'>Tensor Dropout</a>, a novel stochastic regularisation technique that significantly improves model robustness to both random and adversarial noise without requiring adversarial training.</p>
-        <p>Through collaborations between Samsung AI and Caltech, I contributed to <a href='https://jmlr.org/papers/volume21/18-503/18-503.pdf'>Tensor Regression Networks</a>, demonstrating how tensor methods can reduce parameter count while preserving model expressiveness. These innovations were particularly impactful for medical imaging tasks, enabling more reliable predictions from 3D brain MRI data.</p>
+    <section class="container fade-in" id="s06">
+      <div class="section-number">06</div>
+      <div class="section-header">
+        <div class="subtitle">Tensor Methods for Robust Machine Learning</div>
+        <span class="theme-tag tag-ml">ML Methods</span>
       </div>
-    </div>
+      <img src="assets/images/surf_bernoulli_avgpool.png"
+        alt="Tensor Dropout regularisation method for robust deep learning networks" class="theme-image"
+        style="background-color: white;">
+      <p>My research also focuses on tensor methods for deep learning, making neural networks more robust and efficient.</p>
+      <p>I developed <a href='https://arxiv.org/abs/1902.10758'>Tensor Dropout</a>, a novel stochastic regularisation technique that significantly improves model robustness to both random and adversarial noise without requiring adversarial training.</p>
+      <p>Through collaborations between Samsung AI and Caltech, I contributed to <a href='https://jmlr.org/papers/volume21/18-503/18-503.pdf'>Tensor Regression Networks</a>, demonstrating how tensor methods can reduce parameter count while preserving model expressiveness. These innovations were particularly impactful for medical imaging tasks, enabling more reliable predictions from 3D brain MRI data.</p>
+    </section>
+
+    <hr class="section-rule-light">
 
     <!-- AI & Law -->
-    <div class="dual">
-      <div class="container theme-law">
-        <div class="section-header">
-          <span class="theme-tag tag-law">Legal</span>
-          <div class="subtitle">AI & Legal Systems</div>
-        </div>
-        <img src="assets/images/contracts.svg"
-          alt="AI and legal systems research, dynamic contract standardisation and legal technology"
-          class="theme-image" style="background-color: white;">
-        <p>I recently completed legal studies at the University of Iceland, where my thesis research focused on <a
-            href='https://arinbjorn.is/assets/theses/Kvikir-samningsstadlar-BA-IS.pdf'>Dynamic Contract Standardisation
-            (thesis in Icelandic)</a> using AI systems.</p>
-        <p>This work explored how machine learning can make standardised contracts more flexible while maintaining legal validity and protecting consumer rights.</p>
-        <p>My combined expertise in AI development and law enables me to bridge technical innovation with regulatory frameworks, particularly in areas like contract automation and consumer protection.</p>
+    <section class="container fade-in" id="s07">
+      <div class="section-number">07</div>
+      <div class="section-header">
+        <div class="subtitle">AI & Legal Systems</div>
+        <span class="theme-tag tag-law">Legal</span>
       </div>
-    </div>
+      <img src="assets/images/contracts.svg"
+        alt="AI and legal systems research, dynamic contract standardisation and legal technology"
+        class="theme-image" style="background-color: white;">
+      <p>I recently completed legal studies at the University of Iceland, where my thesis research focused on <a href='https://arinbjorn.is/assets/theses/Kvikir-samningsstadlar-BA-IS.pdf'>Dynamic Contract Standardisation (thesis in Icelandic)</a> using AI systems.</p>
+      <p>This work explored how machine learning can make standardised contracts more flexible while maintaining legal validity and protecting consumer rights.</p>
+      <p>My combined expertise in AI development and law enables me to bridge technical innovation with regulatory frameworks, particularly in areas like contract automation and consumer protection.</p>
+    </section>
+
+    <hr class="section-rule">
 
     <!-- Education -->
-    <div class="dual" id="education">
-      <div class="container">
-        <div class="subtitle">Education</div>
-        <div class="education-content">
-          <div class="education-intro">
-            My research bridges machine learning and regulated domains. At Imperial College, I built foundations in bioengineering and biomedical research before completing a PhD in deep learning for healthcare. I added legal expertise to work effectively where law, policy and technology intersect.
-          </div>
-          <div class="education-list">
-            <ul>
-              <li class="education-item">
-                <div class="education-theme-indicator theme-ml"></div>
-                <a href="assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf" class="education-title">
-                  PhD: Deep learning for health outcome prediction
-                </a><br>
-                <span class="education-date">Imperial College London, 2021</span>
-              </li>
-              <li class="education-item">
-                <div class="education-theme-indicator theme-biomedical"></div>
-                <a href="assets/theses/Arinbjorn-Kolbeinsson-MRes-Report.pdf" class="education-title">
-                  MRes in Biomedical Research
-                </a><br>
-                <span class="education-date">Imperial College London, 2016</span>
-              </li>
-              <li class="education-item">
-                <div class="education-theme-indicator theme-biomedical"></div>
-                <a href="assets/theses/Arinbjorn-Kolbeinsson-MEng-Report.pdf" class="education-title">
-                  MEng in Bioengineering
-                </a><br>
-                <span class="education-date">Imperial College London, 2015</span>
-              </li>
-              <li class="education-item">
-                <div class="education-theme-indicator theme-law"></div>
-                <a href="assets/theses/Kvikir-samningsstadlar-BA-IS.pdf" class="education-title">
-                  BA in Law
-                </a><br>
-                <span class="education-date">University of Iceland, 2024</span>
-              </li>
-            </ul>
-          </div>
+    <section class="container fade-in" id="education">
+      <div class="section-number">08</div>
+      <div class="subtitle">Education</div>
+      <div class="education-content">
+        <div class="education-intro">
+          My research bridges machine learning and regulated domains. At Imperial College, I built foundations in bioengineering and biomedical research before completing a PhD in deep learning for healthcare. I added legal expertise to work effectively where law, policy and technology intersect.
+        </div>
+        <div class="education-list">
+          <ul>
+            <li class="education-item">
+              <div class="education-theme-indicator theme-ml"></div>
+              <a href="assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf" class="education-title">
+                PhD: Deep learning for health outcome prediction
+              </a><br>
+              <span class="education-date">Imperial College London, 2021</span>
+            </li>
+            <li class="education-item">
+              <div class="education-theme-indicator theme-biomedical"></div>
+              <a href="assets/theses/Arinbjorn-Kolbeinsson-MRes-Report.pdf" class="education-title">
+                MRes in Biomedical Research
+              </a><br>
+              <span class="education-date">Imperial College London, 2016</span>
+            </li>
+            <li class="education-item">
+              <div class="education-theme-indicator theme-biomedical"></div>
+              <a href="assets/theses/Arinbjorn-Kolbeinsson-MEng-Report.pdf" class="education-title">
+                MEng in Bioengineering
+              </a><br>
+              <span class="education-date">Imperial College London, 2015</span>
+            </li>
+            <li class="education-item">
+              <div class="education-theme-indicator theme-law"></div>
+              <a href="assets/theses/Kvikir-samningsstadlar-BA-IS.pdf" class="education-title">
+                BA in Law
+              </a><br>
+              <span class="education-date">University of Iceland, 2024</span>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
+    </section>
+
+    <hr class="section-rule">
 
     <!-- Publications -->
-    <div class="dual" id="publications">
-      <div class="container">
-        <div class="subtitle">Publication Spotlight</div>
-        <ul>
-          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Kyle O'Brien, Tianjin Huang, Shanghua Gao, Shiwei
-            Liu,
-            Jonathan Richard Schwarz, Anurag Vaidya,
-            Faisal Mahmood, Marinka Zitnik, Tianlong Chen and Thomas Hartvigsen. "Composable Interventions for Language
-            Models".
-            International Conference on Learning Representations (ICLR 2025).</li>
-          <li>Mike A Merrill, Esteban Safranchik, <span class="highlight">Arinbjörn Kolbeinsson</span>, Piyusha Gade,
-            Ernesto
-            Ramirez, Ludwig Schmidt, Luca Foschini,
-            Tim Althoff. "Homekit2020: A benchmark for time series classification on a large mobile sensing dataset with
-            laboratory tested ground
-            truth of influenza infections". Conference on Health, Inference, and Learning (CHIL)
-            (2023).</li>
-          <li>Georgios Efstathiadis, Patrick Emedom-Nnamdi, <span class="highlight">Arinbjörn Kolbeinsson</span>,
-            Jukka-Pekka
-            Onnela, Junwei Lu. "STASIS: Reinforcement Learning Simulators for Human-Centric Real-World Environments"
-            Trustworthy Machine Learning for Healthcare
-            (2023).</li>
-          <li><span class="highlight">Arinbjörn Kolbeinsson</span> and Luca Foschini. "Generative models for wearables
-            data."
-            Workshop on Deep Generative Models for Health at NeurIPS
-            (2023).</li>
-          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Naman Shukla, Akhil Gupta, Lavanya Marla, and Kartik
-            Yellepeddi. "Galactic Air Improves Ancillary Revenues with Dynamic Personalized Pricing." INFORMS Journal on
-            Applied
-            Analytics (2022).</li>
-          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Jean Kossaifi, Yannis Panagakis, Adrian Bulat, Anima
-            Anandkumar, Ioanna Tzoulaki, and Paul Matthews. "Tensor Dropout for Robust Learning," in IEEE Journal of
-            Selected
-            Topics in Signal Processing, doi: 10.1109/JSTSP.2021.3064182 (2021).</li>
-          <li>Akhil Gupta, Lavanya Marla, Ruoyu Sun, Naman Shukla and <span class="highlight">Arinbjörn
-              Kolbeinsson</span>.
-            “PenDer: Incorporating Shape Constraints via Penalized Derivatives”. In Proceedings of the AAAI Conference
-            on
-            Artificial Intelligence (2021).</li>
-          <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Sarah Filippi, Yannis Panagakis, Paul M. Matthews,
-            Paul
-            Elliott, Abbas Dehghan, and Ioanna Tzoulaki. "Accelerated MRI-predicted brain ageing and its associations
-            with
-            cardiometabolic and brain disorders." Scientific Reports 10, no. 1 (2020).</li>
-          <li>Kossaifi, Jean, Zachary C. Lipton, <span class="highlight">Arinbjörn Kolbeinsson</span>, Aran Khanna,
-            Tommaso
-            Furlanello, and Anima Anandkumar. "Tensor regression networks." Journal of Machine Learning Research 21, no.
-            123
-            (2020).</li>
-          <li>
-            See all on my <a href="https://scholar.google.co.uk/citations?user=MiI7lj0AAAAJ&hl=en"
-              style="color:#252525; font-style: italic;">Google Scholar profile</a>.
-          </li>
-        </ul>
-      </div>
-    </div>
+    <section class="container fade-in" id="publications">
+      <div class="section-number">09</div>
+      <div class="subtitle">Publication Spotlight</div>
+      <ul class="publications-list">
+        <li>Mike A. Merrill, Alexander G. Shaw, Nicholas Carlini, ... <span class="highlight">Arinbjörn Kolbeinsson</span>, ... Ludwig Schmidt. "<a href="https://arxiv.org/abs/2601.11868">Terminal-Bench: Benchmarking Agents on Hard, Realistic Tasks in Command Line Interfaces</a>". International Conference on Learning Representations (ICLR 2026).</li>
+        <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Kyle O'Brien, Tianjin Huang, Shanghua Gao, Shiwei Liu, Jonathan Richard Schwarz, Anurag Vaidya, Faisal Mahmood, Marinka Zitnik, Tianlong Chen and Thomas Hartvigsen. "<a href="https://arxiv.org/abs/2407.06483">Composable Interventions for Language Models</a>". International Conference on Learning Representations (ICLR 2025).</li>
+        <li>Mike A Merrill, Esteban Safranchik, <span class="highlight">Arinbjörn Kolbeinsson</span>, Piyusha Gade, Ernesto Ramirez, Ludwig Schmidt, Luca Foschini, Tim Althoff. "<a href="https://proceedings.mlr.press/v209/merrill23b.html">Homekit2020: A benchmark for time series classification on a large mobile sensing dataset with laboratory tested ground truth of influenza infections</a>". Conference on Health, Inference, and Learning (CHIL) (2023).</li>
+        <li>Georgios Efstathiadis, Patrick Emedom-Nnamdi, <span class="highlight">Arinbjörn Kolbeinsson</span>, Jukka-Pekka Onnela, Junwei Lu. "<a href="https://link.springer.com/chapter/10.1007/978-3-031-39539-0_8">STASIS: Reinforcement Learning Simulators for Human-Centric Real-World Environments</a>" Trustworthy Machine Learning for Healthcare (2023).</li>
+        <li><span class="highlight">Arinbjörn Kolbeinsson</span> and Luca Foschini. "<a href="https://arxiv.org/abs/2307.16664">Generative models for wearables data</a>." Workshop on Deep Generative Models for Health at NeurIPS (2023).</li>
+        <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Naman Shukla, Akhil Gupta, Lavanya Marla, and Kartik Yellepeddi. "<a href="https://pubsonline.informs.org/doi/10.1287/inte.2021.1105">Galactic Air Improves Ancillary Revenues with Dynamic Personalized Pricing</a>." INFORMS Journal on Applied Analytics (2022).</li>
+        <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Jean Kossaifi, Yannis Panagakis, Adrian Bulat, Anima Anandkumar, Ioanna Tzoulaki, and Paul Matthews. "<a href="https://arxiv.org/abs/1902.10758">Tensor Dropout for Robust Learning</a>," in IEEE Journal of Selected Topics in Signal Processing (2021).</li>
+        <li>Akhil Gupta, Lavanya Marla, Ruoyu Sun, Naman Shukla and <span class="highlight">Arinbjörn Kolbeinsson</span>. "<a href="https://ojs.aaai.org/index.php/AAAI/article/view/17373">PenDer: Incorporating Shape Constraints via Penalized Derivatives</a>". In Proceedings of the AAAI Conference on Artificial Intelligence (2021).</li>
+        <li><span class="highlight">Arinbjörn Kolbeinsson</span>, Sarah Filippi, Yannis Panagakis, Paul M. Matthews, Paul Elliott, Abbas Dehghan, and Ioanna Tzoulaki. "<a href="https://www.nature.com/articles/s41598-020-76518-z">Accelerated MRI-predicted brain ageing and its associations with cardiometabolic and brain disorders</a>." Scientific Reports 10, no. 1 (2020).</li>
+        <li>Kossaifi, Jean, Zachary C. Lipton, <span class="highlight">Arinbjörn Kolbeinsson</span>, Aran Khanna, Tommaso Furlanello, and Anima Anandkumar. "<a href="https://jmlr.org/papers/volume21/18-503/18-503.pdf">Tensor regression networks</a>." Journal of Machine Learning Research 21, no. 123 (2020).</li>
+        <li>See all on my <a href="https://scholar.google.co.uk/citations?user=MiI7lj0AAAAJ&hl=en">Google Scholar profile</a>.</li>
+      </ul>
+    </section>
+
+    <hr class="section-rule">
 
     <!-- Side Projects -->
-    <div class="dual" id="projects">
-      <div class="container">
-        <div class="subtitle">Side Projects</div>
-        <p>Personal explorations and experimental projects where I combine creativity with code.</p>
-        <div class="projects-grid">
-          <div class="project-card">
-            <div class="project-visual">
-              <div class="train-animation">
-                <div class="route-dot start-dot"></div>
-                <div class="route-dot end-dot"></div>
-                <svg class="route-line">
-                  <path d="M 0 0 L 64 0" />
-                </svg>
-              </div>
-            </div>
-            <div class="project-content">
-              <h3>European Train Journeys</h3>
-              <p>Personal travel log of long-distance train routes I've taken across Europe, visualised on an
-                interactive map with animated route tracing.</p>
-              <a href="/trains" class="project-link">My Routes →</a>
-              <a href="https://trainmap.app" class="project-link" target="_blank">Create Your Own →</a>
+    <section class="container fade-in" id="projects">
+      <div class="section-number">10</div>
+      <div class="subtitle">Side Projects</div>
+      <p>Personal explorations and experimental projects where I combine creativity with code.</p>
+      <div class="projects-grid">
+        <div class="project-card">
+          <div class="project-visual">
+            <div class="train-animation">
+              <div class="route-dot start-dot"></div>
+              <div class="route-dot end-dot"></div>
+              <svg class="route-line">
+                <path d="M 0 0 L 64 0" />
+              </svg>
             </div>
           </div>
-          <div class="project-card">
-            <div class="project-visual">
-              <div class="time-animation">
-                <div class="clock-face">
-                  <div class="clock-hand hour-hand" id="hour-hand"></div>
-                  <div class="clock-hand minute-hand" id="minute-hand"></div>
-                  <div class="clock-center"></div>
-                </div>
+          <div class="project-content">
+            <h3>European Train Journeys</h3>
+            <p>Personal travel log of long-distance train routes I've taken across Europe, visualised on an interactive map with animated route tracing.</p>
+            <a href="/trains" class="project-link">My Routes</a>
+            <a href="https://trainmap.app" class="project-link" target="_blank">Create Your Own</a>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-visual">
+            <div class="time-animation">
+              <div class="clock-face">
+                <div class="clock-hand hour-hand" id="hour-hand"></div>
+                <div class="clock-hand minute-hand" id="minute-hand"></div>
+                <div class="clock-center"></div>
               </div>
             </div>
-            <div class="project-content">
-              <h3>Hyper-local Time</h3>
-              <p>Location-based solar time display that adjusts to your exact position on Earth, showing true
-                hyper-local solar time with dynamic backgrounds.</p>
-              <a href="time.html" class="project-link">View Time →</a>
-            </div>
+          </div>
+          <div class="project-content">
+            <h3>Hyper-local Time</h3>
+            <p>Location-based solar time display that adjusts to your exact position on Earth, showing true hyper-local solar time with dynamic backgrounds.</p>
+            <a href="time.html" class="project-link">View Time</a>
           </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <hr class="section-rule">
 
     <!-- Work With Me -->
-    <div class="dual" id="contact">
-      <div class="container">
-        <div class="subtitle">Work With Me</div>
-        <p>I help organisations solve complex problems at the intersection of machine learning, healthcare and legal technology.</p>
+    <section class="container fade-in" id="contact">
+      <div class="section-number">11</div>
+      <div class="subtitle">Work With Me</div>
+      <p>I help organisations solve complex problems at the intersection of machine learning, healthcare and legal technology.</p>
 
-        <div class="services-grid">
-          <div class="service-item">
-            <h3>Research Consulting</h3>
-            <p>Deep technical expertise in ML systems, foundation models, healthcare AI and biomedical applications.</p>
-          </div>
-          <div class="service-item">
-            <h3>Technical Advisory</h3>
-            <p>Strategic guidance for startups and enterprises building AI products in regulated domains.</p>
-          </div>
-          <div class="service-item">
-            <h3>Research Partnerships</h3>
-            <p>Academic and industry collaborations on foundation models, healthcare AI and legal technology.</p>
-          </div>
-          <div class="service-item">
-            <h3>Speaking & Workshops</h3>
-            <p>Keynotes and technical workshops on ML methods, AI in healthcare and AI governance.</p>
-          </div>
+      <div class="services-grid">
+        <div class="service-item">
+          <h3>Research Consulting</h3>
+          <p>Deep technical expertise in ML systems, foundation models, healthcare AI and biomedical applications.</p>
         </div>
-
-        <p>Reach me at arinbjorn@virginia.edu 
-          (<a href="https://calendar.app.google/i4jdboEkLTmvzJQs8">or book a time to chat</a>), 
-          or connect on
-          <a href="https://bsky.app/profile/arinbjorn.is">Bluesky</a>,
-          <a href="https://www.threads.net/@arinbjornkol">Threads</a>,
-          <a href="https://linkedin.com/in/arinbjorn">LinkedIn</a> or
-          <a href="https://github.com/arinbjornk">GitHub</a>.
-        </p>
+        <div class="service-item">
+          <h3>Technical Advisory</h3>
+          <p>Strategic guidance for startups and enterprises building AI products in regulated domains.</p>
+        </div>
+        <div class="service-item">
+          <h3>Research Partnerships</h3>
+          <p>Academic and industry collaborations on foundation models, healthcare AI and legal technology.</p>
+        </div>
+        <div class="service-item">
+          <h3>Speaking & Workshops</h3>
+          <p>Keynotes and technical workshops on ML methods, AI in healthcare and AI governance.</p>
+        </div>
       </div>
-    </div>
+
+      <p>Reach me at arinbjorn@virginia.edu (<a href="https://calendar.app.google/i4jdboEkLTmvzJQs8">or book a time to chat</a>), or connect on <a href="https://bsky.app/profile/arinbjorn.is">Bluesky</a>, <a href="https://www.threads.net/@arinbjornkol">Threads</a>, <a href="https://linkedin.com/in/arinbjorn">LinkedIn</a> or <a href="https://github.com/arinbjornk">GitHub</a>.</p>
+    </section>
   </main>
 
-  <footer style="text-align: center; padding: 2rem; color: white;">
+  <!-- Floating Section Nav (Single Glassmorphism Element) -->
+  <nav class="floating-nav" id="floating-nav">
+    <a href="#research" class="floating-nav-item" data-section="research"><span class="floating-nav-number">01</span> Research Themes</a>
+    <a href="#s02" class="floating-nav-item" data-section="s02"><span class="floating-nav-number">02</span> Foundation Models</a>
+    <a href="#s03" class="floating-nav-item" data-section="s03"><span class="floating-nav-number">03</span> Digital Health</a>
+    <a href="#s04" class="floating-nav-item" data-section="s04"><span class="floating-nav-number">04</span> Health Biomarkers</a>
+    <a href="#s05" class="floating-nav-item" data-section="s05"><span class="floating-nav-number">05</span> Molecular Biology</a>
+    <a href="#s06" class="floating-nav-item" data-section="s06"><span class="floating-nav-number">06</span> Tensor Methods</a>
+    <a href="#s07" class="floating-nav-item" data-section="s07"><span class="floating-nav-number">07</span> AI & Law</a>
+    <a href="#education" class="floating-nav-item" data-section="education"><span class="floating-nav-number">08</span> Education</a>
+    <a href="#publications" class="floating-nav-item" data-section="publications"><span class="floating-nav-number">09</span> Publications</a>
+    <a href="#projects" class="floating-nav-item" data-section="projects"><span class="floating-nav-number">10</span> Projects</a>
+    <a href="#contact" class="floating-nav-item" data-section="contact"><span class="floating-nav-number">11</span> Contact</a>
+  </nav>
+
+  <footer>
     <p>Copyright © <script>document.write(new Date().getFullYear())</script> Arinbjörn Kolbeinsson. All rights reserved.</p>
   </footer>
 
+  <script>
+    // Floating nav - appears after scrolling past hero, highlights current section
+    const floatingNav = document.getElementById('floating-nav');
+    const heroSection = document.querySelector('.hero');
+    const navItems = document.querySelectorAll('.floating-nav-item');
+    const trackedSections = document.querySelectorAll('section[id]');
 
-  <script>
-    if ('paintWorklet' in CSS) {
-      CSS.paintWorklet.addModule('assets/js/squircle.js');
+    function handleScroll() {
+      const heroBottom = heroSection.getBoundingClientRect().bottom;
+      if (heroBottom < 0) {
+        floatingNav.classList.add('visible');
+      } else {
+        floatingNav.classList.remove('visible');
+      }
+
+      // Determine which section is currently in view
+      let currentSection = null;
+      trackedSections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= window.innerHeight * 0.4) {
+          currentSection = section.id;
+        }
+      });
+
+      navItems.forEach(item => {
+        if (item.dataset.section === currentSection) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
     }
-  </script>
-  <script src="assets/js/effects.js"></script>
-  <script>
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Chromium detection for liquid glass
+    const isChromium = !!window.chrome;
+    if (isChromium) {
+      document.getElementById('floating-nav').classList.add('liquid-glass');
+    }
+
+    // Fade-in animations on scroll
+    const fadeElements = document.querySelectorAll('.fade-in');
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -50px 0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Also animate the section number within this container
+          const sectionNumber = entry.target.querySelector('.section-number');
+          if (sectionNumber) {
+            setTimeout(() => {
+              sectionNumber.classList.add('visible');
+            }, 100);
+          }
+        }
+      });
+    }, observerOptions);
+
+    fadeElements.forEach(el => observer.observe(el));
+
     // Initialize clock hands at random positions
     document.addEventListener('DOMContentLoaded', function () {
       const hourHand = document.getElementById('hour-hand');
       const minuteHand = document.getElementById('minute-hand');
 
       if (hourHand && minuteHand) {
-        // Random starting positions (0-360 degrees)
         const randomHourStart = Math.floor(Math.random() * 360);
         const randomMinuteStart = Math.floor(Math.random() * 360);
 
-        // Create dynamic keyframes that start from random positions
         const hourKeyframes = `
           @keyframes hourRotateRandom {
             from { transform: rotate(${randomHourStart}deg); }
@@ -1927,38 +1863,41 @@
           }
         `;
 
-        // Inject the dynamic keyframes into the page
         const style = document.createElement('style');
         style.textContent = hourKeyframes + minuteKeyframes;
         document.head.appendChild(style);
 
-        // Apply the animations with random starting points
         hourHand.style.animation = 'hourRotateRandom 360s linear infinite';
         minuteHand.style.animation = 'minuteRotateRandom 30s linear infinite';
       }
     });
   </script>
+
+  <!-- Liquid Glass SVG Filter -->
+  <svg style="position:absolute;width:0;height:0;">
+    <defs>
+      <filter id="liquid-glass" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="42" result="noise"/>
+        <feGaussianBlur in="noise" stdDeviation="1.5" result="smooth-noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="smooth-noise" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Seasonal Effects -->
+  <script src="assets/js/effects.js"></script>
   <script>
-    // Get current date
     const now = new Date();
-    const month = now.getMonth() + 1; // Months are 0-indexed
+    const month = now.getMonth() + 1;
     const day = now.getDate();
 
-    console.log("Current date:", month, day); // Log current date
-
-    // Check if it's December 31st or January 1st for fireworks
     const isNewYears = (month === 12 && day === 31) || (month === 1 && day === 1);
-
-    // Check if it's December or January (includes New Year's)
     const isWinter = (month === 12 || month === 1);
 
-    // Initialize effects based on conditions
     if (isNewYears) {
-      // Force dark theme for fireworks (no override)
       document.documentElement.classList.add('force-dark-theme');
     }
 
-    // Single unified effects controller
     if (isNewYears || isWinter) {
       new EffectsController({
         fireworks: isNewYears,
@@ -1967,3 +1906,6 @@
       });
     }
   </script>
+</body>
+
+</html>
