@@ -82,6 +82,19 @@
       position: relative;
     }
 
+    /* Paper texture - subtle noise grain overlay */
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.55;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.09'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
     /* ========================================
        TYPOGRAPHY SYSTEM - The Star
        ======================================== */
@@ -117,7 +130,7 @@
     }
 
     .section-number.visible {
-      opacity: 1;
+      opacity: 0.8;
       transform: translateY(0);
     }
 
@@ -439,16 +452,81 @@
       margin-bottom: 0;
     }
 
+    /* Section tag - sits just above the subtitle */
+    .section-tag {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+      margin-bottom: -0.25rem;
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .section-tag.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-tag.tag-ml { color: var(--theme-ml); }
+    .section-tag.tag-biomedical { color: var(--theme-biomedical); }
+    .section-tag.tag-law { color: var(--theme-law); }
+
     .theme-image {
       width: 100%;
       max-width: 600px;
       height: auto;
-      margin: 1.5rem 0 2rem;
+      margin: 1.5rem auto 2rem;
+      display: block;
       border: 1px solid var(--accent-subtle);
     }
 
     .theme-image:hover {
       /* No transform - editorial style */
+    }
+
+    /* Pattern B: Image-right layout */
+    .layout-image-right {
+      display: flex;
+      gap: 3rem;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .layout-image-right .text-column {
+      flex: 3;
+      min-width: 0;
+    }
+
+    .layout-image-right .image-column {
+      flex: 2;
+      min-width: 0;
+      align-self: center;
+    }
+
+    .layout-image-right .image-column .theme-image {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+    }
+
+    /* Pattern C: Pull quote */
+    .pull-quote {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      line-height: 1.6;
+      text-align: center;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--accent-subtle);
+      border-bottom: 1px solid var(--accent-subtle);
+      padding: 1.5rem 2rem;
+      margin: 2rem 0;
+      max-width: none;
     }
 
     /* ========================================
@@ -617,6 +695,12 @@
       max-width: none;
     }
 
+    .project-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
     .project-link {
       font-family: 'Outfit', sans-serif;
       display: inline-flex;
@@ -641,104 +725,25 @@
       color: var(--bg-pure);
     }
 
-    /* Project animations */
-    .train-animation {
-      position: relative;
-      width: 120px;
-      height: 80px;
+    /* Project ink animations */
+    .project-visual svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .bio-visual {
+      width: 100%;
+      max-width: 400px;
+      height: 200px;
+      margin: 1.5rem auto 2rem;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .route-dot {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: var(--text-primary);
-      border-radius: 50%;
-    }
-
-    .start-dot {
-      top: 50%;
-      left: 20px;
-      transform: translateY(-50%);
-    }
-
-    .end-dot {
-      top: 50%;
-      right: 20px;
-      transform: translateY(-50%);
-    }
-
-    .route-line {
-      position: absolute;
-      top: 50%;
-      left: 28px;
-      width: 64px;
-      height: 2px;
-      stroke: var(--text-primary);
-      stroke-width: 2;
-      fill: none;
-      stroke-dasharray: 64;
-      stroke-dashoffset: 64;
-      animation: routeTrace 4s ease-in-out infinite;
-      transform: translateY(-50%);
-    }
-
-    @keyframes routeTrace {
-      0% { stroke-dashoffset: 64; }
-      25% { stroke-dashoffset: 0; }
-      50% { stroke-dashoffset: 0; }
-      100% { stroke-dashoffset: -64; }
-    }
-
-    .time-animation {
-      position: relative;
-      width: 80px;
-      height: 80px;
-    }
-
-    .clock-face {
-      position: relative;
-      width: 80px;
-      height: 80px;
-      border: 2px solid var(--text-primary);
-      border-radius: 50%;
-      background: transparent;
-    }
-
-    .clock-hand {
-      position: absolute;
-      background: var(--text-primary);
-      transform-origin: bottom center;
-      border-radius: 1px;
-      left: 50%;
-    }
-
-    .hour-hand {
-      width: 2px;
-      height: 22px;
-      bottom: 50%;
-      margin-left: -1px;
-    }
-
-    .minute-hand {
-      width: 1.5px;
-      height: 30px;
-      bottom: 50%;
-      margin-left: -0.75px;
-    }
-
-    .clock-center {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 4px;
-      height: 4px;
-      background: var(--text-primary);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
+    .bio-visual svg {
+      width: 200px;
+      height: 200px;
     }
 
     /* ========================================
@@ -936,6 +941,10 @@
         --theme-law: #A78BFA;
       }
 
+      body::before {
+        opacity: 0.15;
+      }
+
       .floating-nav {
         background: linear-gradient(
           135deg,
@@ -980,6 +989,10 @@
       --theme-law: #A78BFA;
     }
 
+    html.force-dark-theme body::before {
+      opacity: 0.15;
+    }
+
     html.force-dark-theme .floating-nav {
       background: linear-gradient(
         135deg,
@@ -1021,6 +1034,11 @@
         grid-template-columns: 1fr;
       }
 
+      .layout-image-right {
+        flex-direction: column;
+        gap: 2rem;
+      }
+
       .section-number {
         font-size: clamp(3rem, 10vw, 5rem);
       }
@@ -1046,6 +1064,13 @@
       .container {
         padding: 2rem 0;
       }
+
+      .section-number {
+        left: -0.5rem;
+        top: -0.5rem;
+        font-size: clamp(5rem, 22vw, 8rem);
+      }
+
 
       .profile-image {
         width: 120px;
@@ -1518,10 +1543,8 @@
     <!-- Foundation Models -->
     <section class="container fade-in" id="s02">
       <div class="section-number">02</div>
-      <div class="section-header">
-        <div class="subtitle">Foundation Model Interventions</div>
-        <span class="theme-tag tag-ml">ML Methods</span>
-      </div>
+      <div class="section-tag tag-ml">ML Methods</div>
+      <div class="subtitle">Foundation Model Interventions</div>
       <img src="assets/images/composable.svg"
         alt="Composable Interventions for Language Models research, ICLR 2025 foundation models project"
         class="theme-image" style="background-color: white;">
@@ -1535,10 +1558,8 @@
     <!-- Health Analytics -->
     <section class="container fade-in" id="s03">
       <div class="section-number">03</div>
-      <div class="section-header">
-        <div class="subtitle">Time Series Machine Learning for Digital Health</div>
-        <span class="theme-tag tag-biomedical">Biomedical</span>
-      </div>
+      <div class="section-tag tag-biomedical">Biomedical</div>
+      <div class="subtitle">Time Series Machine Learning for Digital Health</div>
       <img src="assets/images/self-supervised.svg"
         alt="Self-supervised learning for healthcare time series and digital health monitoring" class="theme-image"
         style="background-color: white;">
@@ -1553,16 +1574,20 @@
     <!-- Brain Research -->
     <section class="container fade-in" id="s04">
       <div class="section-number">04</div>
-      <div class="section-header">
-        <div class="subtitle">Deep Learning for Health Biomarkers</div>
-        <span class="theme-tag tag-biomedical">Biomedical</span>
+      <div class="section-tag tag-biomedical">Biomedical</div>
+      <div class="subtitle">Deep Learning for Health Biomarkers</div>
+      <div class="layout-image-right">
+        <div class="text-column">
+          <p>During my PhD at Imperial College London, I developed novel deep learning approaches for biomarker discovery from medical imaging and genomic data.</p>
+          <p>My <a href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf'>doctoral research</a> introduced 3D-ResNet architectures for brain MRI analysis, achieving state-of-the-art accuracy in brain age prediction using over 21,000 scans from UK Biobank. Through innovative interpretation methods and phenome-wide association analysis, I identified crucial links between brain structure and systemic health, particularly cardiometabolic and cognitive conditions.</p>
+          <p>I also developed receptive field networks for analysing genome sequences, demonstrating how deep learning can leverage both local and global genomic structure for polygenic risk prediction.</p>
+        </div>
+        <div class="image-column">
+          <img src="assets/images/brain.svg"
+            alt="Deep learning for brain MRI analysis and health biomarker discovery research" class="theme-image"
+            style="background-color: white;">
+        </div>
       </div>
-      <img src="assets/images/brain.svg"
-        alt="Deep learning for brain MRI analysis and health biomarker discovery research" class="theme-image"
-        style="background-color: white;">
-      <p>During my PhD at Imperial College London, I developed novel deep learning approaches for biomarker discovery from medical imaging and genomic data.</p>
-      <p>My <a href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-PhD-Thesis.pdf'>doctoral research</a> introduced 3D-ResNet architectures for brain MRI analysis, achieving state-of-the-art accuracy in brain age prediction using over 21,000 scans from UK Biobank. Through innovative interpretation methods and phenome-wide association analysis, I identified crucial links between brain structure and systemic health, particularly cardiometabolic and cognitive conditions.</p>
-      <p>I also developed receptive field networks for analysing genome sequences, demonstrating how deep learning can leverage both local and global genomic structure for polygenic risk prediction.</p>
     </section>
 
     <hr class="section-rule-light">
@@ -1570,13 +1595,45 @@
     <!-- Computational Molecular Biology -->
     <section class="container fade-in" id="s05">
       <div class="section-number">05</div>
-      <div class="section-header">
-        <div class="subtitle">Computational Molecular Biology</div>
-        <span class="theme-tag tag-biomedical">Biomedical</span>
+      <div class="section-tag tag-biomedical">Biomedical</div>
+      <div class="subtitle">Computational Molecular Biology</div>
+
+      <div class="bio-visual">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="goo-mol" color-interpolation-filters="sRGB">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+              <feColorMatrix in="blur" type="matrix"
+                             values="1 0 0 0 0
+                                     0 1 0 0 0
+                                     0 0 1 0 0
+                                     0 0 0 22 -9"/>
+            </filter>
+          </defs>
+          <g filter="url(#goo-mol)">
+            <circle cx="132" cy="62" r="30" fill="var(--text-primary)" opacity="0.5">
+              <animate attributeName="r" values="30;32;29;31;30" dur="7s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="62;60;64;61;62" dur="11s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="118" cy="142" r="22" fill="var(--text-primary)" opacity="0.5">
+              <animate attributeName="r" values="22;24;21;23;22" dur="9s" repeatCount="indefinite"/>
+              <animate attributeName="cy" values="142;145;140;143;142" dur="13s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="152" cy="92" r="20" fill="var(--text-primary)" opacity="0.5">
+              <animate attributeName="r" values="20;22;19;21;20" dur="8s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="108" cy="118" r="13" fill="var(--text-primary)" opacity="0.5">
+              <animate attributeName="r" values="13;15;12;14;13" dur="10s" repeatCount="indefinite"/>
+            </circle>
+            <circle id="lig-b-main" cx="40" cy="95" r="14" fill="var(--text-primary)" opacity="0.5"/>
+            <circle id="lig-b-comp" cx="47" cy="90" r="10" fill="var(--text-primary)" opacity="0.5"/>
+          </g>
+        </svg>
       </div>
+
       <p>During my MRes at Imperial College London, I developed computational approaches for drug target characterisation combining molecular simulations with systems biology.</p>
       <p>My <a href='https://arinbjorn.is/assets/theses/Arinbjorn-Kolbeinsson-MRes-Report.pdf'>research</a> integrated molecular docking and dynamics simulations to study protein-ligand interactions, while applying multivariate statistical methods to metabolomics data from GC-MS experiments. I built network models linking metabolites to protein targets through pathway analysis, connecting molecular-level findings to broader biological systems.</p>
-      <p>This work established my foundations in cheminformatics and computational structural biology, bridging molecular modelling with data-driven approaches that would later inform my machine learning research.</p>
+      <p class="pull-quote">Bridging molecular modelling with data-driven approaches that would later inform my machine learning research.</p>
     </section>
 
     <hr class="section-rule-light">
@@ -1584,16 +1641,20 @@
     <!-- Tensor Methods -->
     <section class="container fade-in" id="s06">
       <div class="section-number">06</div>
-      <div class="section-header">
-        <div class="subtitle">Tensor Methods for Robust Machine Learning</div>
-        <span class="theme-tag tag-ml">ML Methods</span>
+      <div class="section-tag tag-ml">ML Methods</div>
+      <div class="subtitle">Tensor Methods for Robust Machine Learning</div>
+      <div class="layout-image-right">
+        <div class="text-column">
+          <p>My research also focuses on tensor methods for deep learning, making neural networks more robust and efficient.</p>
+          <p>I developed <a href='https://arxiv.org/abs/1902.10758'>Tensor Dropout</a>, a novel stochastic regularisation technique that significantly improves model robustness to both random and adversarial noise without requiring adversarial training.</p>
+          <p>Through collaborations between Samsung AI and Caltech, I contributed to <a href='https://jmlr.org/papers/volume21/18-503/18-503.pdf'>Tensor Regression Networks</a>, demonstrating how tensor methods can reduce parameter count while preserving model expressiveness. These innovations were particularly impactful for medical imaging tasks, enabling more reliable predictions from 3D brain MRI data.</p>
+        </div>
+        <div class="image-column">
+          <img src="assets/images/surf_bernoulli_avgpool.png"
+            alt="Tensor Dropout regularisation method for robust deep learning networks" class="theme-image"
+            style="background-color: white;">
+        </div>
       </div>
-      <img src="assets/images/surf_bernoulli_avgpool.png"
-        alt="Tensor Dropout regularisation method for robust deep learning networks" class="theme-image"
-        style="background-color: white;">
-      <p>My research also focuses on tensor methods for deep learning, making neural networks more robust and efficient.</p>
-      <p>I developed <a href='https://arxiv.org/abs/1902.10758'>Tensor Dropout</a>, a novel stochastic regularisation technique that significantly improves model robustness to both random and adversarial noise without requiring adversarial training.</p>
-      <p>Through collaborations between Samsung AI and Caltech, I contributed to <a href='https://jmlr.org/papers/volume21/18-503/18-503.pdf'>Tensor Regression Networks</a>, demonstrating how tensor methods can reduce parameter count while preserving model expressiveness. These innovations were particularly impactful for medical imaging tasks, enabling more reliable predictions from 3D brain MRI data.</p>
     </section>
 
     <hr class="section-rule-light">
@@ -1601,10 +1662,8 @@
     <!-- AI & Law -->
     <section class="container fade-in" id="s07">
       <div class="section-number">07</div>
-      <div class="section-header">
-        <div class="subtitle">AI & Legal Systems</div>
-        <span class="theme-tag tag-law">Legal</span>
-      </div>
+      <div class="section-tag tag-law">Legal</div>
+      <div class="subtitle">AI & Legal Systems</div>
       <img src="assets/images/contracts.svg"
         alt="AI and legal systems research, dynamic contract standardisation and legal technology"
         class="theme-image" style="background-color: white;">
@@ -1689,35 +1748,152 @@
       <div class="projects-grid">
         <div class="project-card">
           <div class="project-visual">
-            <div class="train-animation">
-              <div class="route-dot start-dot"></div>
-              <div class="route-dot end-dot"></div>
-              <svg class="route-line">
-                <path d="M 0 0 L 64 0" />
-              </svg>
-            </div>
+            <svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <filter id="goo-train" color-interpolation-filters="sRGB">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+                  <feColorMatrix in="blur" type="matrix"
+                                 values="1 0 0 0 0
+                                         0 1 0 0 0
+                                         0 0 1 0 0
+                                         0 0 0 22 -9"/>
+                </filter>
+              </defs>
+              <g filter="url(#goo-train)">
+                <path id="tr-0" d="M 20 120 C 12 105 32 85 48 82 C 64 79 72 68 82 70 C 92 72 100 65 108 62" stroke="var(--text-primary)" stroke-width="12" fill="none" opacity="0" stroke-linecap="round"/>
+                <path id="tr-1" d="M 20 120 C 28 132 52 128 68 118 C 84 108 95 95 108 100 C 121 105 128 102 135 100" stroke="var(--text-primary)" stroke-width="12" fill="none" opacity="0" stroke-linecap="round"/>
+                <path id="tr-2" d="M 42 32 C 38 48 50 60 65 62 C 80 64 95 58 108 62" stroke="var(--text-primary)" stroke-width="12" fill="none" opacity="0" stroke-linecap="round"/>
+                <path id="tr-3" d="M 42 32 C 58 18 78 6 98 8 C 118 10 126 12 130 12" stroke="var(--text-primary)" stroke-width="12" fill="none" opacity="0" stroke-linecap="round"/>
+                <path id="tr-4" d="M 108 62 C 118 52 132 42 150 38 C 168 34 188 28 202 22 C 210 20 215 20 218 20" stroke="var(--text-primary)" stroke-width="12" fill="none" opacity="0" stroke-linecap="round"/>
+                <path id="tr-5" d="M 130 12 C 145 18 160 22 175 18 C 190 14 205 16 218 20" stroke="var(--text-primary)" stroke-width="12" fill="none" opacity="0" stroke-linecap="round"/>
+                <path id="tr-6" d="M 130 12 C 158 -2 195 -5 230 0 C 265 5 280 8 290 10" stroke="var(--text-primary)" stroke-width="12" fill="none" opacity="0" stroke-linecap="round"/>
+                <path id="tr-7" d="M 135 100 C 148 92 162 80 180 78 C 198 76 218 68 238 62 C 252 58 258 56 262 55" stroke="var(--text-primary)" stroke-width="12" fill="none" opacity="0" stroke-linecap="round"/>
+                <path id="tr-8" d="M 135 100 C 130 115 148 128 165 125 C 182 122 190 120 192 122" stroke="var(--text-primary)" stroke-width="12" fill="none" opacity="0" stroke-linecap="round"/>
+                <path id="tr-9" d="M 218 20 C 228 12 245 6 260 8 C 275 10 285 10 290 10" stroke="var(--text-primary)" stroke-width="12" fill="none" opacity="0" stroke-linecap="round"/>
+                <path id="tr-10" d="M 262 55 C 258 72 248 88 235 98 C 222 108 210 118 192 122" stroke="var(--text-primary)" stroke-width="12" fill="none" opacity="0" stroke-linecap="round"/>
+                <circle id="sta-0" cx="20" cy="120" r="9" fill="var(--text-primary)" opacity="0"/>
+                <circle id="sta-1" cx="42" cy="32" r="9" fill="var(--text-primary)" opacity="0"/>
+                <circle id="sta-2" cx="108" cy="62" r="9" fill="var(--text-primary)" opacity="0"/>
+                <circle id="sta-3" cx="130" cy="12" r="9" fill="var(--text-primary)" opacity="0"/>
+                <circle id="sta-4" cx="135" cy="100" r="9" fill="var(--text-primary)" opacity="0"/>
+                <circle id="sta-5" cx="192" cy="122" r="9" fill="var(--text-primary)" opacity="0"/>
+                <circle id="sta-6" cx="218" cy="20" r="9" fill="var(--text-primary)" opacity="0"/>
+                <circle id="sta-7" cx="262" cy="55" r="9" fill="var(--text-primary)" opacity="0"/>
+                <circle id="sta-8" cx="290" cy="10" r="9" fill="var(--text-primary)" opacity="0"/>
+                <circle id="tpen" r="10" fill="var(--text-primary)" opacity="0"/>
+              </g>
+            </svg>
           </div>
           <div class="project-content">
             <h3>European Train Journeys</h3>
             <p>Personal travel log of long-distance train routes I've taken across Europe, visualised on an interactive map with animated route tracing.</p>
-            <a href="/trains" class="project-link">My Routes</a>
-            <a href="https://trainmap.app" class="project-link" target="_blank">Create Your Own</a>
+            <div class="project-links">
+              <a href="/trains" class="project-link">My Routes</a>
+              <a href="https://trainmap.app" class="project-link" target="_blank">Create Your Own</a>
+            </div>
           </div>
         </div>
         <div class="project-card">
           <div class="project-visual">
-            <div class="time-animation">
-              <div class="clock-face">
-                <div class="clock-hand hour-hand" id="hour-hand"></div>
-                <div class="clock-hand minute-hand" id="minute-hand"></div>
-                <div class="clock-center"></div>
-              </div>
-            </div>
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="goo-time" color-interpolation-filters="sRGB">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+                  <feColorMatrix in="blur" type="matrix"
+                                 values="1 0 0 0 0
+                                         0 1 0 0 0
+                                         0 0 1 0 0
+                                         0 0 0 22 -9"/>
+                </filter>
+              </defs>
+              <g filter="url(#goo-time)">
+                <circle cx="100" cy="100" r="75" stroke="var(--text-primary)" stroke-width="14" fill="none" opacity="0.6"/>
+                <circle cx="100" cy="45" r="15" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="15;17;14;16;15" dur="6s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="155" cy="100" r="15" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="15;14;17;15;15" dur="7s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="100" cy="155" r="15" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="15;16;14;17;15" dur="8s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="45" cy="100" r="15" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="15;17;15;14;15" dur="7s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="100" cy="100" r="10" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="10;12;9;11;10" dur="6s" repeatCount="indefinite"/>
+                </circle>
+                <rect x="94" y="48" width="12" height="52" rx="2" fill="var(--text-primary)" opacity="0.75">
+                  <animateTransform attributeName="transform" type="rotate"
+                    from="0 100 100" to="360 100 100" dur="12s" repeatCount="indefinite"/>
+                </rect>
+                <rect x="95" y="58" width="10" height="42" rx="2" fill="var(--text-primary)" opacity="0.75">
+                  <animateTransform attributeName="transform" type="rotate"
+                    from="60 100 100" to="420 100 100" dur="24s" repeatCount="indefinite"/>
+                </rect>
+              </g>
+            </svg>
           </div>
           <div class="project-content">
             <h3>Hyper-local Time</h3>
             <p>Location-based solar time display that adjusts to your exact position on Earth, showing true hyper-local solar time with dynamic backgrounds.</p>
             <a href="time.html" class="project-link">View Time</a>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-visual">
+            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="goo-ref" color-interpolation-filters="sRGB">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+                  <feColorMatrix in="blur" type="matrix"
+                                 values="1 0 0 0 0
+                                         0 1 0 0 0
+                                         0 0 1 0 0
+                                         0 0 0 22 -9"/>
+                </filter>
+              </defs>
+              <g filter="url(#goo-ref)">
+                <!-- Reference dots — loose page-like arrangement -->
+                <circle cx="55" cy="32" r="6" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="6;12;6" dur="8s" begin="0s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="90" cy="32" r="6" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="6;12;6" dur="8s" begin="0.6s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="125" cy="32" r="6" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="6;12;6" dur="8s" begin="1.2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="55" cy="58" r="6" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="6;12;6" dur="8s" begin="1.8s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="90" cy="58" r="6" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="6;12;6" dur="8s" begin="2.4s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="55" cy="84" r="6" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="6;12;6" dur="8s" begin="3.0s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="90" cy="84" r="6" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="6;12;6" dur="8s" begin="3.6s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="125" cy="84" r="6" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="6;12;6" dur="8s" begin="4.2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="55" cy="110" r="6" fill="var(--text-primary)" opacity="0.5">
+                  <animate attributeName="r" values="6;12;6" dur="8s" begin="4.8s" repeatCount="indefinite"/>
+                </circle>
+                <!-- Scanning blob — sweeps down the "page" -->
+                <circle cx="150" cy="32" r="10" fill="var(--text-primary)" opacity="0.6">
+                  <animate attributeName="cy" values="32;32;58;58;84;84;110;110;32" dur="8s" repeatCount="indefinite"/>
+                  <animate attributeName="r" values="10;13;10;13;10;13;10;13;10" dur="8s" repeatCount="indefinite"/>
+                </circle>
+              </g>
+            </svg>
+          </div>
+          <div class="project-content">
+            <h3>Reference Checker</h3>
+            <p>Validate BibTeX references against CrossRef, Semantic Scholar and arXiv. Catches year mismatches, author discrepancies and missing entries.</p>
+            <a href="refcheck.html" class="project-link">Check References</a>
           </div>
         </div>
       </div>
@@ -1728,31 +1904,41 @@
     <!-- Work With Me -->
     <section class="container fade-in" id="contact">
       <div class="section-number">11</div>
-      <div class="subtitle">Work With Me</div>
-      <p>I help organisations solve complex problems at the intersection of machine learning, healthcare and legal technology.</p>
-
-      <div class="services-grid">
-        <div class="service-item">
-          <h3>Research Consulting</h3>
-          <p>Deep technical expertise in ML systems, foundation models, healthcare AI and biomedical applications.</p>
-        </div>
-        <div class="service-item">
-          <h3>Technical Advisory</h3>
-          <p>Strategic guidance for startups and enterprises building AI products in regulated domains.</p>
-        </div>
-        <div class="service-item">
-          <h3>Research Partnerships</h3>
-          <p>Academic and industry collaborations on foundation models, healthcare AI and legal technology.</p>
-        </div>
-        <div class="service-item">
-          <h3>Speaking & Workshops</h3>
-          <p>Keynotes and technical workshops on ML methods, AI in healthcare and AI governance.</p>
-        </div>
-      </div>
-
+      <div class="subtitle">Contact</div>
+      <p>I'm always open to research collaborations, consulting and interesting conversations.</p>
       <p>Reach me at arinbjorn@virginia.edu (<a href="https://calendar.app.google/i4jdboEkLTmvzJQs8">or book a time to chat</a>), or connect on <a href="https://bsky.app/profile/arinbjorn.is">Bluesky</a>, <a href="https://www.threads.net/@arinbjornkol">Threads</a>, <a href="https://linkedin.com/in/arinbjorn">LinkedIn</a> or <a href="https://github.com/arinbjornk">GitHub</a>.</p>
     </section>
   </main>
+
+  <svg id="contact-blobs" viewBox="0 0 800 100" style="width:100%;display:block;margin-top:-1rem;" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="goo-contact" x="0" y="0" width="800" height="100" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur"/>
+        <feColorMatrix in="blur" type="matrix"
+                       values="1 0 0 0 0
+                               0 1 0 0 0
+                               0 0 1 0 0
+                               0 0 0 22 -9"/>
+      </filter>
+    </defs>
+    <g filter="url(#goo-contact)">
+      <circle id="cb0" cx="100" cy="50" r="11" fill="var(--text-primary)" opacity="0.75">
+        <animate attributeName="r" values="11;13;11" dur="7s" repeatCount="indefinite"/>
+      </circle>
+      <circle id="cb1" cx="100" cy="50" r="9" fill="var(--text-primary)" opacity="0.75">
+        <animate attributeName="r" values="9;11;9" dur="9s" repeatCount="indefinite"/>
+      </circle>
+      <circle id="cb2" cx="100" cy="50" r="10" fill="var(--text-primary)" opacity="0.75">
+        <animate attributeName="r" values="10;12;10" dur="8s" repeatCount="indefinite"/>
+      </circle>
+      <circle id="cb3" cx="100" cy="50" r="8" fill="var(--text-primary)" opacity="0.75">
+        <animate attributeName="r" values="8;10;8" dur="11s" repeatCount="indefinite"/>
+      </circle>
+      <circle id="cb4" cx="100" cy="50" r="12" fill="var(--text-primary)" opacity="0.75">
+        <animate attributeName="r" values="12;14;12" dur="6s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+  </svg>
 
   <!-- Floating Section Nav (Single Glassmorphism Element) -->
   <nav class="floating-nav" id="floating-nav">
@@ -1827,12 +2013,18 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          // Also animate the section number within this container
+          // Also animate the section number and tag within this container
           const sectionNumber = entry.target.querySelector('.section-number');
+          const sectionTag = entry.target.querySelector('.section-tag');
+          if (sectionTag) {
+            setTimeout(() => {
+              sectionTag.classList.add('visible');
+            }, 50);
+          }
           if (sectionNumber) {
             setTimeout(() => {
               sectionNumber.classList.add('visible');
-            }, 100);
+            }, 150);
           }
         }
       });
@@ -1840,37 +2032,6 @@
 
     fadeElements.forEach(el => observer.observe(el));
 
-    // Initialize clock hands at random positions
-    document.addEventListener('DOMContentLoaded', function () {
-      const hourHand = document.getElementById('hour-hand');
-      const minuteHand = document.getElementById('minute-hand');
-
-      if (hourHand && minuteHand) {
-        const randomHourStart = Math.floor(Math.random() * 360);
-        const randomMinuteStart = Math.floor(Math.random() * 360);
-
-        const hourKeyframes = `
-          @keyframes hourRotateRandom {
-            from { transform: rotate(${randomHourStart}deg); }
-            to { transform: rotate(${randomHourStart + 360}deg); }
-          }
-        `;
-
-        const minuteKeyframes = `
-          @keyframes minuteRotateRandom {
-            from { transform: rotate(${randomMinuteStart}deg); }
-            to { transform: rotate(${randomMinuteStart + 360}deg); }
-          }
-        `;
-
-        const style = document.createElement('style');
-        style.textContent = hourKeyframes + minuteKeyframes;
-        document.head.appendChild(style);
-
-        hourHand.style.animation = 'hourRotateRandom 360s linear infinite';
-        minuteHand.style.animation = 'minuteRotateRandom 30s linear infinite';
-      }
-    });
   </script>
 
   <!-- Liquid Glass SVG Filter -->
@@ -1905,6 +2066,165 @@
         duration: 30000
       });
     }
+  </script>
+  <!-- Ink blob animations -->
+  <script>
+  // === Train route network animation ===
+  (function() {
+    var ROUTE_STATIONS = [
+      [0, 2], [0, 4], [1, 2], [1, 3], [2, 6],
+      [3, 6], [3, 8], [4, 7], [4, 5], [6, 8], [7, 5]
+    ];
+    var NUM_ROUTES = ROUTE_STATIONS.length, NUM_STATIONS = 9;
+    var paths = [], pathLens = [];
+    for (var i = 0; i < NUM_ROUTES; i++) {
+      var p = document.getElementById('tr-' + i);
+      if (!p) continue;
+      paths.push(p);
+      var len = p.getTotalLength();
+      pathLens.push(len);
+      p.style.strokeDasharray = len;
+      p.style.strokeDashoffset = len;
+      p.setAttribute('opacity', '0');
+    }
+    var staEls = [];
+    for (var i = 0; i < NUM_STATIONS; i++) staEls.push(document.getElementById('sta-' + i));
+    var pen = document.getElementById('tpen');
+    if (!pen || paths.length === 0) return;
+
+    var staRefs = new Array(NUM_STATIONS).fill(0);
+    var staBlobStart = new Array(NUM_STATIONS).fill(-1);
+    var staBlobOut = new Array(NUM_STATIONS).fill(-1);
+    var BLOB_IN = 0.4, BLOB_OUT = 0.3;
+
+    function easeOutBack(t) { var c=1.4; return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2); }
+    function showSta(idx,t) { staRefs[idx]++; if(staRefs[idx]===1){staBlobStart[idx]=t;staBlobOut[idx]=-1;staEls[idx].setAttribute('opacity','0.75');staEls[idx].setAttribute('r','0');} }
+    function hideSta(idx,t) { staRefs[idx]=Math.max(0,staRefs[idx]-1); if(staRefs[idx]===0) staBlobOut[idx]=t; }
+    function updateBlobs(t) {
+      for(var i=0;i<NUM_STATIONS;i++){
+        if(staBlobStart[i]>=0&&staBlobOut[i]<0){var e=t-staBlobStart[i];staEls[i].setAttribute('r',e<BLOB_IN?9*easeOutBack(e/BLOB_IN):'9');}
+        if(staBlobOut[i]>=0){var e=t-staBlobOut[i];if(e<BLOB_OUT){staEls[i].setAttribute('r',9*(1-e/BLOB_OUT));}else{staEls[i].setAttribute('opacity','0');staEls[i].setAttribute('r','0');staBlobStart[i]=-1;staBlobOut[i]=-1;}}
+      }
+    }
+
+    var DRAW_DUR=5,HOLD_DUR=12,FADE_DUR=3,STAGGER=6;
+    var active=[],lastSpawn=-STAGGER;
+    function pickRoute(){var taken=new Set(active.map(function(a){return a.idx}));var av=[];for(var i=0;i<paths.length;i++)if(!taken.has(i))av.push(i);return av.length?av[Math.floor(Math.random()*av.length)]:-1;}
+    function drawSpeed(p){var s=1;if(p<.05)s=.1+(p/.05)*.9;if(p>.95)s=.1+((1-p)/.05)*.9;return s;}
+
+    var t0=null,lastT=0;
+    function tick(ts){
+      if(!t0)t0=ts;var t=(ts-t0)/1000,dt=Math.min(t-lastT,.05);lastT=t;
+      if(t-lastSpawn>=STAGGER){var idx=pickRoute();if(idx>=0){paths[idx].style.strokeDashoffset=pathLens[idx];paths[idx].setAttribute('opacity','0.6');for(var j=0;j<ROUTE_STATIONS[idx].length;j++)showSta(ROUTE_STATIONS[idx][j],t);active.push({idx:idx,state:'draw',stateStart:t,progress:0});lastSpawn=t;}}
+      var drawing=null;
+      for(var i=active.length-1;i>=0;i--){var r=active[i],el=t-r.stateStart;
+        if(r.state==='draw'){var spd=drawSpeed(r.progress);r.progress=Math.min(1,r.progress+dt*spd/DRAW_DUR);paths[r.idx].style.strokeDashoffset=pathLens[r.idx]*(1-r.progress);drawing=r;if(r.progress>=1){r.state='hold';r.stateStart=t;}}
+        else if(r.state==='hold'){if(el>=HOLD_DUR){r.state='fade';r.stateStart=t;}}
+        else if(r.state==='fade'){var f=Math.min(1,el/FADE_DUR);paths[r.idx].setAttribute('opacity',0.6*(1-f));if(f>=1){paths[r.idx].setAttribute('opacity','0');paths[r.idx].style.strokeDashoffset=pathLens[r.idx];for(var j=0;j<ROUTE_STATIONS[r.idx].length;j++)hideSta(ROUTE_STATIONS[r.idx][j],t);active.splice(i,1);}}
+      }
+      updateBlobs(t);
+      if(drawing){var pt=paths[drawing.idx].getPointAtLength(drawing.progress*pathLens[drawing.idx]);pen.setAttribute('cx',pt.x);pen.setAttribute('cy',pt.y);pen.setAttribute('opacity','0.5');pen.setAttribute('r',9+(1-drawSpeed(drawing.progress))*3);}else{pen.setAttribute('opacity','0');}
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+
+  // === Molecular docking: Langevin dynamics ===
+  (function() {
+    var main = document.getElementById('lig-b-main');
+    var comp = document.getElementById('lig-b-comp');
+    if (!main || !comp) return;
+
+    function gaussian() { var u1=Math.random(),u2=Math.random(); return Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2); }
+
+    var DOCK={x:108,y:97}, MARGIN=14;
+    var px=40,py=95,vx=0,vy=0;
+    var bound=false,boundTime=0,currentBoundDur=0;
+    var cooldown=false,cooldownEnd=0;
+    var FRICTION=0.98,THERMAL=0.012;
+    var ATTRACT_RADIUS=100,ATTRACT_STRENGTH=0.006;
+    var BIND_RADIUS=10,BIND_PROB=0.008;
+
+    var t0=null;
+    function tick(ts) {
+      if(!t0)t0=ts;var t=(ts-t0)/1000;
+      if(bound){
+        px=DOCK.x+Math.sin(t*0.7)*0.8+Math.sin(t*1.1)*0.4;
+        py=DOCK.y+Math.cos(t*0.9)*0.6+Math.cos(t*0.6)*0.3;
+        vx=0;vy=0;
+        if(t-boundTime>currentBoundDur){var a=Math.random()*Math.PI*2;vx=Math.cos(a)*0.8;vy=Math.sin(a)*0.8;bound=false;cooldown=true;cooldownEnd=t+10+Math.random()*8;}
+      } else {
+        vx*=FRICTION;vy*=FRICTION;
+        vx+=gaussian()*THERMAL;vy+=gaussian()*THERMAL;
+        if(cooldown&&t>cooldownEnd)cooldown=false;
+        var tox=DOCK.x-px,toy=DOCK.y-py,dist=Math.sqrt(tox*tox+toy*toy);
+        if(!cooldown&&dist<ATTRACT_RADIUS&&dist>1){var pull=ATTRACT_STRENGTH*(1-dist/ATTRACT_RADIUS);vx+=(tox/dist)*pull;vy+=(toy/dist)*pull;}
+        px+=vx;py+=vy;
+        if(px<MARGIN){px=MARGIN;vx=Math.abs(vx)*0.5;}if(px>200-MARGIN){px=200-MARGIN;vx=-Math.abs(vx)*0.5;}
+        if(py<MARGIN){py=MARGIN;vy=Math.abs(vy)*0.5;}if(py>200-MARGIN){py=200-MARGIN;vy=-Math.abs(vy)*0.5;}
+        if(dist<BIND_RADIUS&&Math.random()<BIND_PROB){bound=true;boundTime=t;currentBoundDur=4+Math.random()*4;px=DOCK.x;py=DOCK.y;vx=0;vy=0;}
+      }
+      main.setAttribute('cx',px);main.setAttribute('cy',py);
+      var ox=Math.sin(t*1.3+0.5)*7+Math.sin(t*0.7)*3,oy=Math.cos(t*1.1+1.2)*5+Math.cos(t*0.9)*3;
+      comp.setAttribute('cx',px+ox);comp.setAttribute('cy',py+oy);
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+
+  // === Contact blobs: Lissajous orbits ===
+  (function() {
+    var CX = 400, CY = 50;
+    var blobs = [
+      { el: document.getElementById('cb0'), rx: 360, ry: 18, wx: 0.28, wy: 0.44, ph: 0 },
+      { el: document.getElementById('cb1'), rx: 280, ry: 15, wx: 0.37, wy: 0.22, ph: 1.05 },
+      { el: document.getElementById('cb2'), rx: 380, ry: 13, wx: 0.22, wy: 0.36, ph: 1.57 },
+      { el: document.getElementById('cb3'), rx: 240, ry: 19, wx: 0.43, wy: 0.27, ph: 3.14 },
+      { el: document.getElementById('cb4'), rx: 340, ry: 16, wx: 0.26, wy: 0.40, ph: 4.71 }
+    ];
+    if (!blobs[0].el) return;
+    var GRAVITY = 0.15, GRAVITY_RADIUS = 80;
+    // offsets from Lissajous base positions
+    for (var i = 0; i < blobs.length; i++) blobs[i].ox = 0, blobs[i].oy = 0, blobs[i].vox = 0, blobs[i].voy = 0;
+    var t0 = null;
+    function tick(ts) {
+      if (!t0) t0 = ts;
+      var s = (ts - t0) / 1000;
+      // compute base Lissajous positions
+      for (var i = 0; i < blobs.length; i++) {
+        var b = blobs[i];
+        b.bx = CX + b.rx * Math.sin(s * b.wx + b.ph);
+        b.by = CY + b.ry * Math.sin(s * b.wy + b.ph * 0.7);
+      }
+      // apply pairwise gravity as offset nudge
+      for (var i = 0; i < blobs.length; i++) {
+        var ax = 0, ay = 0, bi = blobs[i];
+        var xi = bi.bx + bi.ox, yi = bi.by + bi.oy;
+        for (var j = 0; j < blobs.length; j++) {
+          if (i === j) continue;
+          var bj = blobs[j];
+          var dx = (bj.bx + bj.ox) - xi, dy = (bj.by + bj.oy) - yi;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < GRAVITY_RADIUS && dist > 1) {
+            var pull = GRAVITY * (1 - dist / GRAVITY_RADIUS);
+            ax += (dx / dist) * pull;
+            ay += (dy / dist) * pull;
+          }
+        }
+        bi.vox = (bi.vox + ax) * 0.92;
+        bi.voy = (bi.voy + ay) * 0.92;
+        bi.ox += bi.vox;
+        bi.oy += bi.voy;
+        // spring back to base
+        bi.ox *= 0.95;
+        bi.oy *= 0.95;
+        bi.el.setAttribute('cx', bi.bx + bi.ox);
+        bi.el.setAttribute('cy', bi.by + bi.oy);
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
   </script>
 </body>
 
