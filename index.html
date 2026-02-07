@@ -863,6 +863,10 @@
       opacity: 0.6;
     }
 
+    .floating-nav-toggle {
+      display: none;
+    }
+
     .floating-nav-item:hover {
       color: var(--text-primary);
       border: none;
@@ -976,6 +980,10 @@
         background: rgba(255, 255, 255, 0.06);
       }
 
+      .floating-nav-toggle {
+        color: #F5F5F5;
+      }
+
       .theme-image {
         filter: invert(1) hue-rotate(180deg);
         opacity: 0.9;
@@ -1022,6 +1030,10 @@
 
     html.force-dark-theme .floating-nav-item.active {
       background: rgba(255, 255, 255, 0.06);
+    }
+
+    html.force-dark-theme .floating-nav-toggle {
+      color: #F5F5F5;
     }
 
     html.force-dark-theme .theme-image {
@@ -1100,12 +1112,112 @@
         height: 120px;
       }
 
+      /* Mobile floating nav: collapsed circle → expanded panel */
       .floating-nav {
-        display: none;
+        gap: 0;
+        max-width: 52px;
+        max-height: 52px;
+        border-radius: 50%;
+        padding: 0;
+        overflow: hidden;
+        right: 1rem;
+        bottom: 1rem;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.25) 0%,
+          rgba(255, 255, 255, 0.12) 100%
+        );
+        border-color: rgba(255, 255, 255, 0.18);
+        box-shadow:
+          0 4px 24px rgba(0, 0, 0, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+        transition: max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                    max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                    border-radius 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                    background 0.5s ease,
+                    opacity 0.4s ease,
+                    transform 0.4s ease;
       }
+
+      .floating-nav.expanded {
+        max-width: 260px;
+        max-height: 22rem;
+        border-radius: 10px;
+        gap: 0.1rem;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.65) 0%,
+          rgba(255, 255, 255, 0.4) 100%
+        );
+      }
+
+      .floating-nav-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--text-primary);
+        padding: 0;
+        width: 52px;
+        height: 52px;
+        flex-shrink: 0;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .floating-nav.expanded .floating-nav-toggle {
+        opacity: 0;
+        height: 0;
+        width: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .floating-nav-item {
+        opacity: 0;
+        transform: translateY(8px);
+        pointer-events: none;
+        max-height: 0;
+        padding: 0 0.5rem;
+        overflow: hidden;
+        transition: opacity 0.4s ease, transform 0.4s ease, max-height 0.4s ease, padding 0.4s ease;
+      }
+
+      .floating-nav.expanded .floating-nav-item {
+        opacity: 0.6;
+        transform: translateY(0);
+        pointer-events: auto;
+        max-height: 2rem;
+        padding: 0.2rem 0.5rem;
+      }
+
+      .floating-nav.expanded .floating-nav-item.active {
+        opacity: 1;
+      }
+
+      /* Staggered fade-in for nav items */
+      .floating-nav.expanded .floating-nav-item:nth-child(2)  { transition-delay: 0.05s; }
+      .floating-nav.expanded .floating-nav-item:nth-child(3)  { transition-delay: 0.10s; }
+      .floating-nav.expanded .floating-nav-item:nth-child(4)  { transition-delay: 0.15s; }
+      .floating-nav.expanded .floating-nav-item:nth-child(5)  { transition-delay: 0.20s; }
+      .floating-nav.expanded .floating-nav-item:nth-child(6)  { transition-delay: 0.25s; }
+      .floating-nav.expanded .floating-nav-item:nth-child(7)  { transition-delay: 0.30s; }
+      .floating-nav.expanded .floating-nav-item:nth-child(8)  { transition-delay: 0.35s; }
+      .floating-nav.expanded .floating-nav-item:nth-child(9)  { transition-delay: 0.40s; }
+      .floating-nav.expanded .floating-nav-item:nth-child(10) { transition-delay: 0.45s; }
+      .floating-nav.expanded .floating-nav-item:nth-child(11) { transition-delay: 0.50s; }
+      .floating-nav.expanded .floating-nav-item:nth-child(12) { transition-delay: 0.55s; }
 
       .projects-grid {
         grid-template-columns: 1fr;
+      }
+
+      .tagline br {
+        display: none;
       }
 
       .hero-nav {
@@ -1122,6 +1234,51 @@
       .hero-nav a {
         font-size: 0.7rem;
         padding: 0.4rem 0.5rem;
+      }
+    }
+
+    /* Dark mode mobile circle — must come after both dark-theme and mobile blocks */
+    @media (max-width: 600px) and (prefers-color-scheme: dark) {
+      .floating-nav {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.08) 0%,
+          rgba(255, 255, 255, 0.03) 100%
+        );
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow:
+          0 4px 24px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+      }
+      .floating-nav.expanded {
+        background: linear-gradient(
+          135deg,
+          rgba(40, 40, 40, 0.55) 0%,
+          rgba(25, 25, 25, 0.35) 100%
+        );
+      }
+    }
+
+    @media (max-width: 600px) {
+      html.force-dark-theme .floating-nav {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.08) 0%,
+          rgba(255, 255, 255, 0.03) 100%
+        );
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow:
+          0 4px 24px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+      }
+      html.force-dark-theme .floating-nav.expanded {
+        background: linear-gradient(
+          135deg,
+          rgba(40, 40, 40, 0.55) 0%,
+          rgba(25, 25, 25, 0.35) 100%
+        );
       }
     }
   </style>
@@ -1997,6 +2154,13 @@
 
   <!-- Floating Section Nav (Single Glassmorphism Element) -->
   <nav class="floating-nav" id="floating-nav">
+    <button class="floating-nav-toggle" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="4" y1="7" x2="20" y2="7"/>
+        <line x1="4" y1="12" x2="20" y2="12"/>
+        <line x1="4" y1="17" x2="20" y2="17"/>
+      </svg>
+    </button>
     <a href="#research" class="floating-nav-item" data-section="research"><span class="floating-nav-number">01</span> Research Themes</a>
     <a href="#s02" class="floating-nav-item" data-section="s02"><span class="floating-nav-number">02</span> Foundation Models</a>
     <a href="#s03" class="floating-nav-item" data-section="s03"><span class="floating-nav-number">03</span> Digital Health</a>
@@ -2027,6 +2191,7 @@
         floatingNav.classList.add('visible');
       } else {
         floatingNav.classList.remove('visible');
+        floatingNav.classList.remove('expanded');
       }
 
       // Determine which section is currently in view
@@ -2054,6 +2219,35 @@
     if (isChromium) {
       document.getElementById('floating-nav').classList.add('liquid-glass');
     }
+
+    // Mobile floating nav toggle
+    const navToggle = document.querySelector('.floating-nav-toggle');
+
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      floatingNav.classList.toggle('expanded');
+    });
+
+    // Close when clicking a nav item
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        setTimeout(() => floatingNav.classList.remove('expanded'), 150);
+      });
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!floatingNav.contains(e.target)) {
+        floatingNav.classList.remove('expanded');
+      }
+    });
+
+    // Reset on resize to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 600) {
+        floatingNav.classList.remove('expanded');
+      }
+    });
 
     // Fade-in animations on scroll
     const fadeElements = document.querySelectorAll('.fade-in');
