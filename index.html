@@ -176,7 +176,7 @@
       line-height: 1.7;
       color: var(--text-secondary);
       max-width: 60ch;
-      margin: 1.5rem auto;
+      margin: 2.5rem auto 1.5rem;
     }
 
     /* Subtitle - section headers */
@@ -287,6 +287,11 @@
     .hero-nav {
       margin-top: 2.5rem;
       text-align: center;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0;
     }
 
     .hero-nav a {
@@ -333,7 +338,8 @@
       font-family: 'Source Serif 4', Georgia, serif;
       font-size: 1.1rem;
       color: var(--text-secondary);
-      margin-top: 1rem;
+      margin: 1rem auto 0;
+      text-align: center;
     }
 
     .current-position a {
@@ -390,6 +396,14 @@
     /* ========================================
        RESEARCH THEMES GRID
        ======================================== */
+
+    .research-header {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 1.5rem;
+      gap: 1.5rem;
+    }
 
     .interests-grid {
       display: grid;
@@ -1020,6 +1034,15 @@
        ======================================== */
 
     @media (max-width: 900px) {
+      .research-header {
+        flex-wrap: wrap;
+      }
+
+      .research-header svg {
+        width: 100%;
+        height: 40px;
+      }
+
       .interests-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -1083,6 +1106,17 @@
 
       .projects-grid {
         grid-template-columns: 1fr;
+      }
+
+      .hero-nav {
+        gap: 0.25rem;
+      }
+
+      .hero-nav .nav-separator:nth-child(6) {
+        flex-basis: 100%;
+        height: 0;
+        overflow: hidden;
+        font-size: 0;
       }
 
       .hero-nav a {
@@ -1483,7 +1517,7 @@
           alt="Arinbjörn Kolbeinsson, machine learning scientist and researcher in healthcare AI and foundation models">
       </div>
       <h1>Arinbjörn Kolbeinsson</h1>
-      <p class="tagline">Advancing machine learning research and transforming deep technical innovations into practical solutions across healthcare and legal domains.</p>
+      <p class="tagline">I study how to make AI systems more controllable,<br>and apply machine learning to healthcare and law.</p>
       <p class="current-position">Visiting scholar at <a href="https://datascience.virginia.edu/people/arinbjorn-kolbeinsson">UVA</a>. Co-founder of <a href="https://k01.is">K01</a> and <a href="https://regava.com">Regava</a>.</p>
 
       <nav class="hero-nav">
@@ -1504,7 +1538,28 @@
     <!-- Research Themes -->
     <section class="container fade-in" id="research">
       <div class="section-number">01</div>
-      <div class="subtitle">Research Themes</div>
+      <div class="research-header">
+        <div class="subtitle" style="margin-bottom:0;flex-shrink:0;">Research Themes</div>
+        <svg id="rise-svg" viewBox="0 0 600 50" style="flex:1;height:40px;overflow:visible;" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="goo-rise" x="0" y="0" width="600" height="50" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+              <feColorMatrix in="blur" type="matrix"
+                             values="1 0 0 0 0
+                                     0 1 0 0 0
+                                     0 0 1 0 0
+                                     0 0 0 22 -9"/>
+            </filter>
+          </defs>
+          <g filter="url(#goo-rise)">
+            <circle id="ri0" cx="300" cy="25" r="9" fill="var(--text-primary)" opacity="0.75"/>
+            <circle id="ri1" cx="300" cy="25" r="7" fill="var(--text-primary)" opacity="0.75"/>
+            <circle id="ri2" cx="300" cy="25" r="10" fill="var(--text-primary)" opacity="0.75"/>
+            <circle id="ri3" cx="300" cy="25" r="8" fill="var(--text-primary)" opacity="0.75"/>
+            <circle id="ri4" cx="300" cy="25" r="9" fill="var(--text-primary)" opacity="0.75"/>
+          </g>
+        </svg>
+      </div>
       <div class="interests-grid">
         <div class="theme-category">
           <span class="theme-tag tag-ml">ML Methods</span>
@@ -2167,6 +2222,54 @@
       main.setAttribute('cx',px);main.setAttribute('cy',py);
       var ox=Math.sin(t*1.3+0.5)*7+Math.sin(t*0.7)*3,oy=Math.cos(t*1.1+1.2)*5+Math.cos(t*0.9)*3;
       comp.setAttribute('cx',px+ox);comp.setAttribute('cy',py+oy);
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+
+  // === Research Themes: horizontal drift blobs ===
+  (function() {
+    var CX = 300, CY = 25;
+    var blobs = [
+      { el: document.getElementById('ri0'), rx: 250, ry: 8, wx: 0.25, wy: 0.51, ph: 0 },
+      { el: document.getElementById('ri1'), rx: 200, ry: 7, wx: 0.33, wy: 0.42, ph: 1.2 },
+      { el: document.getElementById('ri2'), rx: 270, ry: 9, wx: 0.20, wy: 0.58, ph: 2.5 },
+      { el: document.getElementById('ri3'), rx: 180, ry: 6, wx: 0.38, wy: 0.35, ph: 3.8 },
+      { el: document.getElementById('ri4'), rx: 230, ry: 8, wx: 0.28, wy: 0.47, ph: 5.1 }
+    ];
+    if (!blobs[0].el) return;
+    var GRAVITY = 0.12, GRAVITY_RADIUS = 60;
+    for (var i = 0; i < blobs.length; i++) blobs[i].ox = 0, blobs[i].oy = 0, blobs[i].vox = 0, blobs[i].voy = 0;
+    var t0 = null;
+    function tick(ts) {
+      if (!t0) t0 = ts;
+      var s = (ts - t0) / 1000;
+      for (var i = 0; i < blobs.length; i++) {
+        var b = blobs[i];
+        b.bx = CX + b.rx * Math.sin(s * b.wx + b.ph);
+        b.by = CY + b.ry * Math.sin(s * b.wy + b.ph * 0.7);
+      }
+      for (var i = 0; i < blobs.length; i++) {
+        var ax = 0, ay = 0, bi = blobs[i];
+        var xi = bi.bx + bi.ox, yi = bi.by + bi.oy;
+        for (var j = 0; j < blobs.length; j++) {
+          if (i === j) continue;
+          var bj = blobs[j];
+          var dx = (bj.bx + bj.ox) - xi, dy = (bj.by + bj.oy) - yi;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < GRAVITY_RADIUS && dist > 1) {
+            var pull = GRAVITY * (1 - dist / GRAVITY_RADIUS);
+            ax += (dx / dist) * pull;
+            ay += (dy / dist) * pull;
+          }
+        }
+        bi.vox = (bi.vox + ax) * 0.92;
+        bi.voy = (bi.voy + ay) * 0.92;
+        bi.ox += bi.vox; bi.oy += bi.voy;
+        bi.ox *= 0.95; bi.oy *= 0.95;
+        bi.el.setAttribute('cx', bi.bx + bi.ox);
+        bi.el.setAttribute('cy', bi.by + bi.oy);
+      }
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
